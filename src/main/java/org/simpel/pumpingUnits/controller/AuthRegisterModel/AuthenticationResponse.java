@@ -1,4 +1,4 @@
-package ru.nikita.tyufyakov.pumpingunits.controller.AuthRegisterModel;
+package org.simpel.pumpingUnits.controller.AuthRegisterModel;
 
 public class AuthenticationResponse {
     private String token;

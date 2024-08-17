@@ -1,15 +1,15 @@
-package ru.nikita.tyufyakov.pumpingunits.controller;
+package org.simpel.pumpingUnits.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-import ru.nikita.tyufyakov.pumpingunits.controller.AuthRegisterModel.AuthenticationRequest;
-import ru.nikita.tyufyakov.pumpingunits.controller.AuthRegisterModel.RegisterRequest;
-import ru.nikita.tyufyakov.pumpingunits.controller.AuthRegisterModel.errorMessage;
-import ru.nikita.tyufyakov.pumpingunits.service.AuthenticationService;
-import ru.nikita.tyufyakov.pumpingunits.service.UserService;
+import org.simpel.pumpingUnits.controller.AuthRegisterModel.AuthenticationRequest;
+import org.simpel.pumpingUnits.controller.AuthRegisterModel.RegisterRequest;
+import org.simpel.pumpingUnits.controller.AuthRegisterModel.errorMessage;
+import org.simpel.pumpingUnits.service.AuthenticationService;
+import org.simpel.pumpingUnits.service.UserService;
 
 
 @RestController

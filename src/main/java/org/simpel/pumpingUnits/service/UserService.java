@@ -1,9 +1,8 @@
-package ru.nikita.tyufyakov.pumpingunits.service;
+package org.simpel.pumpingUnits.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.nikita.tyufyakov.pumpingunits.model.Users;
-import ru.nikita.tyufyakov.pumpingunits.repository.UserRepository;
+import org.simpel.pumpingUnits.model.Users;
+import org.simpel.pumpingUnits.repository.UserRepository;
 
 import java.util.List;
 

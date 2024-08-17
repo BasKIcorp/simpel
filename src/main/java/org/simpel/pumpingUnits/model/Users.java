@@ -1,10 +1,10 @@
-package ru.nikita.tyufyakov.pumpingunits.model;
+package org.simpel.pumpingUnits.model;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.nikita.tyufyakov.pumpingunits.model.enums.Role;
+import org.simpel.pumpingUnits.model.enums.Role;
 
 import java.util.Collection;
 import java.util.List;

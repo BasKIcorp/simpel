@@ -1,4 +1,4 @@
-package ru.nikita.tyufyakov.pumpingunits;
+package org.simpel.pumpingUnits;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

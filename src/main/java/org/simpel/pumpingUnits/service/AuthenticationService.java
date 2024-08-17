@@ -1,4 +1,4 @@
-package ru.nikita.tyufyakov.pumpingunits.service;
+package org.simpel.pumpingUnits.service;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -6,13 +6,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.nikita.tyufyakov.pumpingunits.controller.AuthRegisterModel.AuthenticationRequest;
-import ru.nikita.tyufyakov.pumpingunits.controller.AuthRegisterModel.AuthenticationResponse;
-import ru.nikita.tyufyakov.pumpingunits.controller.AuthRegisterModel.RegisterRequest;
-import ru.nikita.tyufyakov.pumpingunits.model.Users;
-import ru.nikita.tyufyakov.pumpingunits.model.enums.Role;
-import ru.nikita.tyufyakov.pumpingunits.repository.UserRepository;
-import ru.nikita.tyufyakov.pumpingunits.service.jwtUtils.JwtService;
+import org.simpel.pumpingUnits.controller.AuthRegisterModel.AuthenticationRequest;
+import org.simpel.pumpingUnits.controller.AuthRegisterModel.AuthenticationResponse;
+import org.simpel.pumpingUnits.controller.AuthRegisterModel.RegisterRequest;
+import org.simpel.pumpingUnits.model.Users;
+import org.simpel.pumpingUnits.model.enums.Role;
+import org.simpel.pumpingUnits.repository.UserRepository;
+import org.simpel.pumpingUnits.service.jwtUtils.JwtService;
 
 @Service
 public class AuthenticationService {

@@ -1,4 +1,4 @@
-package ru.nikita.tyufyakov.pumpingunits.config;
+package org.simpel.pumpingUnits.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

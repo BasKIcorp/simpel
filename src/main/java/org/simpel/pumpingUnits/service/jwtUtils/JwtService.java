@@ -1,4 +1,4 @@
-package ru.nikita.tyufyakov.pumpingunits.service.jwtUtils;
+package org.simpel.pumpingUnits.service.jwtUtils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

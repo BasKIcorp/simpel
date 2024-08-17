@@ -1,12 +1,12 @@
-package ru.nikita.tyufyakov.pumpingunits;
+package org.simpel.pumpingUnits;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import ru.nikita.tyufyakov.pumpingunits.repository.UserRepository;
-import ru.nikita.tyufyakov.pumpingunits.service.UserService;
+import org.simpel.pumpingUnits.repository.UserRepository;
+import org.simpel.pumpingUnits.service.UserService;
 
 @SpringBootApplication
 public class PumpingUnitsApplication implements ApplicationRunner {
