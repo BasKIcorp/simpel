@@ -23,9 +23,16 @@ public class Users implements UserDetails {
     private String phoneNumber;
     private String company;
     private String jobTitle;
-
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     public Users() {};
 

@@ -1,5 +1,6 @@
 package org.simpel.pumpingUnits.service;
 
+import org.simpel.pumpingUnits.model.UsersBuilder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,16 +30,20 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse register(RegisterRequest request){
-        var user = Users.builder()
-                .username(request.getEmail())
+        var user = new UsersBuilder()
+                .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
+                .name(request.getName())
+                .surname(request.getSurname())
+                .patronymic(request.getPatronymic())
+                .phoneNumber(request.getPhoneNumber())
+                .jobTitle(request.getJobTitle())
+                .company(request.getCompany())
                 .build();
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+        return new AuthenticationResponse(jwtToken);
     }
     public AuthenticationResponse authenticate(AuthenticationRequest request) throws UsernameNotFoundException, BadCredentialsException {
         Users user = userRepository.findByEmail(request.getEmail())
@@ -51,8 +56,6 @@ public class AuthenticationService {
                 )
         );
         var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+        return new AuthenticationResponse(jwtToken);
     }
 }

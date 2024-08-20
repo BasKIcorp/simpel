@@ -9,8 +9,8 @@ import org.simpel.pumpingUnits.repository.UserRepository;
 import org.simpel.pumpingUnits.service.UserService;
 
 @SpringBootApplication
-public class PumpingUnitsApplication implements ApplicationRunner {
-    @Autowired
+public class PumpingUnitsApplication  {
+
     private UserRepository userRepository;
 
     public PumpingUnitsApplication(UserRepository userRepository) {
@@ -21,7 +21,9 @@ public class PumpingUnitsApplication implements ApplicationRunner {
         SpringApplication.run(PumpingUnitsApplication.class, args);
 
     }
-    @Override
+
+
+   /* @Override
     public void run(ApplicationArguments args) throws Exception {
         UserService userService = new UserService(userRepository);
         userService.addUser("asdasd.ru","456");
@@ -30,6 +32,6 @@ public class PumpingUnitsApplication implements ApplicationRunner {
                     System.out.println( users.getEmail());
                     System.out.println(users.getPassword());}
         );
-    }
+    }*/
 
 }

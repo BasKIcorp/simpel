@@ -20,5 +20,5 @@ public class UserService {
     public List<Users> getAllUsers(){
         return userRepository.findAll();
     }
-    public boolean isExist(String username){return  userRepository.existsUserByUsername(username);}
+    public boolean isExist(String username){return  userRepository.existsUserByEmail(username);}
 }

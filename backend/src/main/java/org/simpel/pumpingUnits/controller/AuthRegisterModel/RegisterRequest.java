@@ -86,6 +86,7 @@ public class RegisterRequest {
         this.jobTitle = jobTitle;
     }
 
+
     public RegisterRequest(String email, String password) {
         this.email = email;
         this.password = password;
