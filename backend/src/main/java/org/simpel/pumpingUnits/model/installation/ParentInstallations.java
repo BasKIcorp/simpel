@@ -8,7 +8,7 @@ import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class ParentInstallations {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private TypeInstallations typeInstallations;
     private Enum<?> subtype;

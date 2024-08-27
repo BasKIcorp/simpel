@@ -43,8 +43,8 @@ public class GMInstallation extends ParentInstallations {
     }
 
     public void setConcentration(int concentration) {
-        if(coolantType != CoolantType.WATER) {
-            this.concentration = null;
+        if(coolantType == CoolantType.WATER) {
+            throw new IllegalArgumentException("FLKDSJNFKLJDSFLKF");
         }
         this.concentration = concentration;
     }
