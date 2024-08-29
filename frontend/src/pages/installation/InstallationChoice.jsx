@@ -3,13 +3,20 @@ import styles from "./installationChoice.module.css";
 import {useState} from "react";
 import arrow from '../../assets/next-page.svg'
 import locationArrow from '../../assets/location-arrow.svg'
+import {replace, useNavigate} from "react-router-dom";
 
 export const InstallationChoice = () => {
     const [installationType, setInstallationType] = useState('');
     const [hydromoduleType, setHydromoduleType] = useState('');
     const [workingPumps, setWorkingPumps] = useState(1);
     const [reservePumps, setReservePumps] = useState(1);
+    const navigate = useNavigate();
 
+
+    const handleArrowClick = async (e) => {
+        e.preventDefault();
+        navigate("/selection/device_params")
+    }
     return (
         <div>
             <Header/>
@@ -74,7 +81,7 @@ export const InstallationChoice = () => {
                             </div>
                         </div>
                         {/*TODO: здесь не забыть сделать navigate To */}
-                        <img className={styles.arrow} src={arrow}/>
+                        <img className={styles.arrow} src={arrow} onClick={handleArrowClick}/>
                     </div>
                     <div className={styles.rightSide}>
                         <div className={styles.titlesWrapper}>

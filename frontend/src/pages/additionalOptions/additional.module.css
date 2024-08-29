@@ -97,8 +97,8 @@
     float: right;
     transition: transform 0.3s ease; /* Плавный переход для трансформации */
     position: absolute;
-    top: 330px;
-    left: 430px;
+    top: 170px;
+    left: 440px;
 }
 
 .arrow:disabled {

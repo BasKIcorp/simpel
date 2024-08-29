@@ -126,3 +126,7 @@
     white-space: nowrap;
     border: 0;
 }
+
+.registerLink strong{
+    cursor: pointer;
+}

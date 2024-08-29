@@ -1,17 +1,16 @@
 import React, {useState} from "react";
-import styles from './AuthPage.module.css';
+import styles from '../auth/AuthPage.module.css';
 import {Header} from "../../components/UI/Header";
 import {isDisabled} from "@testing-library/user-event/dist/utils";
-import {useNavigate} from 'react-router-dom';
-import {useDispatch} from "react-redux";
-function AuthPage() {
+import {useNavigate} from "react-router-dom";
+
+function RegPage() {
     const [username, setUsername] = useState('');
     const [usernameError, setUsernameError] = useState(false);
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError] = useState(false);
     const isFormValid = username !== "" && password !== "";
     const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const handleUsernameChange = (e) => {
         const value = e.target.value;
@@ -33,14 +32,11 @@ function AuthPage() {
     };
     const handleSubmit = (e) => {
         e.preventDefault();
-        //TODO: как бэк придет тут доделать чтоб через запрос было, тоже самое с регой
-        dispatch({ type: 'set_user', payload: { username: username, token: "token" } });
-        navigate("/selection/installation_choice", {replace: true})
     }
 
-    const handleRegistrationClick = (e) => {
+    const handleLoginClick = (e) => {
         e.preventDefault();
-        navigate("/registration");
+        navigate("/auth");
     }
 
     return (
@@ -49,10 +45,8 @@ function AuthPage() {
             <Header/>
             <section className={styles.authContainer}>
                 <div className={styles.formWrapper}>
-                    <form className={styles.formContent}
-                          onSubmit={(e) => handleSubmit(e)}
-                    >
-                        <h1 className={styles.formTitle}>Авторизация</h1>
+                    <form className={styles.formContent}>
+                        <h1 className={styles.formTitle}>Регистрация</h1>
                         <label htmlFor="login" className={styles['visually-hidden']}>Логин</label>
                         <input
                             id="login"
@@ -72,13 +66,14 @@ function AuthPage() {
                         />
                         {passwordError && <div className={styles.errorText}>Введите пароль</div>}
                         <p className={styles.registerLink}>
-                            Нет аккаунта? <strong  onClick={handleRegistrationClick}>Зарегистрироваться</strong>
+                            Есть аккаунт? <strong onClick={handleLoginClick}>Войти</strong>
                         </p>
                         {/*TODO: Сделать ссылку из слов зарегестрироваться, также сделать аналогичную страницу для реги*/}
                         <button
                             type="submit"
                             className={`${styles.submitButton} ${!isFormValid ? styles.disabledButton : ''} `}
                             disabled={!isFormValid}
+                            onSubmit={(e) => handleSubmit(e)}
                         >Войти</button>
                     </form>
                 </div>
@@ -87,4 +82,4 @@ function AuthPage() {
     );
 }
 
-export default AuthPage;
+export default RegPage;

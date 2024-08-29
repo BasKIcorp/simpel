@@ -3,9 +3,15 @@ import styles from "./deviceParams.module.css";
 import {useState} from "react";
 import arrow from '../../assets/next-page.svg'
 import locationArrow from '../../assets/location-arrow.svg'
-
+import {useNavigate} from "react-router-dom";
+//TODO: fix margins
 export const DeviceParams = () => {
+    const navigate = useNavigate();
 
+    const handleArrowClick = async (e) => {
+        e.preventDefault();
+        navigate("/selection/selection_results")
+    }
     return (
         <div>
             <Header/>
@@ -77,7 +83,7 @@ export const DeviceParams = () => {
                             </div>
                         </div>
                         {/*TODO: здесь не забыть сделать navigate To */}
-                        <img className={styles.arrow} src={arrow}/>
+                        <img className={styles.arrow} src={arrow} onClick={handleArrowClick}/>
                     </div>
                     <div className={styles.rightSide}>
                         <div className={styles.titlesWrapper}>

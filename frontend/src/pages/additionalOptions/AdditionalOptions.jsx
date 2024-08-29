@@ -3,9 +3,15 @@ import styles from "./additional.module.css";
 import {useState} from "react";
 import arrow from '../../assets/next-page.svg'
 import locationArrow from '../../assets/location-arrow.svg'
+import {useNavigate} from "react-router-dom";
 
 export const AdditionalOptions = () => {
+    const navigate = useNavigate();
 
+    const handleArrowClick = async (e) => {
+        e.preventDefault();
+        navigate("/selection/result")
+    }
 
     return (
         <div>
@@ -47,7 +53,7 @@ export const AdditionalOptions = () => {
 
                         {/*TODO: здесь не забыть сделать navigate To */}
                         <div className={styles.arrowWrapper}>
-                            <img className={styles.arrow} src={arrow} alt="arrow"/>
+                            <img className={styles.arrow} src={arrow} alt="arrow" onClick={handleArrowClick}/>
                         </div>
                     </div>
                     {/*TODO: выделить правую часть в отедльный ui компонент*/}
