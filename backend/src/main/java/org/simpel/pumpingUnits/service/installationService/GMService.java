@@ -7,23 +7,28 @@ import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
 import org.simpel.pumpingUnits.model.installation.GMInstallation;
 import org.simpel.pumpingUnits.model.installation.ParentInstallations;
 import org.simpel.pumpingUnits.repository.GMRepository;
+import org.simpel.pumpingUnits.service.FileStorageService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class GMService implements InstallationServiceInterface<GMInstallation> {
 
     private final GMRepository repository;
+    private final FileStorageService fileStorageService;
 
-    public GMService(GMRepository repository) {
+    public GMService(GMRepository repository, FileStorageService fileStorageService) {
         this.repository = repository;
+        this.fileStorageService = fileStorageService;
     }
 
     @Override
-    public GMInstallation save(InstallationRequest installationRequest) {
+    public GMInstallation save(InstallationRequest installationRequest, MultipartFile[] files) throws IOException {
         GMInstallation gmInstallation = new GMInstallation();
-        //todo сделать отодельный конструктор который будет принимать на вход InstallationRequest чтоб не засорять сервис
         gmInstallation.setTypeInstallations(TypeInstallations.valueOf(installationRequest.getTypeInstallations()));
         gmInstallation.setSubtypes(SubtypeForGm.valueOf(installationRequest.getSubtype()));
         gmInstallation.setCoolantType(CoolantType.valueOf(installationRequest.getCoolantType()));
@@ -36,7 +41,8 @@ public class GMService implements InstallationServiceInterface<GMInstallation> {
         gmInstallation.setFlowRate(installationRequest.getFlowRate());
         gmInstallation.setPressure(installationRequest.getPressure());
 
-
+        List<String> pathFiles = fileStorageService.saveFiles(files,repository.save(gmInstallation));
+        gmInstallation.setDrawingsPath(pathFiles);
         return repository.save(gmInstallation);
     }
 

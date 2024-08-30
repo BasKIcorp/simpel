@@ -6,6 +6,11 @@ import org.simpel.pumpingUnits.model.installation.ParentInstallations;
 import org.simpel.pumpingUnits.service.installationService.InstallationServiceFactory;
 import org.simpel.pumpingUnits.service.installationService.InstallationServiceInterface;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 @Service
 public class InstallationService {
@@ -16,9 +21,16 @@ public class InstallationService {
         this.installationServiceFactory = installationServiceFactory;
     }
 
-    public ParentInstallations save(InstallationRequest request){
+    public ParentInstallations save(InstallationRequest request,
+                                    MultipartFile[] files) throws IOException {
         TypeInstallations typeInstallations = TypeInstallations.valueOf(request.getTypeInstallations());
         InstallationServiceInterface<?> installationsService = installationServiceFactory.getInstallationService(typeInstallations, request.getSubtype());
-        return  installationsService.save(request);
+        return installationsService.save(request,files);
+    }
+
+    public List<?> get(InstallationRequest request) {
+        TypeInstallations typeInstallations = TypeInstallations.valueOf(request.getTypeInstallations());
+        InstallationServiceInterface<?> installationsService = installationServiceFactory.getInstallationService(typeInstallations, request.getSubtype());
+        return installationsService.getAll(request);
     }
 }

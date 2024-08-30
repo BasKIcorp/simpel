@@ -8,18 +8,18 @@ public class InstallationRequest {
     private String typeInstallations;
     private String subtype;
     private String coolantType;
-    private int temperature;
-    private int countMainPumps;
-    private int countSparePumps;
-    private int FlowRate;
-    private int Pressure;
+    private Integer temperature;
+    private Integer countMainPumps;
+    private Integer countSparePumps;
+    private Integer FlowRate;
+    private Integer Pressure;
     //gm
     private Integer concentration;
     //hozPit and PnsERW
     private String pumpType;
     //PnsAFEIJP
-    private int totalCapacityOfJockeyPump;
-    private int requiredJockeyPumpPressure;
+    private Integer totalCapacityOfJockeyPump;
+    private Integer requiredJockeyPumpPressure;
 
     public String getTypeInstallations() {
         return typeInstallations;

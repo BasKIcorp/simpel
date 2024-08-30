@@ -3,13 +3,14 @@ package org.simpel.pumpingUnits.service.installationService;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Service
+@Component
 public class InstallationServiceFactory {
     private final GMService gmService;
     private final HozPitService hozPitService;

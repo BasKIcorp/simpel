@@ -15,6 +15,17 @@ public class GMInstallation extends ParentInstallations {
     private Integer concentration;
     private int temperature;
 
+    public GMInstallation(CoolantType coolantType, SubtypeForGm subtype, Integer concentration, int temperature) {
+        this.coolantType = coolantType;
+        this.subtype = subtype;
+        this.concentration = concentration;
+        this.temperature = temperature;
+    }
+
+    public GMInstallation() {
+
+    }
+
     @Override
     public SubtypeForGm getSubtype() {
         return subtype;
