@@ -5,6 +5,7 @@ import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
 import org.simpel.pumpingUnits.model.installation.GMInstallation;
+import org.simpel.pumpingUnits.model.installation.InstallationPoint;
 import org.simpel.pumpingUnits.model.installation.ParentInstallations;
 import org.simpel.pumpingUnits.repository.GMRepository;
 import org.simpel.pumpingUnits.service.FileStorageService;
@@ -12,8 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+
 
 @Service
 public class GMService implements InstallationServiceInterface<GMInstallation> {
@@ -27,21 +28,19 @@ public class GMService implements InstallationServiceInterface<GMInstallation> {
     }
 
     @Override
-    public GMInstallation save(InstallationRequest installationRequest, MultipartFile[] files) throws IOException {
+    public GMInstallation save(InstallationRequest installationRequest, MultipartFile[] files, List<InstallationPoint> points) throws IOException {
         GMInstallation gmInstallation = new GMInstallation();
         gmInstallation.setTypeInstallations(TypeInstallations.valueOf(installationRequest.getTypeInstallations()));
         gmInstallation.setSubtypes(SubtypeForGm.valueOf(installationRequest.getSubtype()));
         gmInstallation.setCoolantType(CoolantType.valueOf(installationRequest.getCoolantType()));
-        if (installationRequest.getConcentration() != null){
-            gmInstallation.setConcentration(installationRequest.getConcentration());
-        }
+        gmInstallation.setConcentration(installationRequest.getConcentration());
         gmInstallation.setTemperature(installationRequest.getTemperature());
         gmInstallation.setCountMainPumps(installationRequest.getCountMainPumps());
         gmInstallation.setCountSparePumps(installationRequest.getCountSparePumps());
         gmInstallation.setFlowRate(installationRequest.getFlowRate());
         gmInstallation.setPressure(installationRequest.getPressure());
-
-        List<String> pathFiles = fileStorageService.saveFiles(files,repository.save(gmInstallation));
+        gmInstallation = repository.save(gmInstallation);
+        List<String> pathFiles = fileStorageService.saveFiles(files,gmInstallation);
         gmInstallation.setDrawingsPath(pathFiles);
         return repository.save(gmInstallation);
     }

@@ -5,6 +5,7 @@ import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.PumpType;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.enums.subtypes.PNSSubtypes;
+import org.simpel.pumpingUnits.model.installation.InstallationPoint;
 import org.simpel.pumpingUnits.model.installation.PNSInstallationAFEIJP;
 import org.simpel.pumpingUnits.model.installation.PNSInstallationERW;
 import org.simpel.pumpingUnits.repository.PnsAFEIJPRepository;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+
 
 @Service
 public class PNSServiceERW implements InstallationServiceInterface<PNSInstallationERW> {
@@ -27,7 +29,7 @@ public class PNSServiceERW implements InstallationServiceInterface<PNSInstallati
     }
 
     @Override
-    public PNSInstallationERW save(InstallationRequest request, MultipartFile[] files) throws IOException {
+    public PNSInstallationERW save(InstallationRequest request, MultipartFile[] files, List<InstallationPoint> points) throws IOException {
         PNSInstallationERW pns = new PNSInstallationERW();
         pns.setTypeInstallations(TypeInstallations.valueOf(request.getTypeInstallations()));
         pns.setSubtypes(PNSSubtypes.valueOf(request.getSubtype()));
@@ -39,6 +41,7 @@ public class PNSServiceERW implements InstallationServiceInterface<PNSInstallati
         pns.setPressure(request.getPressure());
 
         pns.setPumpType(PumpType.valueOf(request.getPumpType()));
+
         List<String> pathFiles = fileStorageService.saveFiles(files, repository.save(pns));
         pns.setDrawingsPath(pathFiles);
         return repository.save(pns);

@@ -1,5 +1,6 @@
 package org.simpel.pumpingUnits.controller;
 
+import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationPointRequest;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.service.InstallationService;
 import org.springframework.http.MediaType;
@@ -21,9 +22,10 @@ public class InstallationsController {
 
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestPart("request") InstallationRequest request,
-                                  @RequestPart("files") MultipartFile[] files) throws IOException {
+                                  @RequestPart("files") MultipartFile[] files,
+                                  @RequestPart("points")InstallationPointRequest[] pointRequests) throws IOException {
         try {
-           return ResponseEntity.ok(installationService.save(request,files));
+           return ResponseEntity.ok(installationService.save(request,files,pointRequests));
         }
         catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().body(e.getMessage());

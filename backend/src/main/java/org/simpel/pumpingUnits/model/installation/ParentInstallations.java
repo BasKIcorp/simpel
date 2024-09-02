@@ -24,6 +24,8 @@ public abstract class ParentInstallations {
     private int countSparePumps;
     private int FlowRate;
     private int Pressure;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<InstallationPoint> installationPoints;
 
     public Long getId() {
         return id;
@@ -99,5 +101,13 @@ public abstract class ParentInstallations {
 
     public void setPressure(int pressure) {
         Pressure = pressure;
+    }
+
+    public List<InstallationPoint> getInstallationPoints() {
+        return installationPoints;
+    }
+
+    public void setInstallationPoints(List<InstallationPoint> installationPoints) {
+        this.installationPoints = installationPoints;
     }
 }

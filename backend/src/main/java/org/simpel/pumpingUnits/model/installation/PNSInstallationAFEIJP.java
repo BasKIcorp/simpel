@@ -13,8 +13,6 @@ public class PNSInstallationAFEIJP extends ParentInstallations{
     private PNSSubtypes subtypes;
     private int totalCapacityOfJockeyPump;
     private int requiredJockeyPumpPressure;
-    @Min(value = 4)
-    @Max(value = 50)
     private int temperature;
 
 
@@ -61,5 +59,18 @@ public class PNSInstallationAFEIJP extends ParentInstallations{
 
     public void setRequiredJockeyPumpPressure(int requiredJockeyPumpPressure) {
         this.requiredJockeyPumpPressure = requiredJockeyPumpPressure;
+    }
+
+    @Override
+    public int getTemperature() {
+        return temperature;
+    }
+
+    @Override
+    public void setTemperature(int temperature) {
+        if(temperature < 4 || temperature > 50){
+            throw new IllegalArgumentException("PNSInstallationAFEIJP supports only 4 or 50");
+        }
+        this.temperature = temperature;
     }
 }

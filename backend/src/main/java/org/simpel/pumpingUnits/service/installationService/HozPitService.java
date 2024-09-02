@@ -6,6 +6,7 @@ import org.simpel.pumpingUnits.model.enums.PumpType;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.enums.subtypes.HozPitSubtypes;
 import org.simpel.pumpingUnits.model.installation.HozPitInstallation;
+import org.simpel.pumpingUnits.model.installation.InstallationPoint;
 import org.simpel.pumpingUnits.repository.HozPitRepository;
 import org.simpel.pumpingUnits.service.FileStorageService;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+
 
 @Service
 public class HozPitService implements InstallationServiceInterface<HozPitInstallation> {
@@ -26,7 +28,7 @@ public class HozPitService implements InstallationServiceInterface<HozPitInstall
     }
 
     @Override
-    public HozPitInstallation save(InstallationRequest request, MultipartFile[] files) throws IOException {
+    public HozPitInstallation save(InstallationRequest request, MultipartFile[] files, List<InstallationPoint> points) throws IOException {
         HozPitInstallation hpi = new HozPitInstallation();
         hpi.setTypeInstallations(TypeInstallations.valueOf(request.getTypeInstallations()));
         hpi.setSubtypes(HozPitSubtypes.valueOf(request.getSubtype()));

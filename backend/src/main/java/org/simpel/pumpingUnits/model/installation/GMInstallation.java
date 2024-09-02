@@ -53,10 +53,14 @@ public class GMInstallation extends ParentInstallations {
         return concentration;
     }
 
-    public void setConcentration(int concentration) {
+    public void setConcentration(Integer concentration) {
         if(coolantType == CoolantType.WATER) {
-            throw new IllegalArgumentException("FLKDSJNFKLJDSFLKF");
+            throw new IllegalArgumentException("Water should not have concentration");
         }
+        else if(concentration == null) {
+            throw new IllegalArgumentException("Concentration should not be null for Solution");
+        }
+
         this.concentration = concentration;
     }
 
@@ -73,5 +77,10 @@ public class GMInstallation extends ParentInstallations {
             throw new IllegalArgumentException("Choose CoolantType before setting the temperature");
         }
         this.temperature = temperature;
+    }
+
+    @Override
+    public int getTemperature() {
+        return temperature;
     }
 }

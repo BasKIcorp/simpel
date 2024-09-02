@@ -11,8 +11,8 @@ public class InstallationRequest {
     private Integer temperature;
     private Integer countMainPumps;
     private Integer countSparePumps;
-    private Integer FlowRate;
-    private Integer Pressure;
+    private Integer flowRate;
+    private Integer pressure;
     //gm
     private Integer concentration;
     //hozPit and PnsERW
@@ -70,19 +70,19 @@ public class InstallationRequest {
     }
 
     public int getFlowRate() {
-        return FlowRate;
+        return flowRate;
     }
 
     public void setFlowRate(int flowRate) {
-        FlowRate = flowRate;
+        this.flowRate = flowRate;
     }
 
     public int getPressure() {
-        return Pressure;
+        return pressure;
     }
 
     public void setPressure(int pressure) {
-        Pressure = pressure;
+        this.pressure = pressure;
     }
 
     public Integer getConcentration() {

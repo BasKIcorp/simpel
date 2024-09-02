@@ -12,8 +12,6 @@ public class HozPitInstallation extends ParentInstallations {
     private CoolantType coolantType;
     private HozPitSubtypes subtypes;
     private PumpType pumpType;
-    @Min(value = 4)
-    @Max(value = 70)
     private int temperature;
 
     @Override
@@ -48,5 +46,18 @@ public class HozPitInstallation extends ParentInstallations {
 
     public void setPumpType(PumpType pumpType) {
         this.pumpType = pumpType;
+    }
+
+    @Override
+    public int getTemperature() {
+        return temperature;
+    }
+
+    @Override
+    public void setTemperature(int temperature) {
+        if(temperature < 4 || temperature > 70){
+            throw new IllegalArgumentException("HozPitInstallation supports only 4 or 70");
+        }
+        this.temperature = temperature;
     }
 }

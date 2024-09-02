@@ -12,8 +12,6 @@ public class PNSInstallationERW extends ParentInstallations {
     private CoolantType coolantType;
     private PNSSubtypes subtypes;
     private PumpType pumpType;
-    @Min(value = 4)
-    @Max(value = 50)
     private int temperature;
 
     @Override
@@ -51,5 +49,18 @@ public class PNSInstallationERW extends ParentInstallations {
 
     public void setPumpType(PumpType pumpType) {
         this.pumpType = pumpType;
+    }
+
+    @Override
+    public int getTemperature() {
+        return temperature;
+    }
+
+    @Override
+    public void setTemperature(int temperature) {
+        if(temperature < 4 || temperature > 50){
+            throw new IllegalArgumentException("PNSInstallationERW supports only 4 or 50");
+        }
+        this.temperature = temperature;
     }
 }

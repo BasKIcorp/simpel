@@ -21,7 +21,7 @@ public class FileStorageService {
         if (!directory.exists()) {
             directory.mkdirs();
         }
-        String uniqueFileName = UUID.randomUUID().toString() + " для установки " + installations.getTypeInstallations() + " " + installations.getSubtype() + installations.getId() + ".jpg";
+        String uniqueFileName = UUID.randomUUID().toString() + " для установки " + installations.getTypeInstallations() + " " + installations.getSubtype() + " " + installations.getId() + ".jpg";
         String filePath = directoryPath + "/" + uniqueFileName;
 
         BufferedImage image = ImageIO.read(file.getInputStream());
@@ -40,7 +40,7 @@ public class FileStorageService {
             }
         }
 
-        return uniqueFileName;
+        return filePath;
     }
 
 
