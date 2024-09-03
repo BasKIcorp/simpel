@@ -15,13 +15,13 @@ import java.util.UUID;
 public class FileStorageService {
     private final String uploadDir = "uploads/";
 
-    public String saveFile(MultipartFile file, ParentInstallations installations) throws IOException {
-        String directoryPath = uploadDir + installations.getTypeInstallations() + "/" + installations.getSubtype();
+    public String saveFile(MultipartFile file, String type, String subtype) throws IOException {
+        String directoryPath = uploadDir + type + "/" + subtype;
         File directory = new File(directoryPath);
         if (!directory.exists()) {
             directory.mkdirs();
         }
-        String uniqueFileName = UUID.randomUUID().toString() + " для установки " + installations.getTypeInstallations() + " " + installations.getSubtype() + " " + installations.getId() + ".jpg";
+        String uniqueFileName = UUID.randomUUID().toString() + " для установки " + type + " " + subtype + ".jpg";
         String filePath = directoryPath + "/" + uniqueFileName;
 
         BufferedImage image = ImageIO.read(file.getInputStream());

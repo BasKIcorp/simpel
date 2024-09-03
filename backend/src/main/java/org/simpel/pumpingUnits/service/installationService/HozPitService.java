@@ -41,8 +41,9 @@ public class HozPitService implements InstallationServiceInterface<HozPitInstall
         hpi.setPressure(request.getPressure());
 
         hpi.setPumpType(PumpType.valueOf(request.getPumpType()));
-        List<String> pathFiles = fileStorageService.saveFiles(files, repository.save(hpi));
+        List<String> pathFiles = fileStorageService.saveFiles(files,installationRequest.getTypeInstallations(), installationRequest.getSubtype());
         hpi.setDrawingsPath(pathFiles);
+        hpi.setInstallationPoints(points);
         return repository.save(hpi);
     }
 

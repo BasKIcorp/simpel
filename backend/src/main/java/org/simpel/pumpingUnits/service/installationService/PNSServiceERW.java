@@ -42,8 +42,9 @@ public class PNSServiceERW implements InstallationServiceInterface<PNSInstallati
 
         pns.setPumpType(PumpType.valueOf(request.getPumpType()));
 
-        List<String> pathFiles = fileStorageService.saveFiles(files, repository.save(pns));
+        List<String> pathFiles = fileStorageService.saveFiles(files,installationRequest.getTypeInstallations(), installationRequest.getSubtype());
         pns.setDrawingsPath(pathFiles);
+        pns.setInstallationPoints(points);
         return repository.save(pns);
     }
 
