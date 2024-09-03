@@ -22,7 +22,7 @@
 }
 
 .leftSide {
-
+    position: relative;
     background-color: white;
     padding: 20px; /* Настройте отступы по вашему усмотрению */
 }
@@ -97,8 +97,8 @@
     float: right;
     transition: transform 0.3s ease; /* Плавный переход для трансформации */
     position: absolute;
-    top: 170px;
-    left: 440px;
+    bottom: 10%;
+    right: 2%;
 }
 
 .arrow:disabled {
@@ -137,5 +137,6 @@
 
 
 .arrowWrapper {
+
     position: relative; /* Задаем родителю относительное позиционирование */
 }

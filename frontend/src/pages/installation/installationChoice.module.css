@@ -22,7 +22,7 @@
 }
 
 .leftSide {
-
+    position: relative; /* Добавляем позиционирование для родителя */
     background-color: white;
     padding: 20px; /* Настройте отступы по вашему усмотрению */
 }
@@ -93,6 +93,9 @@
 .arrow {
     float: right;
     transition: transform 0.3s ease; /* Плавный переход для трансформации */
+    position: absolute;
+    bottom: 10%;
+    right: 2%;
 }
 
 .arrow:disabled {

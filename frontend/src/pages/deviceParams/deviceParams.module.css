@@ -22,7 +22,7 @@
 }
 
 .leftSide {
-
+    position: relative;
     background-color: white;
     padding: 20px; /* Настройте отступы по вашему усмотрению */
 }
@@ -44,7 +44,7 @@
 }
 
 .formGroup {
-    margin-top: 10px;
+    margin-top: 22px;
     margin-left: 20px;
 }
 
@@ -115,7 +115,10 @@
 
 .arrow {
     float: right;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease; /* Плавный переход для трансформации */
+    position: absolute;
+    bottom: 10%;
+    right: 2%;
 }
 
 .arrow:disabled {

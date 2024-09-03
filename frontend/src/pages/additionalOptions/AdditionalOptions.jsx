@@ -52,9 +52,7 @@ export const AdditionalOptions = () => {
                         {/*TODO: тут главное не забыть, что тут взависимости от выбора типа установки будут разные дивы, тип гидромодуля, тип хвс пмс вот это вот все, надо запомнить или прочитать это и потом сделать обязательно*/}
 
                         {/*TODO: здесь не забыть сделать navigate To */}
-                        <div className={styles.arrowWrapper}>
                             <img className={styles.arrow} src={arrow} alt="arrow" onClick={handleArrowClick}/>
-                        </div>
                     </div>
                     {/*TODO: выделить правую часть в отедльный ui компонент*/}
                     <div className={styles.rightSide}>

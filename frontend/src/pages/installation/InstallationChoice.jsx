@@ -17,6 +17,11 @@ export const InstallationChoice = () => {
         e.preventDefault();
         navigate("/selection/device_params")
     }
+
+    const handleInstallationTypeChange = (event) => {
+        const value = event.target.value;
+        setInstallationType(value);
+    };
     return (
         <div>
             <Header/>
@@ -28,31 +33,81 @@ export const InstallationChoice = () => {
                             <h2 className={styles.formSubtitle}>Тип установки</h2>
                             <div className={styles.selectWrapper}>
 
-                                <select className={styles.select}>
+                                <select className={styles.select} onChange={handleInstallationTypeChange}>
                                     <option value="">Выберите тип установки</option>
-                                    <option value="type1">Гидромодуль</option>
-                                    <option value="type2">ХВС</option>
-                                    <option value="type2">ПМС</option>
+                                    <option value="hydra">Гидромодуль</option>
+                                    <option value="hvs">Хоз-пит</option>
+                                    <option value="pns">ПНС</option>
                                 </select>
                             </div>
                         </div>
                         {/*TODO: тут главное не забыть, что тут взависимости от выбора типа установки будут разные дивы, тип гидромодуля, тип хвс пмс вот это вот все, надо запомнить или прочитать это и потом сделать обязательно*/}
-                        <div className={styles.formGroup}>
-                            <h2 className={styles.formSubtitle}>Тип гидромодуля</h2>
-                            <div className={styles.radioGroup}>
-                                <label>
-                                    <input type="radio" name="hydromodule" value="1"/> С частным регулированием
-                                </label>
-                                <br/>
-                                <label>
-                                    <input type="radio" name="hydromodule" value="2"/> С релейным управлением
-                                </label>
-                                <br/>
-                                <label>
-                                    <input type="radio" name="hydromodule" value="3"/> С кайфовым управлением
-                                </label>
+                        {installationType === "hydra" && (
+                            <div className={styles.formGroup}>
+                                <h2 className={styles.formSubtitle}>Тип гидромодуля</h2>
+                                <div className={styles.radioGroup}>
+                                    <label>
+                                        <input type="radio" name="hydromodule" value="1"/> С частным регулированием
+                                    </label>
+                                    <br/>
+                                    <label>
+                                        <input type="radio" name="hydromodule" value="2"/> С релейным управлением
+                                    </label>
+                                    <br/>
+                                </div>
                             </div>
-                        </div>
+                        )}
+                        {installationType === "hvs" && (
+                            <div className={styles.formGroup}>
+                                <h2 className={styles.formSubtitle}>Тип хоз-пит</h2>
+                                <div className={styles.radioGroup}>
+                                    <label>
+                                        <input type="radio" name="hydromodule" value="1"/> С мульти-частотным
+                                        регулированием ( ПЧ на каждый насос)
+                                    </label>
+                                    <br/>
+                                    <label>
+                                        <input type="radio" name="hydromodule" value="2"/> С каскадным частотным
+                                        управлением ( 1 ПЧ на установку)
+                                    </label>
+                                    <br/>
+                                    <label>
+                                        <input type="radio" name="hydromodule" value="3"/> С релейным управлением
+                                    </label>
+                                </div>
+                            </div>
+                        )}
+                        {installationType === "pns" && (
+                            <div className={styles.formGroup}>
+                                <h2 className={styles.formSubtitle}>Тип ПНС</h2>
+                                <div className={styles.radioGroup}>
+                                    <label>
+                                        <input type="radio" name="hydromodule" value="1"/>  Установка для системы ВПВ
+                                    </label>
+                                    <br/>
+                                    <label>
+                                        <input type="radio" name="hydromodule" value="2"/> Установка автоматического пожаротушения с жокей-насосом (АУПТ)
+                                    </label>
+                                </div>
+                            </div>
+                        )}
+
+                        {/*<div className={styles.formGroup}>*/}
+                        {/*    <h2 className={styles.formSubtitle}>Тип гидромодуля</h2>*/}
+                        {/*    <div className={styles.radioGroup}>*/}
+                        {/*        <label>*/}
+                        {/*            <input type="radio" name="hydromodule" value="1"/> С частным регулированием*/}
+                        {/*        </label>*/}
+                        {/*        <br/>*/}
+                        {/*        <label>*/}
+                        {/*            <input type="radio" name="hydromodule" value="2"/> С релейным управлением*/}
+                        {/*        </label>*/}
+                        {/*        <br/>*/}
+                        {/*        <label>*/}
+                        {/*            <input type="radio" name="hydromodule" value="3"/> С кайфовым управлением*/}
+                        {/*        </label>*/}
+                        {/*    </div>*/}
+                        {/*</div>*/}
                         <div className={styles.formGroup}>
                             <h3 className={styles.formSubtitle}>Количество насосов</h3>
                             <div className={styles.radioGroup}>
