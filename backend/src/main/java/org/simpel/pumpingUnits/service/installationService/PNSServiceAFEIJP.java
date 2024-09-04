@@ -42,7 +42,7 @@ public class PNSServiceAFEIJP implements InstallationServiceInterface <PNSInstal
         pns.setTotalCapacityOfJockeyPump(request.getTotalCapacityOfJockeyPump());
         pns.setRequiredJockeyPumpPressure(request.getRequiredJockeyPumpPressure());
 
-        List<String> pathFiles = fileStorageService.saveFiles(files,installationRequest.getTypeInstallations(), installationRequest.getSubtype());
+        List<String> pathFiles = fileStorageService.saveFiles(files,request.getTypeInstallations(), request.getSubtype());
         pns.setDrawingsPath(pathFiles);
         pns.setInstallationPoints(points);
         return repository.save(pns);

@@ -24,6 +24,7 @@ public abstract class ParentInstallations {
     private int countSparePumps;
     private int FlowRate;
     private int Pressure;
+    @JoinColumn(name = "installation_id")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<InstallationPoint> installationPoints;
 

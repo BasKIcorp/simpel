@@ -20,7 +20,6 @@ import java.util.Set;
 public class InstallationService {
 
     private final InstallationServiceFactory installationServiceFactory;
-    private final
 
     public InstallationService(InstallationServiceFactory installationServiceFactory) {
         this.installationServiceFactory = installationServiceFactory;

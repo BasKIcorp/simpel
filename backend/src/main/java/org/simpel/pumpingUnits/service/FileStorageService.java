@@ -45,10 +45,10 @@ public class FileStorageService {
 
 
 
-    public List<String> saveFiles(MultipartFile[] files, ParentInstallations installation) throws IOException {
+    public List<String> saveFiles(MultipartFile[] files, String type, String subtype) throws IOException {
         List<String> fileNames = new ArrayList<>();
         for (MultipartFile file : files) {
-            fileNames.add(saveFile(file, installation));
+            fileNames.add(saveFile(file, type, subtype));
         }
         return fileNames;
     }
