@@ -16,6 +16,7 @@ public class InstallationsController {
 
     private final InstallationService installationService;
 
+
     public InstallationsController(InstallationService installationService) {
         this.installationService = installationService;
     }

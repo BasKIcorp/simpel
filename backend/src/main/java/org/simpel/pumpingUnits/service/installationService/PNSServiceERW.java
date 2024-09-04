@@ -44,6 +44,9 @@ public class PNSServiceERW implements InstallationServiceInterface<PNSInstallati
 
         List<String> pathFiles = fileStorageService.saveFiles(files,request.getTypeInstallations(), request.getSubtype());
         pns.setDrawingsPath(pathFiles);
+        for(InstallationPoint point : points){
+            point.setParentInstallations(pns);
+        }
         pns.setInstallationPoints(points);
         return repository.save(pns);
     }

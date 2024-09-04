@@ -1,5 +1,6 @@
 package org.simpel.pumpingUnits.model.installation;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
@@ -24,8 +25,8 @@ public abstract class ParentInstallations {
     private int countSparePumps;
     private int FlowRate;
     private int Pressure;
-    @JoinColumn(name = "installation_id")
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "parentInstallations", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<InstallationPoint> installationPoints;
 
     public Long getId() {

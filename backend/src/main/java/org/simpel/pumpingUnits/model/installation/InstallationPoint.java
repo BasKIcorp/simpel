@@ -1,5 +1,6 @@
 package org.simpel.pumpingUnits.model.installation;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,9 +10,9 @@ public class InstallationPoint {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "installation_id", nullable = false)
+    @JsonBackReference
     private ParentInstallations parentInstallations;
-
     private double x;
     private double y;
 

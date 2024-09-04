@@ -54,10 +54,10 @@ public class GMInstallation extends ParentInstallations {
     }
 
     public void setConcentration(Integer concentration) {
-        if(coolantType == CoolantType.WATER) {
+        if(coolantType == CoolantType.WATER && concentration != null) {
             throw new IllegalArgumentException("Water should not have concentration");
         }
-        else if(concentration == null) {
+        else if(coolantType != CoolantType.WATER && concentration == null) {
             throw new IllegalArgumentException("Concentration should not be null for Solution");
         }
 

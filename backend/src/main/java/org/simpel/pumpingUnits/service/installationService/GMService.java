@@ -41,6 +41,9 @@ public class GMService implements InstallationServiceInterface<GMInstallation> {
         gmInstallation.setPressure(installationRequest.getPressure());
         List<String> pathFiles = fileStorageService.saveFiles(files,installationRequest.getTypeInstallations(), installationRequest.getSubtype());
         gmInstallation.setDrawingsPath(pathFiles);
+        for(InstallationPoint point : points){
+            point.setParentInstallations(gmInstallation);
+        }
         gmInstallation.setInstallationPoints(points);
         return repository.save(gmInstallation);
     }
