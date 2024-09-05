@@ -22,8 +22,8 @@
 .header {
     background-color: #061D52; /* Цвет фона заголовка */
     color: white;
-    font-size: 24px;
-    padding: 10px 20px;
+    font-size: 32px;
+    padding: 5px 20px;
     text-align: center;
 }
 
@@ -36,6 +36,7 @@
 }
 
 .chartContainer {
+
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -44,6 +45,7 @@
 
 .selectWrapper {
     margin-bottom: 10px;
+    margin-left: 60px;
 }
 
 .select {
@@ -52,7 +54,7 @@
     -moz-appearance: none;
     background-color: white;
     padding: 8px 40px 8px 12px; /* Отступ справа для стрелки */
-    width: 55%;
+    width: 65%;
     font-size: 16px;
     border: 1px solid #000;
     border-radius: 6px;
@@ -63,19 +65,19 @@
 }
 
 .chart {
-    border: 2px solid;
-
+    /*border: solid 2px;*/
     flex: 1;
     border-radius: 6px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
+    justify-content: left;
+    margin-bottom: 10px;
 }
 
 .graphSelector {
     display: flex;
     justify-content: center;
+
 }
 
 .graphSelector label {
@@ -85,7 +87,7 @@
 .data {
     flex: 1;
     padding: 20px;
-    padding-top: 50px;
+    padding-top: 80px;
     border-radius: 6px;
     font-size: 18px;
 }
@@ -107,3 +109,4 @@
     transform: scale(1.1);
     cursor: pointer;
 }
+
