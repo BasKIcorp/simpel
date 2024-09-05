@@ -28,6 +28,21 @@ public abstract class ParentInstallations {
     @OneToMany(mappedBy = "parentInstallations", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<InstallationPoint> installationPoints;
+    //full info
+    private String name;
+    private ControlType controlType;
+    private PowerType powerType;
+    private String article;
+    private float price;
+    private float power;
+    private int efficiency;
+    private float NPSH;
+    private float DM_in;
+    private float DM_out;
+    private float installationLength;
+    private String description;
+
+    
 
     public Long getId() {
         return id;

@@ -16,7 +16,7 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-    private final String SECRET_KEY = "y55fs6xk663Ei41X5XwPKELRKAngNKTW";
+    private final String SECRET_KEY = "9bgATz23gMcMW0rWKzfEXEd5I5kvcTer8P3bJU5eVig=";
 
     public String generateToken(UserDetails userDetails){
         return generateToken(new HashMap<>(), userDetails);

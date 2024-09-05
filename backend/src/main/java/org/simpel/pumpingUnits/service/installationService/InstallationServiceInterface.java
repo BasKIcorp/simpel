@@ -11,5 +11,5 @@ import java.util.List;
 public interface InstallationServiceInterface <T extends ParentInstallations>{
     T save(InstallationRequest parentInstallations, MultipartFile[] files, List<InstallationPoint> points) throws IOException;
     List<T> getAll(InstallationRequest parentInstallations);
-    List<T> search(InstallationRequest parentInstallations);
+    /*List<T> search(InstallationRequest parentInstallations);*/
 }
