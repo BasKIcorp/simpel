@@ -8,6 +8,7 @@ import {Navigate, Route, Routes} from "react-router-dom";
 import RegPage from "./pages/registration/RegPage";
 import {useSelector} from "react-redux";
 import SelectionResults from "./pages/selection_results/SelectionResults";
+import Result from "./pages/result/Result";
 
 function App() {
 
@@ -33,7 +34,7 @@ function App() {
                     <Route path={"additional_options"}
                            element={isAuthenticated ? <AdditionalOptions/> : <Navigate to={"/auth"}/>}/>
                     <Route path={"result"}
-                           element={isAuthenticated ? <AdditionalOptions/> : <Navigate to={"/auth"}/>}/>
+                           element={isAuthenticated ? <Result/> : <Navigate to={"/auth"}/>}/>
                 </Route>
             </Route>
         </Routes>

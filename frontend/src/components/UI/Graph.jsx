@@ -9,8 +9,8 @@ const Graph = ({ data = [], legendNames = [] }) => {
             ) : (
                 <LineChart width={500} height={400} data={data}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
+                    <XAxis dataKey="name" strokeWidth={2}/>
+                    <YAxis strokeWidth={2}/>
                     <Tooltip />
                     {/* Используем компонент Legend и передаем русские названия */}
                     <Legend
