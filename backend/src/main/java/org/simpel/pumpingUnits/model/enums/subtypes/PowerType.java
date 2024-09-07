@@ -1,4 +1,4 @@
-package org.simpel.pumpingUnits.model.installation;
+package org.simpel.pumpingUnits.model.enums.subtypes;
 
 public enum PowerType {
     ONE_PHASE,

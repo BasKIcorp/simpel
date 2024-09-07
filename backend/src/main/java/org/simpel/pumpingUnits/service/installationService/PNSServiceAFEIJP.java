@@ -1,6 +1,7 @@
 package org.simpel.pumpingUnits.service.installationService;
 
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
+import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.enums.subtypes.PNSSubtypes;
@@ -28,26 +29,11 @@ public class PNSServiceAFEIJP implements InstallationServiceInterface <PNSInstal
     }
 
     @Override
-    public PNSInstallationAFEIJP save(InstallationRequest request, MultipartFile[] files, List<InstallationPoint> points) throws IOException {
+    public PNSInstallationAFEIJP save(InstallationSaveRequest request, MultipartFile[] files, List<InstallationPoint> points) throws IOException {
         PNSInstallationAFEIJP pns = new PNSInstallationAFEIJP();
-        pns.setTypeInstallations(TypeInstallations.valueOf(request.getTypeInstallations()));
-        pns.setSubtypes(PNSSubtypes.valueOf(request.getSubtype()));
-        pns.setCoolantType(CoolantType.valueOf(request.getCoolantType()));
-        pns.setTemperature(request.getTemperature());
-        pns.setCountMainPumps(request.getCountMainPumps());
-        pns.setCountSparePumps(request.getCountSparePumps());
-        pns.setFlowRate(request.getFlowRate());
-        pns.setPressure(request.getPressure());
-
-        pns.setTotalCapacityOfJockeyPump(request.getTotalCapacityOfJockeyPump());
-        pns.setRequiredJockeyPumpPressure(request.getRequiredJockeyPumpPressure());
-
-        List<String> pathFiles = fileStorageService.saveFiles(files,request.getTypeInstallations(), request.getSubtype());
-        pns.setDrawingsPath(pathFiles);
-        for(InstallationPoint point : points){
-            point.setParentInstallations(pns);
-        }
-        pns.setInstallationPoints(points);
+        pns.setCommonFields(request);
+        pns.setSpecificFields(request);
+        pns.setFieldsForSave(request,files,points,fileStorageService);
         return repository.save(pns);
     }
 

@@ -2,6 +2,7 @@ package org.simpel.pumpingUnits.controller;
 
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationPointRequest;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
+import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
 import org.simpel.pumpingUnits.service.InstallationService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class InstallationsController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestPart("request") InstallationRequest request,
+    public ResponseEntity<?> save(@RequestPart("request")InstallationSaveRequest request,
                                   @RequestPart("files") MultipartFile[] files,
                                   @RequestPart("points")InstallationPointRequest[] pointRequests) throws IOException {
         try {

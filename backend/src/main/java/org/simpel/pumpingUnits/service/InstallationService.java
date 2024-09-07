@@ -2,6 +2,7 @@ package org.simpel.pumpingUnits.service;
 
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationPointRequest;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
+import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.installation.InstallationPoint;
 import org.simpel.pumpingUnits.model.installation.ParentInstallations;
@@ -25,7 +26,7 @@ public class InstallationService {
         this.installationServiceFactory = installationServiceFactory;
     }
 
-    public ParentInstallations save(InstallationRequest request,
+    public ParentInstallations save(InstallationSaveRequest request,
                                     MultipartFile[] files, InstallationPointRequest[] requestPoints) throws IOException {
         TypeInstallations typeInstallations = TypeInstallations.valueOf(request.getTypeInstallations());
         InstallationServiceInterface<?> installationsService = installationServiceFactory.getInstallationService(typeInstallations, request.getSubtype());

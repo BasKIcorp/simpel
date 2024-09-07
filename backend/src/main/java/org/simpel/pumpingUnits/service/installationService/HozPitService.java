@@ -1,6 +1,7 @@
 package org.simpel.pumpingUnits.service.installationService;
 
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
+import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.PumpType;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
@@ -28,25 +29,11 @@ public class HozPitService implements InstallationServiceInterface<HozPitInstall
     }
 
     @Override
-    public HozPitInstallation save(InstallationRequest request, MultipartFile[] files, List<InstallationPoint> points) throws IOException {
+    public HozPitInstallation save(InstallationSaveRequest request, MultipartFile[] files, List<InstallationPoint> points) throws IOException {
         HozPitInstallation hpi = new HozPitInstallation();
-        hpi.setTypeInstallations(TypeInstallations.valueOf(request.getTypeInstallations()));
-        hpi.setSubtypes(HozPitSubtypes.valueOf(request.getSubtype()));
-        hpi.setCoolantType(CoolantType.valueOf(request.getCoolantType()));
-        hpi.setTemperature(request.getTemperature());
-        hpi.setTemperature(request.getTemperature());
-        hpi.setCountMainPumps(request.getCountMainPumps());
-        hpi.setCountSparePumps(request.getCountSparePumps());
-        hpi.setFlowRate(request.getFlowRate());
-        hpi.setPressure(request.getPressure());
-
-        hpi.setPumpType(PumpType.valueOf(request.getPumpType()));
-        List<String> pathFiles = fileStorageService.saveFiles(files,request.getTypeInstallations(), request.getSubtype());
-        hpi.setDrawingsPath(pathFiles);
-        for(InstallationPoint point : points){
-            point.setParentInstallations(hpi);
-        }
-        hpi.setInstallationPoints(points);
+        hpi.setCommonFields(request);
+        hpi.setSpecificFields(request);
+        hpi.setFieldsForSave(request,files,points,fileStorageService);
         return repository.save(hpi);
     }
 

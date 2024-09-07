@@ -1,6 +1,7 @@
 package org.simpel.pumpingUnits.service.installationService;
 
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
+import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
@@ -9,6 +10,7 @@ import org.simpel.pumpingUnits.model.installation.InstallationPoint;
 import org.simpel.pumpingUnits.model.installation.ParentInstallations;
 import org.simpel.pumpingUnits.repository.GMRepository;
 import org.simpel.pumpingUnits.service.FileStorageService;
+import org.simpel.pumpingUnits.service.SearchComponent;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,36 +23,45 @@ public class GMService implements InstallationServiceInterface<GMInstallation> {
 
     private final GMRepository repository;
     private final FileStorageService fileStorageService;
+    private final SearchComponent searchComponent;
 
-    public GMService(GMRepository repository, FileStorageService fileStorageService) {
+    public GMService(GMRepository repository, FileStorageService fileStorageService, SearchComponent searchComponent) {
         this.repository = repository;
         this.fileStorageService = fileStorageService;
+        this.searchComponent = searchComponent;
     }
 
     @Override
-    public GMInstallation save(InstallationRequest installationRequest, MultipartFile[] files, List<InstallationPoint> points) throws IOException {
+    public GMInstallation save(InstallationSaveRequest request, MultipartFile[] files, List<InstallationPoint> points) throws IOException {
         GMInstallation gmInstallation = new GMInstallation();
-        gmInstallation.setTypeInstallations(TypeInstallations.valueOf(installationRequest.getTypeInstallations()));
-        gmInstallation.setSubtypes(SubtypeForGm.valueOf(installationRequest.getSubtype()));
-        gmInstallation.setCoolantType(CoolantType.valueOf(installationRequest.getCoolantType()));
-        gmInstallation.setConcentration(installationRequest.getConcentration());
-        gmInstallation.setTemperature(installationRequest.getTemperature());
-        gmInstallation.setCountMainPumps(installationRequest.getCountMainPumps());
-        gmInstallation.setCountSparePumps(installationRequest.getCountSparePumps());
-        gmInstallation.setFlowRate(installationRequest.getFlowRate());
-        gmInstallation.setPressure(installationRequest.getPressure());
-        List<String> pathFiles = fileStorageService.saveFiles(files,installationRequest.getTypeInstallations(), installationRequest.getSubtype());
-        gmInstallation.setDrawingsPath(pathFiles);
-        for(InstallationPoint point : points){
-            point.setParentInstallations(gmInstallation);
-        }
-        gmInstallation.setInstallationPoints(points);
+        gmInstallation.setCommonFields(request);
+        gmInstallation.setSpecificFields(request);
+        gmInstallation.setFieldsForSave(request,files,points,fileStorageService);
         return repository.save(gmInstallation);
     }
 
     @Override
     public List<GMInstallation> getAll(InstallationRequest installationRequest) {
-        return repository.findAll();
+        TypeInstallations typeInstallations = TypeInstallations.valueOf(installationRequest.getTypeInstallations());
+        SubtypeForGm subtype = SubtypeForGm.valueOf(installationRequest.getSubtype());
+        CoolantType coolantType = CoolantType.valueOf(installationRequest.getCoolantType());
+        int temperature = installationRequest.getTemperature();
+        int concentration = installationRequest.getConcentration();
+        int countMainPumps = installationRequest.getCountMainPumps();
+        int countSparePumps = installationRequest.getCountSparePumps();
+        searchComponent.setFlowRateForSearch(installationRequest.getFlowRate());
+        int maxFlowRate = searchComponent.getMaxFlowRate();
+        int minFlowRate = searchComponent.getMinFlowRate();
+        List<GMInstallation> suitableInstallations = repository.findInstallations(typeInstallations.toString(),
+                subtype.toString(),
+                coolantType.toString(),
+                temperature,
+                concentration,
+                countMainPumps,
+                countSparePumps,
+                maxFlowRate,
+                minFlowRate);
+        return searchComponent.get(suitableInstallations);
     }
 
 

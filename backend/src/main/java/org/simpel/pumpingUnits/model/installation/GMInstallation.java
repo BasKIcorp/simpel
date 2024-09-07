@@ -3,6 +3,7 @@ package org.simpel.pumpingUnits.model.installation;
 import jakarta.persistence.Entity;
 
 
+import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
 import org.simpel.pumpingUnits.validation.ValidTemperature;
@@ -24,6 +25,10 @@ public class GMInstallation extends ParentInstallations {
 
     public GMInstallation() {
 
+    }
+    @Override
+    public void setSpecificFields(InstallationRequest request){
+        this.setConcentration(request.getConcentration());
     }
 
     @Override

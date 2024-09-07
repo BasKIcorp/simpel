@@ -2,9 +2,17 @@ package org.simpel.pumpingUnits.model.installation;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
+import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
+import org.simpel.pumpingUnits.model.enums.ControlType;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
+import org.simpel.pumpingUnits.model.enums.subtypes.PowerType;
+import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
+import org.simpel.pumpingUnits.service.FileStorageService;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +31,8 @@ public abstract class ParentInstallations {
     private int temperature;
     private int countMainPumps;
     private int countSparePumps;
-    private int FlowRate;
-    private int Pressure;
+    private int flowRate;
+    private int pressure;
     @OneToMany(mappedBy = "parentInstallations", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<InstallationPoint> installationPoints;
@@ -41,6 +49,139 @@ public abstract class ParentInstallations {
     private float DM_out;
     private float installationLength;
     private String description;
+
+    public void setCommonFields(InstallationRequest request) {
+        this.setTypeInstallations(TypeInstallations.valueOf(request.getTypeInstallations()));
+        this.setSubtypes(SubtypeForGm.valueOf(request.getSubtype()));
+        this.setCoolantType(CoolantType.valueOf(request.getCoolantType()));
+        this.setTemperature(request.getTemperature());
+        this.setCountMainPumps(request.getCountMainPumps());
+        this.setCountSparePumps(request.getCountSparePumps());
+        this.setFlowRate(request.getFlowRate());
+        this.setPressure(request.getPressure());
+    }
+
+    public abstract void setSpecificFields(InstallationRequest request);
+
+    public void setFieldsForSave(InstallationSaveRequest request, MultipartFile[] files, List<InstallationPoint> points, FileStorageService fileStorageService) throws IOException {
+        for(InstallationPoint point : points){
+            point.setParentInstallations(this);
+        }
+        this.setInstallationPoints(points);
+        List<String> pathFiles = fileStorageService.saveFiles(files,request.getTypeInstallations(), request.getSubtype());
+        this.setDrawingsPath(pathFiles);
+        this.setName(request.getName());
+        this.setControlType(ControlType.valueOf(request.getControlType()));
+        this.setPowerType(PowerType.valueOf(request.getPowerType()));
+        this.setArticle(request.getArticle());
+        this.setPrice(request.getPrice());
+        this.setPower(request.getPower());
+        this.setEfficiency(request.getEfficiency());
+        this.setNPSH(request.getNPSH());
+        this.setDM_in(request.getDM_in());
+        this.setDM_out(request.getDM_out());
+        this.setInstallationLength(request.getInstallationLength());
+        this.setDescription(request.getDescription());
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ControlType getControlType() {
+        return controlType;
+    }
+
+    public void setControlType(ControlType controlType) {
+        this.controlType = controlType;
+    }
+
+    public PowerType getPowerType() {
+        return powerType;
+    }
+
+    public void setPowerType(PowerType powerType) {
+        this.powerType = powerType;
+    }
+
+    public String getArticle() {
+        return article;
+    }
+
+    public void setArticle(String article) {
+        this.article = article;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public float getPower() {
+        return power;
+    }
+
+    public void setPower(float power) {
+        this.power = power;
+    }
+
+    public int getEfficiency() {
+        return efficiency;
+    }
+
+    public void setEfficiency(int efficiency) {
+        this.efficiency = efficiency;
+    }
+
+    public float getNPSH() {
+        return NPSH;
+    }
+
+    public void setNPSH(float NPSH) {
+        this.NPSH = NPSH;
+    }
+
+    public float getDM_in() {
+        return DM_in;
+    }
+
+    public void setDM_in(float DM_in) {
+        this.DM_in = DM_in;
+    }
+
+    public float getDM_out() {
+        return DM_out;
+    }
+
+    public void setDM_out(float DM_out) {
+        this.DM_out = DM_out;
+    }
+
+    public float getInstallationLength() {
+        return installationLength;
+    }
+
+    public void setInstallationLength(float installationLength) {
+        this.installationLength = installationLength;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+
 
     
 
@@ -105,19 +246,19 @@ public abstract class ParentInstallations {
     }
 
     public int getFlowRate() {
-        return FlowRate;
+        return flowRate;
     }
 
     public void setFlowRate(int flowRate) {
-        FlowRate = flowRate;
+        this.flowRate = flowRate;
     }
 
     public int getPressure() {
-        return Pressure;
+        return pressure;
     }
 
     public void setPressure(int pressure) {
-        Pressure = pressure;
+        this.pressure = pressure;
     }
 
     public List<InstallationPoint> getInstallationPoints() {

@@ -25,10 +25,15 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        if (userService.isExist(request.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new errorMessage("username \'" + request.getEmail() + "\' is already taken"));
-        } else {
-            return ResponseEntity.ok(authenticationService.register(request));
+        try {
+            if (userService.isExist(request.getEmail())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new errorMessage("username \'" + request.getEmail() + "\' is already taken"));
+            } else {
+                return ResponseEntity.ok(authenticationService.register(request));
+            }
+        }
+        catch (NullPointerException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -41,6 +46,9 @@ public class AuthenticationController {
         }
         catch(BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.resolve(400)).body(new errorMessage("Incorrect password"));
+        }
+        catch (NullPointerException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
     }

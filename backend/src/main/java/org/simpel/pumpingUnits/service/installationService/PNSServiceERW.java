@@ -1,6 +1,7 @@
 package org.simpel.pumpingUnits.service.installationService;
 
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
+import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.PumpType;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
@@ -29,25 +30,11 @@ public class PNSServiceERW implements InstallationServiceInterface<PNSInstallati
     }
 
     @Override
-    public PNSInstallationERW save(InstallationRequest request, MultipartFile[] files, List<InstallationPoint> points) throws IOException {
+    public PNSInstallationERW save(InstallationSaveRequest request, MultipartFile[] files, List<InstallationPoint> points) throws IOException {
         PNSInstallationERW pns = new PNSInstallationERW();
-        pns.setTypeInstallations(TypeInstallations.valueOf(request.getTypeInstallations()));
-        pns.setSubtypes(PNSSubtypes.valueOf(request.getSubtype()));
-        pns.setCoolantType(CoolantType.valueOf(request.getCoolantType()));
-        pns.setTemperature(request.getTemperature());
-        pns.setCountMainPumps(request.getCountMainPumps());
-        pns.setCountSparePumps(request.getCountSparePumps());
-        pns.setFlowRate(request.getFlowRate());
-        pns.setPressure(request.getPressure());
-
-        pns.setPumpType(PumpType.valueOf(request.getPumpType()));
-
-        List<String> pathFiles = fileStorageService.saveFiles(files,request.getTypeInstallations(), request.getSubtype());
-        pns.setDrawingsPath(pathFiles);
-        for(InstallationPoint point : points){
-            point.setParentInstallations(pns);
-        }
-        pns.setInstallationPoints(points);
+        pns.setCommonFields(request);
+        pns.setSpecificFields(request);
+        pns.setFieldsForSave(request,files,points,fileStorageService);
         return repository.save(pns);
     }
 

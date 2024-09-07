@@ -3,6 +3,7 @@ package org.simpel.pumpingUnits.model.installation;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.PumpType;
 import org.simpel.pumpingUnits.model.enums.subtypes.PNSSubtypes;
@@ -41,6 +42,11 @@ public class PNSInstallationERW extends ParentInstallations {
             throw new IllegalArgumentException("PNSInstallation supports only water coolant");
         }
         this.coolantType = coolantType;
+    }
+
+    @Override
+    public void setSpecificFields(InstallationRequest request) {
+        this.setPumpType(PumpType.valueOf(request.getPumpType()));
     }
 
     public PumpType getPumpType() {

@@ -14,11 +14,17 @@ public class UsersBuilder {
     private String company;
 
     public UsersBuilder email(String email) {
+        if (email == null){
+            throw new NullPointerException("email is null");
+        }
         this.email = email;
         return this;
     }
 
     public UsersBuilder password(String password) {
+        if (email == null){
+            throw new NullPointerException("password is null");
+        }
         this.password = password;
         return this;
     }
