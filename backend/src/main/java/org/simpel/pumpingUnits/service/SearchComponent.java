@@ -22,7 +22,6 @@ public class SearchComponent <T extends ParentInstallations>  {
     public void setPressureForSearch(float pressureForSearch) {
         this.pressureForSearch = pressureForSearch;
     }
-
     public List<T> get(List<T> installations) {
         //выбираем только те установки в которой точки подходят под рабочию
         List<T> resultList = new ArrayList<>();

@@ -36,9 +36,8 @@ public class InstallationsController {
             return ResponseEntity.badRequest().body("Some data is missing, fill out the form completely and submit again");
         }
     }
-    @PostMapping(value = "/get", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> getAll(@RequestPart("request") InstallationRequest request,
-                                  @RequestPart("files") MultipartFile[] files) throws IOException {
+    @PostMapping(value = "/get")
+    public ResponseEntity<?> getAll(@RequestBody InstallationRequest request)throws IOException {
         try {
             return ResponseEntity.ok(installationService.get(request));
         }

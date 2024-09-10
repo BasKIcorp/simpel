@@ -50,6 +50,7 @@ public class GMService implements InstallationServiceInterface<GMInstallation> {
         int countMainPumps = installationRequest.getCountMainPumps();
         int countSparePumps = installationRequest.getCountSparePumps();
         searchComponent.setFlowRateForSearch(installationRequest.getFlowRate());
+        searchComponent.setPressureForSearch(installationRequest.getPressure());
         int maxFlowRate = searchComponent.getMaxFlowRate();
         int minFlowRate = searchComponent.getMinFlowRate();
         List<GMInstallation> suitableInstallations = repository.findInstallations(typeInstallations.toString(),
