@@ -1,17 +1,15 @@
 package org.simpel.pumpingUnits.model.installation;
 
 import jakarta.persistence.Entity;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
-import org.simpel.pumpingUnits.model.enums.PumpType;
+import org.simpel.pumpingUnits.model.enums.subtypes.HozPitSubtypes;
 import org.simpel.pumpingUnits.model.enums.subtypes.PNSSubtypes;
 
 @Entity
 public class PNSInstallationAFEIJP extends ParentInstallations{
     private CoolantType coolantType;
-    private PNSSubtypes subtypes;
+    private PNSSubtypes subtype;
     private int totalCapacityOfJockeyPump;
     private int requiredJockeyPumpPressure;
     private int temperature;
@@ -22,12 +20,11 @@ public class PNSInstallationAFEIJP extends ParentInstallations{
         return PNSSubtypes.AFEIJP;
     }
 
-    @Override
-    public void setSubtypes(Enum<?> subtype) {
+    public void setSubtype(Enum<?> subtype) {
         if (subtype != PNSSubtypes.AFEIJP) {
             throw new IllegalArgumentException("Invalid subtype");
         }
-        this.subtypes = (PNSSubtypes) subtype;
+        this.subtype = (PNSSubtypes) subtype;
     }
 
     @Override
@@ -47,6 +44,7 @@ public class PNSInstallationAFEIJP extends ParentInstallations{
     }
     @Override
     public void setSpecificFields(InstallationRequest request) {
+        this.setSubtype(PNSSubtypes.valueOf(request.getSubtype()));
         this.setTotalCapacityOfJockeyPump(request.getTotalCapacityOfJockeyPump());
         this.setRequiredJockeyPumpPressure(request.getRequiredJockeyPumpPressure());
     }

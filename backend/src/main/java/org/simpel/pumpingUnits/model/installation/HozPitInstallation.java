@@ -1,8 +1,6 @@
 package org.simpel.pumpingUnits.model.installation;
 
 import jakarta.persistence.Entity;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.PumpType;
@@ -11,7 +9,7 @@ import org.simpel.pumpingUnits.model.enums.subtypes.HozPitSubtypes;
 @Entity
 public class HozPitInstallation extends ParentInstallations {
     private CoolantType coolantType;
-    private HozPitSubtypes subtypes;
+    private HozPitSubtypes subtype;
     private PumpType pumpType;
     private int temperature;
 
@@ -33,17 +31,18 @@ public class HozPitInstallation extends ParentInstallations {
 
     @Override
     public void setSpecificFields(InstallationRequest request) {
+        this.setSubtype(HozPitSubtypes.valueOf(request.getSubtype()));
         this.setPumpType(PumpType.valueOf(request.getPumpType()));
     }
 
     @Override
     public HozPitSubtypes getSubtype() {
-        return subtypes;
+        return subtype;
     }
 
     @Override
-    public void setSubtypes(Enum<?> subtype) {
-        this.subtypes = (HozPitSubtypes) subtype;
+    public void setSubtype(Enum<?> subtype) {
+        this.subtype = (HozPitSubtypes) subtype;
     }
 
     public PumpType getPumpType() {

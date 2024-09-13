@@ -1,8 +1,6 @@
 package org.simpel.pumpingUnits.model.installation;
 
 import jakarta.persistence.Entity;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.PumpType;
@@ -11,7 +9,7 @@ import org.simpel.pumpingUnits.model.enums.subtypes.PNSSubtypes;
 @Entity
 public class PNSInstallationERW extends ParentInstallations {
     private CoolantType coolantType;
-    private PNSSubtypes subtypes;
+    private PNSSubtypes subtype;
     private PumpType pumpType;
     private int temperature;
 
@@ -21,11 +19,11 @@ public class PNSInstallationERW extends ParentInstallations {
     }
 
     @Override
-    public void setSubtypes(Enum<?> subtype) {
+    public void setSubtype(Enum<?> subtype) {
         if (subtype != PNSSubtypes.ERW_SYSTEM) {
             throw new IllegalArgumentException("Invalid subtype");
         }
-        this.subtypes = (PNSSubtypes) subtype;
+        this.subtype = (PNSSubtypes) subtype;
     }
 
     @Override
@@ -46,6 +44,7 @@ public class PNSInstallationERW extends ParentInstallations {
 
     @Override
     public void setSpecificFields(InstallationRequest request) {
+        this.setSubtype(PNSSubtypes.valueOf(request.getSubtype()));
         this.setPumpType(PumpType.valueOf(request.getPumpType()));
     }
 

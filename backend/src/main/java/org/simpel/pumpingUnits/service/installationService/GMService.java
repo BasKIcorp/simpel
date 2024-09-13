@@ -3,10 +3,12 @@ package org.simpel.pumpingUnits.service.installationService;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
+import org.simpel.pumpingUnits.model.enums.PumpType;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
 import org.simpel.pumpingUnits.model.installation.GMInstallation;
 import org.simpel.pumpingUnits.model.installation.InstallationPoint;
+import org.simpel.pumpingUnits.model.installation.PNSInstallationERW;
 import org.simpel.pumpingUnits.model.installation.ParentInstallations;
 import org.simpel.pumpingUnits.repository.GMRepository;
 import org.simpel.pumpingUnits.service.FileStorageService;
@@ -42,24 +44,18 @@ public class GMService implements InstallationServiceInterface<GMInstallation> {
 
     @Override
     public List<GMInstallation> getAll(InstallationRequest installationRequest) {
-        TypeInstallations typeInstallations = TypeInstallations.valueOf(installationRequest.getTypeInstallations());
-        SubtypeForGm subtype = SubtypeForGm.valueOf(installationRequest.getSubtype());
-        CoolantType coolantType = CoolantType.valueOf(installationRequest.getCoolantType());
-        int temperature = installationRequest.getTemperature();
-        int concentration = installationRequest.getConcentration();
-        int countMainPumps = installationRequest.getCountMainPumps();
-        int countSparePumps = installationRequest.getCountSparePumps();
         searchComponent.setFlowRateForSearch(installationRequest.getFlowRate());
         searchComponent.setPressureForSearch(installationRequest.getPressure());
         int maxFlowRate = searchComponent.getMaxFlowRate();
         int minFlowRate = searchComponent.getMinFlowRate();
-        List<GMInstallation> suitableInstallations = repository.findInstallations(typeInstallations.toString(),
-                subtype.toString(),
-                coolantType.toString(),
-                temperature,
-                concentration,
-                countMainPumps,
-                countSparePumps,
+        List<GMInstallation> suitableInstallations = repository.findInstallations(
+                TypeInstallations.valueOf(installationRequest.getTypeInstallations()).toString(),
+                SubtypeForGm.valueOf(installationRequest.getSubtype()).toString(),
+                CoolantType.valueOf(installationRequest.getCoolantType()).toString(),
+                installationRequest.getTemperature(),
+                installationRequest.getConcentration(),
+                installationRequest.getCountMainPumps(),
+                installationRequest.getCountSparePumps(),
                 maxFlowRate,
                 minFlowRate);
         return searchComponent.get(suitableInstallations);

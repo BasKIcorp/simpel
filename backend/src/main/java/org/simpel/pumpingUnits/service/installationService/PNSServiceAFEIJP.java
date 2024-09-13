@@ -7,10 +7,7 @@ import org.simpel.pumpingUnits.model.enums.PumpType;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.enums.subtypes.PNSSubtypes;
 import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
-import org.simpel.pumpingUnits.model.installation.HozPitInstallation;
-import org.simpel.pumpingUnits.model.installation.InstallationPoint;
-import org.simpel.pumpingUnits.model.installation.PNSInstallationAFEIJP;
-import org.simpel.pumpingUnits.model.installation.PNSInstallationERW;
+import org.simpel.pumpingUnits.model.installation.*;
 import org.simpel.pumpingUnits.repository.PnsAFEIJPRepository;
 import org.simpel.pumpingUnits.service.FileStorageService;
 import org.simpel.pumpingUnits.service.SearchComponent;
@@ -45,27 +42,19 @@ public class PNSServiceAFEIJP implements InstallationServiceInterface <PNSInstal
 
     @Override
     public List<PNSInstallationAFEIJP> getAll(InstallationRequest installationRequest) {
-        TypeInstallations typeInstallations = TypeInstallations.valueOf(installationRequest.getTypeInstallations());
-        SubtypeForGm subtype = SubtypeForGm.valueOf(installationRequest.getSubtype());
-        CoolantType coolantType = CoolantType.valueOf(installationRequest.getCoolantType());
-        int temperature = installationRequest.getTemperature();
-        int countMainPumps = installationRequest.getCountMainPumps();
-        int countSparePumps = installationRequest.getCountSparePumps();
-        PumpType pumpType = PumpType.valueOf(installationRequest.getPumpType());
         searchComponent.setFlowRateForSearch(installationRequest.getFlowRate());
         searchComponent.setPressureForSearch(installationRequest.getPressure());
         int maxFlowRate = searchComponent.getMaxFlowRate();
         int minFlowRate = searchComponent.getMinFlowRate();
-        int totalCapacityOfJockeyPump = installationRequest.getTotalCapacityOfJockeyPump();
-        int requiredJockeyPumpPressure = installationRequest.getRequiredJockeyPumpPressure();
-        List<PNSInstallationERW> suitableInstallations = repository.findInstallations(typeInstallations.toString(),
-                subtype.toString(),
-                coolantType.toString(),
-                temperature,
-                countMainPumps,
-                countSparePumps,
-                totalCapacityOfJockeyPump,
-                requiredJockeyPumpPressure,
+        List<PNSInstallationAFEIJP> suitableInstallations = repository.findInstallations(
+                TypeInstallations.valueOf(installationRequest.getTypeInstallations()).toString(),
+                PNSSubtypes.valueOf(installationRequest.getSubtype()).toString(),
+                CoolantType.valueOf(installationRequest.getCoolantType()).toString(),
+                installationRequest.getTemperature(),
+                installationRequest.getCountMainPumps(),
+                installationRequest.getCountSparePumps(),
+                installationRequest.getTotalCapacityOfJockeyPump(),
+                installationRequest.getRequiredJockeyPumpPressure(),
                 maxFlowRate,
                 minFlowRate);
         return searchComponent.get(suitableInstallations);

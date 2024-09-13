@@ -49,7 +49,8 @@ public class PNSServiceERW implements InstallationServiceInterface<PNSInstallati
         searchComponent.setPressureForSearch(installationRequest.getPressure());
         int maxFlowRate = searchComponent.getMaxFlowRate();
         int minFlowRate = searchComponent.getMinFlowRate();
-        List<PNSInstallationERW> suitableInstallations = repository.findInstallations(TypeInstallations.valueOf(installationRequest.getTypeInstallations()).toString(),
+        List<PNSInstallationERW> suitableInstallations = repository.findInstallations(
+                TypeInstallations.valueOf(installationRequest.getTypeInstallations()).toString(),
                 SubtypeForGm.valueOf(installationRequest.getSubtype()).toString(),
                 CoolantType.valueOf(installationRequest.getCoolantType()).toString(),
                 installationRequest.getTemperature(),

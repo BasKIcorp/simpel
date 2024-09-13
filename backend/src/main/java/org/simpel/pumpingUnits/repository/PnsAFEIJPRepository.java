@@ -23,7 +23,7 @@ public interface PnsAFEIJPRepository extends JpaRepository<PNSInstallationAFEIJP
             "AND i.totalCapacityOfJockeyPump = :totalCapacityOfJockeyPump "+
             "AND i.requiredJockeyPumpPressure = :requiredJockeyPumpPressure " +
             "AND i.flowRate BETWEEN :minFlowRate AND :maxFlowRate ")
-    public List<PNSInstallationERW> findInstallations(@Param("typeInstallations") String typeInstallations,
+    public List<PNSInstallationAFEIJP> findInstallations(@Param("typeInstallations") String typeInstallations,
                                                       @Param("subtype") String subtype,
                                                       @Param("coolantType") String coolantType,
                                                       @Param("temperature") Integer temperature,

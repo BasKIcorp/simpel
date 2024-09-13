@@ -52,7 +52,6 @@ public abstract class ParentInstallations {
 
     public void setCommonFields(InstallationRequest request) {
         this.setTypeInstallations(TypeInstallations.valueOf(request.getTypeInstallations()));
-        this.setSubtypes(SubtypeForGm.valueOf(request.getSubtype()));
         this.setCoolantType(CoolantType.valueOf(request.getCoolantType()));
         this.setTemperature(request.getTemperature());
         this.setCountMainPumps(request.getCountMainPumps());
@@ -215,7 +214,7 @@ public abstract class ParentInstallations {
 
     public abstract Enum<?> getSubtype();
 
-    public abstract void setSubtypes(Enum<?> subtype);
+    public abstract void setSubtype(Enum<?> subtype);
 
     public abstract CoolantType getCoolantType();
 

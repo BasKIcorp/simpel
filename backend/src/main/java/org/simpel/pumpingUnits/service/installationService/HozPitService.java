@@ -10,6 +10,7 @@ import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
 import org.simpel.pumpingUnits.model.installation.GMInstallation;
 import org.simpel.pumpingUnits.model.installation.HozPitInstallation;
 import org.simpel.pumpingUnits.model.installation.InstallationPoint;
+import org.simpel.pumpingUnits.model.installation.PNSInstallationERW;
 import org.simpel.pumpingUnits.repository.HozPitRepository;
 import org.simpel.pumpingUnits.service.FileStorageService;
 import org.simpel.pumpingUnits.service.SearchComponent;
@@ -44,24 +45,18 @@ public class HozPitService implements InstallationServiceInterface<HozPitInstall
 
     @Override
     public List<HozPitInstallation> getAll(InstallationRequest installationRequest) {
-        TypeInstallations typeInstallations = TypeInstallations.valueOf(installationRequest.getTypeInstallations());
-        SubtypeForGm subtype = SubtypeForGm.valueOf(installationRequest.getSubtype());
-        CoolantType coolantType = CoolantType.valueOf(installationRequest.getCoolantType());
-        int temperature = installationRequest.getTemperature();
-        int countMainPumps = installationRequest.getCountMainPumps();
-        int countSparePumps = installationRequest.getCountSparePumps();
-        PumpType pumpType = PumpType.valueOf(installationRequest.getPumpType());
         searchComponent.setFlowRateForSearch(installationRequest.getFlowRate());
         searchComponent.setPressureForSearch(installationRequest.getPressure());
         int maxFlowRate = searchComponent.getMaxFlowRate();
         int minFlowRate = searchComponent.getMinFlowRate();
-        List<HozPitInstallation> suitableInstallations = repository.findInstallations(typeInstallations.toString(),
-                subtype.toString(),
-                coolantType.toString(),
-                temperature,
-                countMainPumps,
-                countSparePumps,
-                pumpType.toString(),
+        List<HozPitInstallation> suitableInstallations = repository.findInstallations(
+                TypeInstallations.valueOf(installationRequest.getTypeInstallations()).toString(),
+                HozPitSubtypes.valueOf(installationRequest.getSubtype()).toString(),
+                CoolantType.valueOf(installationRequest.getCoolantType()).toString(),
+                installationRequest.getTemperature(),
+                installationRequest.getCountMainPumps(),
+                installationRequest.getCountSparePumps(),
+                PumpType.valueOf(installationRequest.getPumpType()).toString(),
                 maxFlowRate,
                 minFlowRate);
         return searchComponent.get(suitableInstallations);

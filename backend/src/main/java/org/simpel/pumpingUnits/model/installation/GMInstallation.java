@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
+import org.simpel.pumpingUnits.model.enums.subtypes.PNSSubtypes;
 import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
 import org.simpel.pumpingUnits.validation.ValidTemperature;
 
@@ -28,6 +29,7 @@ public class GMInstallation extends ParentInstallations {
     }
     @Override
     public void setSpecificFields(InstallationRequest request){
+        this.setSubtype(SubtypeForGm.valueOf(request.getSubtype()));
         this.setConcentration(request.getConcentration());
     }
 
@@ -37,7 +39,7 @@ public class GMInstallation extends ParentInstallations {
     }
 
     @Override
-    public void setSubtypes(Enum<?> subtype) {
+    public void setSubtype(Enum<?> subtype) {
         this.subtype = (SubtypeForGm) subtype;
     }
 
