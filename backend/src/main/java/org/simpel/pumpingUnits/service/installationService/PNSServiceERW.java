@@ -26,9 +26,9 @@ import java.util.List;
 public class PNSServiceERW implements InstallationServiceInterface<PNSInstallationERW> {
     private final PnsERWRepository repository;
     private final FileStorageService fileStorageService;
-    private final SearchComponent searchComponent;
+    private final SearchComponent<PNSInstallationERW> searchComponent;
 
-    public PNSServiceERW(PnsERWRepository repository, FileStorageService fileStorageService, SearchComponent searchComponent) {
+    public PNSServiceERW(PnsERWRepository repository, FileStorageService fileStorageService, SearchComponent<PNSInstallationERW> searchComponent) {
         this.repository = repository;
         this.fileStorageService = fileStorageService;
         this.searchComponent = searchComponent;

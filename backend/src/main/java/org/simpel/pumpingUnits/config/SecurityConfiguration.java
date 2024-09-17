@@ -27,9 +27,10 @@ public class SecurityConfiguration {
         http
                 .csrf
                         (csrf -> csrf.disable())
-                .authorizeHttpRequests
-                (authorize -> authorize.requestMatchers("/api/simple/auth/**", "/api/simple/inst/save", "/api/simple/inst/get")
-                        .permitAll()
+                .authorizeHttpRequests(authorize -> authorize
+                        // Разрешаем доступ к статическим ресурсам, включая папку /uploads
+                        .requestMatchers("/uploads/**").permitAll()
+                        .requestMatchers("/api/simple/auth/**", "/api/simple/inst/save", "/api/simple/inst/get").permitAll()
                         .anyRequest()
                         .authenticated()
                 )

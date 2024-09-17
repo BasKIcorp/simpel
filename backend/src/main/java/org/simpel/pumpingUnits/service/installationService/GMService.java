@@ -25,9 +25,9 @@ public class GMService implements InstallationServiceInterface<GMInstallation> {
 
     private final GMRepository repository;
     private final FileStorageService fileStorageService;
-    private final SearchComponent searchComponent;
+    private final SearchComponent<GMInstallation> searchComponent;
 
-    public GMService(GMRepository repository, FileStorageService fileStorageService, SearchComponent searchComponent) {
+    public GMService(GMRepository repository, FileStorageService fileStorageService, SearchComponent<GMInstallation> searchComponent) {
         this.repository = repository;
         this.fileStorageService = fileStorageService;
         this.searchComponent = searchComponent;

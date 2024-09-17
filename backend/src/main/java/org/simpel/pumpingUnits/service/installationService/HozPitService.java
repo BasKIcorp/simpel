@@ -26,9 +26,9 @@ public class HozPitService implements InstallationServiceInterface<HozPitInstall
 
     private final HozPitRepository repository;
     private final FileStorageService fileStorageService;
-    private final SearchComponent searchComponent;
+    private final SearchComponent<HozPitInstallation> searchComponent;
 
-    public HozPitService(HozPitRepository repository, FileStorageService fileStorageService, SearchComponent searchComponent) {
+    public HozPitService(HozPitRepository repository, FileStorageService fileStorageService, SearchComponent<HozPitInstallation>  searchComponent) {
         this.repository = repository;
         this.fileStorageService = fileStorageService;
         this.searchComponent = searchComponent;

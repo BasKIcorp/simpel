@@ -23,9 +23,9 @@ public class PNSServiceAFEIJP implements InstallationServiceInterface <PNSInstal
 
     private final PnsAFEIJPRepository repository;
     private final FileStorageService fileStorageService;
-    private final SearchComponent searchComponent;
+    private final SearchComponent<PNSInstallationAFEIJP> searchComponent;
 
-    public PNSServiceAFEIJP(PnsAFEIJPRepository repository, FileStorageService fileStorageService, SearchComponent searchComponent) {
+    public PNSServiceAFEIJP(PnsAFEIJPRepository repository, FileStorageService fileStorageService, SearchComponent<PNSInstallationAFEIJP> searchComponent) {
         this.repository = repository;
         this.fileStorageService = fileStorageService;
         this.searchComponent = searchComponent;

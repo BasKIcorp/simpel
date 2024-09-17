@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
+import org.simpel.pumpingUnits.model.Material;
 import org.simpel.pumpingUnits.model.enums.ControlType;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
@@ -22,7 +23,6 @@ public abstract class ParentInstallations {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-
     @ElementCollection
     @CollectionTable(name = "installation_photos", joinColumns = @JoinColumn(name = "installation_id"))
     @Column(name = "file_name")
@@ -49,6 +49,11 @@ public abstract class ParentInstallations {
     private float DM_out;
     private float installationLength;
     private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "material_name", referencedColumnName = "name")
+    private Material material;
+
 
     public void setCommonFields(InstallationRequest request) {
         this.setTypeInstallations(TypeInstallations.valueOf(request.getTypeInstallations()));
@@ -266,5 +271,13 @@ public abstract class ParentInstallations {
 
     public void setInstallationPoints(List<InstallationPoint> installationPoints) {
         this.installationPoints = installationPoints;
+    }
+
+    public Material getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(Material material) {
+        this.material = material;
     }
 }

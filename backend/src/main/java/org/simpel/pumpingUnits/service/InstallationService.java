@@ -6,24 +6,25 @@ import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSa
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.installation.InstallationPoint;
 import org.simpel.pumpingUnits.model.installation.ParentInstallations;
+import org.simpel.pumpingUnits.repository.InstallationPointRepository;
 import org.simpel.pumpingUnits.service.installationService.InstallationServiceFactory;
 import org.simpel.pumpingUnits.service.installationService.InstallationServiceInterface;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class InstallationService {
 
     private final InstallationServiceFactory installationServiceFactory;
 
+
     public InstallationService(InstallationServiceFactory installationServiceFactory) {
         this.installationServiceFactory = installationServiceFactory;
+
     }
 
     public ParentInstallations save(InstallationSaveRequest request,
@@ -49,5 +50,6 @@ public class InstallationService {
             points.add(point);
         }
         return points;
+
     };
 }
