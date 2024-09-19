@@ -3,14 +3,14 @@ package org.simpel.pumpingUnits.model.installation;
 import jakarta.persistence.Entity;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
-import org.simpel.pumpingUnits.model.enums.PumpType;
+import org.simpel.pumpingUnits.model.enums.PumpTypeForSomeInstallation;
 import org.simpel.pumpingUnits.model.enums.subtypes.HozPitSubtypes;
 
 @Entity
 public class HozPitInstallation extends ParentInstallations {
     private CoolantType coolantType;
     private HozPitSubtypes subtype;
-    private PumpType pumpType;
+    private PumpTypeForSomeInstallation pumpTypeForSomeInstallation;
     private int temperature;
 
     @Override
@@ -32,7 +32,7 @@ public class HozPitInstallation extends ParentInstallations {
     @Override
     public void setSpecificFields(InstallationRequest request) {
         this.setSubtype(HozPitSubtypes.valueOf(request.getSubtype()));
-        this.setPumpType(PumpType.valueOf(request.getPumpType()));
+        this.setPumpType(PumpTypeForSomeInstallation.valueOf(request.getPumpType()));
     }
 
     @Override
@@ -45,12 +45,12 @@ public class HozPitInstallation extends ParentInstallations {
         this.subtype = (HozPitSubtypes) subtype;
     }
 
-    public PumpType getPumpType() {
-        return pumpType;
+    public PumpTypeForSomeInstallation getPumpType() {
+        return pumpTypeForSomeInstallation;
     }
 
-    public void setPumpType(PumpType pumpType) {
-        this.pumpType = pumpType;
+    public void setPumpType(PumpTypeForSomeInstallation pumpTypeForSomeInstallation) {
+        this.pumpTypeForSomeInstallation = pumpTypeForSomeInstallation;
     }
 
     @Override

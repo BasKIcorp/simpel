@@ -5,11 +5,12 @@ import jakarta.persistence.*;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
 import org.simpel.pumpingUnits.model.Material;
+import org.simpel.pumpingUnits.model.Pump;
 import org.simpel.pumpingUnits.model.enums.ControlType;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
+import org.simpel.pumpingUnits.model.enums.Diameter;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.enums.subtypes.PowerType;
-import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
 import org.simpel.pumpingUnits.service.FileStorageService;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,13 +34,26 @@ public abstract class ParentInstallations {
     private int countSparePumps;
     private int flowRate;
     private int pressure;
+    private ControlType controlType;
+    private PowerType powerType;
     @OneToMany(mappedBy = "parentInstallations", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<InstallationPoint> installationPoints;
+    private Diameter diameter;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "installation_id") // Внешний ключ в таблице насосов
+    private List<Pump> pumps = new ArrayList<>();
     //full info
+    //ToDo переписать запросы
+    //ToDo убрать не нужные поля из отцовской установки
+    //ToDo перенсти точки в насосы
+    //ToDo сделать 3 разных точки
+    //ToDo посмотреть что из движка должно быть и в насосе по типу типа насоса
+    //ToDo сервисы переписать
+    //ToDo написать гет ручки для насосов и движков
+    //ToDo посмотреть сервис подбора
+    //ToDo написать методы для заполнения в классе движка
     private String name;
-    private ControlType controlType;
-    private PowerType powerType;
     private String article;
     private float price;
     private float power;
@@ -50,11 +64,6 @@ public abstract class ParentInstallations {
     private float installationLength;
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "material_name", referencedColumnName = "name")
-    private Material material;
-
-
     public void setCommonFields(InstallationRequest request) {
         this.setTypeInstallations(TypeInstallations.valueOf(request.getTypeInstallations()));
         this.setCoolantType(CoolantType.valueOf(request.getCoolantType()));
@@ -63,6 +72,8 @@ public abstract class ParentInstallations {
         this.setCountSparePumps(request.getCountSparePumps());
         this.setFlowRate(request.getFlowRate());
         this.setPressure(request.getPressure());
+        this.setControlType(ControlType.valueOf(request.getControlType()));
+        this.setPowerType(PowerType.valueOf(request.getPowerType()));
     }
 
     public abstract void setSpecificFields(InstallationRequest request);
@@ -271,13 +282,5 @@ public abstract class ParentInstallations {
 
     public void setInstallationPoints(List<InstallationPoint> installationPoints) {
         this.installationPoints = installationPoints;
-    }
-
-    public Material getMaterial() {
-        return material;
-    }
-
-    public void setMaterial(Material material) {
-        this.material = material;
     }
 }

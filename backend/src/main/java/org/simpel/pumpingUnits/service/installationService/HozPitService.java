@@ -3,14 +3,11 @@ package org.simpel.pumpingUnits.service.installationService;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
-import org.simpel.pumpingUnits.model.enums.PumpType;
+import org.simpel.pumpingUnits.model.enums.PumpTypeForSomeInstallation;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.enums.subtypes.HozPitSubtypes;
-import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
-import org.simpel.pumpingUnits.model.installation.GMInstallation;
 import org.simpel.pumpingUnits.model.installation.HozPitInstallation;
 import org.simpel.pumpingUnits.model.installation.InstallationPoint;
-import org.simpel.pumpingUnits.model.installation.PNSInstallationERW;
 import org.simpel.pumpingUnits.repository.HozPitRepository;
 import org.simpel.pumpingUnits.service.FileStorageService;
 import org.simpel.pumpingUnits.service.SearchComponent;
@@ -56,7 +53,7 @@ public class HozPitService implements InstallationServiceInterface<HozPitInstall
                 installationRequest.getTemperature(),
                 installationRequest.getCountMainPumps(),
                 installationRequest.getCountSparePumps(),
-                PumpType.valueOf(installationRequest.getPumpType()).toString(),
+                PumpTypeForSomeInstallation.valueOf(installationRequest.getPumpType()).toString(),
                 maxFlowRate,
                 minFlowRate);
         return searchComponent.get(suitableInstallations);

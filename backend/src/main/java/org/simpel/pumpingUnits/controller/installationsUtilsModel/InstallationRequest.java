@@ -1,9 +1,5 @@
 package org.simpel.pumpingUnits.controller.installationsUtilsModel;
 
-import org.simpel.pumpingUnits.model.enums.CoolantType;
-import org.simpel.pumpingUnits.model.enums.PumpType;
-import org.simpel.pumpingUnits.model.enums.TypeInstallations;
-
 public class InstallationRequest {
     private String typeInstallations;
     private String subtype;
@@ -13,6 +9,25 @@ public class InstallationRequest {
     private Integer countSparePumps;
     private Integer flowRate;
     private Integer pressure;
+    private String controlType;
+    private String powerType;
+
+    public String getControlType() {
+        return controlType;
+    }
+
+    public void setControlType(String controlType) {
+        this.controlType = controlType;
+    }
+
+    public String getPowerType() {
+        return powerType;
+    }
+
+    public void setPowerType(String powerType) {
+        this.powerType = powerType;
+    }
+
     //gm
     private Integer concentration;
     //hozPit and PnsERW

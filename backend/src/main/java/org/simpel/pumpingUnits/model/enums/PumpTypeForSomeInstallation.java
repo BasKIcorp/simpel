@@ -1,6 +1,6 @@
 package org.simpel.pumpingUnits.model.enums;
 
-public enum PumpType {
+public enum PumpTypeForSomeInstallation {
     VERTICAL,
     HORIZONTAL
 }
