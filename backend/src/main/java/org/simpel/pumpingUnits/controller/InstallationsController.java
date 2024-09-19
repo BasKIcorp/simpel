@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 @RestController
 @RequestMapping("/api/simple/inst")
@@ -48,4 +51,6 @@ public class InstallationsController {
             return ResponseEntity.badRequest().body("Some data is missing, fill out the form completely and submit again");
         }
     }
+
+
 }

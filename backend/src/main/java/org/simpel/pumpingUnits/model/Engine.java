@@ -21,15 +21,7 @@ public class Engine {
     private String typeOfProtection;
     private String insulationClass;
     private String color;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    public Engine() {}
     public String getManufacturer() {
         return manufacturer;
     }

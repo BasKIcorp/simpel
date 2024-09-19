@@ -43,6 +43,15 @@ public abstract class ParentInstallations {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "installation_id") // Внешний ключ в таблице насосов
     private List<Pump> pumps = new ArrayList<>();
+
+    public List<Pump> getPumps() {
+        return pumps;
+    }
+
+    public void setPumps(List<Pump> pumps) {
+        this.pumps = pumps;
+    }
+
     //full info
     //ToDo переписать запросы
     //ToDo убрать не нужные поля из отцовской установки
@@ -54,15 +63,6 @@ public abstract class ParentInstallations {
     //ToDo посмотреть сервис подбора
     //ToDo написать методы для заполнения в классе движка
     private String name;
-    private String article;
-    private float price;
-    private float power;
-    private int efficiency;
-    private float NPSH;
-    private float DM_in;
-    private float DM_out;
-    private float installationLength;
-    private String description;
 
     public void setCommonFields(InstallationRequest request) {
         this.setTypeInstallations(TypeInstallations.valueOf(request.getTypeInstallations()));
@@ -88,7 +88,8 @@ public abstract class ParentInstallations {
         this.setName(request.getName());
         this.setControlType(ControlType.valueOf(request.getControlType()));
         this.setPowerType(PowerType.valueOf(request.getPowerType()));
-        this.setArticle(request.getArticle());
+        this.setPumps(null);
+        /*this.setArticle(request.getArticle());
         this.setPrice(request.getPrice());
         this.setPower(request.getPower());
         this.setEfficiency(request.getEfficiency());
@@ -96,7 +97,7 @@ public abstract class ParentInstallations {
         this.setDM_in(request.getDM_in());
         this.setDM_out(request.getDM_out());
         this.setInstallationLength(request.getInstallationLength());
-        this.setDescription(request.getDescription());
+        this.setDescription(request.getDescription());*/
     }
 
 
@@ -123,82 +124,6 @@ public abstract class ParentInstallations {
     public void setPowerType(PowerType powerType) {
         this.powerType = powerType;
     }
-
-    public String getArticle() {
-        return article;
-    }
-
-    public void setArticle(String article) {
-        this.article = article;
-    }
-
-    public float getPrice() {
-        return price;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
-    }
-
-    public float getPower() {
-        return power;
-    }
-
-    public void setPower(float power) {
-        this.power = power;
-    }
-
-    public int getEfficiency() {
-        return efficiency;
-    }
-
-    public void setEfficiency(int efficiency) {
-        this.efficiency = efficiency;
-    }
-
-    public float getNPSH() {
-        return NPSH;
-    }
-
-    public void setNPSH(float NPSH) {
-        this.NPSH = NPSH;
-    }
-
-    public float getDM_in() {
-        return DM_in;
-    }
-
-    public void setDM_in(float DM_in) {
-        this.DM_in = DM_in;
-    }
-
-    public float getDM_out() {
-        return DM_out;
-    }
-
-    public void setDM_out(float DM_out) {
-        this.DM_out = DM_out;
-    }
-
-    public float getInstallationLength() {
-        return installationLength;
-    }
-
-    public void setInstallationLength(float installationLength) {
-        this.installationLength = installationLength;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-
-
-    
 
     public Long getId() {
         return id;

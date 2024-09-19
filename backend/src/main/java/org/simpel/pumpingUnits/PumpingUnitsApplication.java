@@ -7,14 +7,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.simpel.pumpingUnits.repository.UserRepository;
 import org.simpel.pumpingUnits.service.UserService;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
 
 @SpringBootApplication
 public class PumpingUnitsApplication  {
 
-    private UserRepository userRepository;
-
     public PumpingUnitsApplication(UserRepository userRepository) {
-        this.userRepository = userRepository;
     }
 
     public static void main(String[] args) {

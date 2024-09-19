@@ -49,9 +49,9 @@ public class Pump {
     public void setFieldsForPumpSave(InstallationSaveRequest request) {
         this.setName(request.getName());
         this.setType(PumpType.valueOf(request.getPumpType()));
-        this.setManufacturer(request.getManufactureForPump());
+        /*this.setManufacturer(request.getManufactureForPump());
         this.setSpeed(request.getSpeed());
-        this.setNumberOfSteps(request.getNumberOfSteps());
+        this.setNumberOfSteps(request.getNumberOfSteps());*/
         this.setMaximumPressure(request.getFlowRate());
         this.setMaximumHead(request.getPressure());
         this.setArticle(request.getArticle());
@@ -60,6 +60,7 @@ public class Pump {
         this.setNPSH(request.getNPSH());
         this.setDM_in(request.getDM_in());
         this.setDM_out(request.getDM_out());
+        this.setEngine(new Engine());
         this.setInstallationLength(request.getInstallationLength());
         this.setDescription(request.getDescription());
     }

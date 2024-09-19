@@ -17,7 +17,7 @@ public interface HozPitRepository extends JpaRepository<HozPitInstallation,Long>
             "AND i.temperature = :temperature " +
             "AND i.countMainPumps = :countMainPumps " +
             "AND i.countSparePumps = :countSparePumps " +
-            "AND i.pumpType = :pumpType " +
+            "AND i.pumpTypeForSomeInstallation = :pumpTypeForSomeInstallation " +
             "AND i.flowRate BETWEEN :minFlowRate AND :maxFlowRate ")
     public List<HozPitInstallation> findInstallations(@Param("typeInstallations") String typeInstallations,
                                                   @Param("subtype") String subtype,
@@ -25,7 +25,7 @@ public interface HozPitRepository extends JpaRepository<HozPitInstallation,Long>
                                                   @Param("temperature") Integer temperature,
                                                   @Param("countMainPumps") Integer countMainPumps,
                                                   @Param("countSparePumps") Integer countSparePumps,
-                                                  @Param("pumpType") String pumpType,
+                                                  @Param("pumpTypeForSomeInstallation") String pumpTypeForSomeInstallation,
                                                   @Param("minFlowRate") Integer minFlowRate,
                                                   @Param("maxFlowRate") Integer maxFlowRate);
 
