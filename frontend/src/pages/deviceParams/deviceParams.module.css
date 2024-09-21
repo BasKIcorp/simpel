@@ -121,16 +121,19 @@
     right: 2%;
 }
 
-.arrow:disabled {
+/* Анимация трансформации применяется только если стрелка не disabled */
+.arrow:disabled{
     cursor: not-allowed;
     transform: none;
 }
-
-.arrow:hover {
-    transform: scale(1.1);
-    cursor: pointer;
+.arrow:not(.disabledArrow):hover {
+    transform: scale(1.1); /* Увеличение при наведении */
 }
 
+.disabledArrow {
+    cursor: not-allowed; /* Показать, что клик невозможен */
+    transform: none; /* Отменяем трансформацию */
+}
 .titlesWrapper{
     margin-top: 70px;
     margin-left: 40px;
@@ -154,13 +157,16 @@
 .additionalOptions {
     margin-top: 20px;
 }
+/* Температурный блок */
 .temperatureGroup {
     display: flex;
     align-items: center;
     margin-top: 10px;
     margin-left: 20px;
+    position: relative; /* Для корректного позиционирования ошибки */
 }
 
+/* Обертка для инпута температуры */
 .temperatureInputWrapper {
     display: flex;
     align-items: center;
@@ -168,19 +174,41 @@
     margin-bottom: 10px;
 }
 
+/* Поле ввода температуры */
 .temperatureInput {
     padding: 5px;
     font-size: 16px;
-    border: 1px solid #000;
+    border: 1px solid #000; /* Стандартная граница */
     border-radius: 6px;
     height: 30px;
     width: 100px; /* Ширина инпута */
+    transition: border-color 0.3s ease; /* Плавный переход для рамки */
 }
 
+/* Единица измерения температуры */
 .temperatureUnit {
     margin-left: 10px;
     font-size: 16px;
     color: #000;
+}
+
+/* Сообщение об ошибке */
+.error {
+    color: red;
+    font-size: 14px;
+    position: absolute;
+    bottom: -20px; /* Размещаем сообщение под полем ввода */
+    left: 0; /* Совмещаем с началом группы */
+}
+
+/* Красный цвет для поля ввода и единицы измерения при ошибке */
+.temperatureInput.error {
+    border-color: red;
+    color: red;
+}
+
+.temperatureUnit.error {
+    color: red;
 }
 .perfomanceInputWrapper{
     display: flex;

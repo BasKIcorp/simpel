@@ -1,8 +1,9 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import styles from '../auth/AuthPage.module.css';
-import {Header} from "../../components/UI/Header";
-import {isDisabled} from "@testing-library/user-event/dist/utils";
-import {useNavigate} from "react-router-dom";
+import { Header } from "../../components/UI/Header";
+import { useNavigate } from "react-router-dom";
+import { server_url } from "../../config";
+import { useDispatch } from "react-redux";
 
 function RegPage() {
     const [username, setUsername] = useState('');
@@ -11,41 +12,60 @@ function RegPage() {
     const [passwordError, setPasswordError] = useState(false);
     const isFormValid = username !== "" && password !== "";
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleUsernameChange = (e) => {
         const value = e.target.value;
         setUsername(value);
-        if (value === "") {
-            setUsernameError(true);
-        } else {
-            setUsernameError(false);
-        }
+        setUsernameError(value === "");
     };
+
     const handlePasswordChange = (e) => {
         const value = e.target.value;
         setPassword(value);
-        if (value === "") {
-            setPasswordError(true);
-        } else {
-            setPasswordError(false);
+        setPasswordError(value === "");
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const url = server_url + "/api/simple/auth/register";
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "email": username,
+                    "password": password
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                dispatch({ type: 'set_user', payload: { username: username, token: data.token } });
+                console.log(data.message);
+                navigate("/selection/installation_choice", { replace: true });
+            } else {
+                const error = await response.text();
+                console.error('Ошибка:', error);
+            }
+        } catch (error) {
+            console.error('Произошла ошибка при отправке запроса:', error);
         }
     };
-    const handleSubmit = (e) => {
-        e.preventDefault();
-    }
 
     const handleLoginClick = (e) => {
         e.preventDefault();
         navigate("/auth");
-    }
+    };
 
     return (
-        // TODO: тут нужно сделать динамическую форму, чтобы все было чики брики
         <main className={styles.authPage}>
-            <Header/>
+            <Header />
             <section className={styles.authContainer}>
                 <div className={styles.formWrapper}>
-                    <form className={styles.formContent}>
+                    <form className={styles.formContent} onSubmit={handleSubmit}>
                         <h1 className={styles.formTitle}>Регистрация</h1>
                         <label htmlFor="login" className={styles['visually-hidden']}>Логин</label>
                         <input
@@ -68,13 +88,13 @@ function RegPage() {
                         <p className={styles.registerLink}>
                             Есть аккаунт? <strong onClick={handleLoginClick}>Войти</strong>
                         </p>
-                        {/*TODO: Сделать ссылку из слов зарегестрироваться, также сделать аналогичную страницу для реги*/}
                         <button
                             type="submit"
-                            className={`${styles.submitButton} ${!isFormValid ? styles.disabledButton : ''} `}
+                            className={`${styles.submitButton} ${!isFormValid ? styles.disabledButton : ''}`}
                             disabled={!isFormValid}
-                            onSubmit={(e) => handleSubmit(e)}
-                        >Войти</button>
+                        >
+                            Войти
+                        </button>
                     </form>
                 </div>
             </section>

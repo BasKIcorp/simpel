@@ -98,15 +98,24 @@
     right: 2%;
 }
 
-.arrow:disabled {
+/* Анимация трансформации применяется только если стрелка не disabled */
+.arrow:disabled{
     cursor: not-allowed;
     transform: none;
 }
-
-.arrow:hover {
-    transform: scale(1.1);
-    cursor: pointer;
+.arrow:not(.disabledArrow):hover {
+    transform: scale(1.1); /* Увеличение при наведении */
 }
+
+.disabledArrow {
+    cursor: not-allowed; /* Показать, что клик невозможен */
+    transform: none; /* Отменяем трансформацию */
+}
+
+/*.arrow:hover {*/
+/*    transform: scale(1.1);*/
+/*    cursor: pointer;*/
+/*}*/
 
 .titlesWrapper{
     margin-top: 70px;

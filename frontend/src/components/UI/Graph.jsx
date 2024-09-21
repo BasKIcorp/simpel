@@ -22,7 +22,7 @@ const Graph = ({ data = [], legendNames = [] }) => {
                         }))}
                     />
                     {legendNames.map((name, index) => (
-                        <Line key={index} type="monotone" dataKey={name.key} stroke={name.color} strokeWidth={2}/>
+                        <Line key={index} type="monotone" dataKey={name.key} stroke={name.color} strokeWidth={2} dot={false}/>
                     ))}
                 </LineChart>
             )}

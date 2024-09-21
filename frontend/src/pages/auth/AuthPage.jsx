@@ -4,6 +4,7 @@ import {Header} from "../../components/UI/Header";
 import {isDisabled} from "@testing-library/user-event/dist/utils";
 import {useNavigate} from 'react-router-dom';
 import {useDispatch} from "react-redux";
+import {server_url} from "../../config";
 function AuthPage() {
     const [username, setUsername] = useState('');
     const [usernameError, setUsernameError] = useState(false);
@@ -31,11 +32,32 @@ function AuthPage() {
             setPasswordError(false);
         }
     };
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        //TODO: как бэк придет тут доделать чтоб через запрос было, тоже самое с регой
-        dispatch({ type: 'set_user', payload: { username: username, token: "token" } });
-        navigate("/selection/installation_choice", {replace: true})
+        const url = server_url + "/api/simple/auth/authenticate"
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "email": username,
+                    "password": password
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                dispatch({ type: 'set_user', payload: { username: username, token: data.token } });
+                console.log(data.message);
+                navigate("/selection/installation_choice", {replace: true})
+            } else {
+                const error = await response.text();
+            }
+        } catch (error) {
+            console.error('Произошла ошибка при отправке запроса:', error);
+        }
     }
 
     const handleRegistrationClick = (e) => {
