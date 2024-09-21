@@ -32,7 +32,7 @@ public class HozPitInstallation extends ParentInstallations {
     @Override
     public void setSpecificFields(InstallationRequest request) {
         this.setSubtype(HozPitSubtypes.valueOf(request.getSubtype()));
-        this.setPumpType(PumpTypeForSomeInstallation.valueOf(request.getPumpType()));
+        this.setPumpType(PumpTypeForSomeInstallation.valueOf(request.getPumpTypeForSomeInstallation()));
     }
 
     @Override

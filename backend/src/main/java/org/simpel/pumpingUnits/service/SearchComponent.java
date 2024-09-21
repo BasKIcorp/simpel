@@ -1,8 +1,8 @@
 package org.simpel.pumpingUnits.service;
 
-import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
-import org.simpel.pumpingUnits.model.installation.InstallationPoint;
+import org.simpel.pumpingUnits.model.installation.Point;
 import org.simpel.pumpingUnits.model.installation.ParentInstallations;
+import org.simpel.pumpingUnits.model.Pump;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class SearchComponent <T extends ParentInstallations>  {
+public class SearchComponent<T extends ParentInstallations> {
     private float flowRateForSearch;
     private float pressureForSearch;
 
@@ -22,39 +22,45 @@ public class SearchComponent <T extends ParentInstallations>  {
     public void setPressureForSearch(float pressureForSearch) {
         this.pressureForSearch = pressureForSearch;
     }
+
     public List<T> get(List<T> installations) {
-        //выбираем только те установки в которой точки подходят под рабочию
+        // Выбираем установки, в которых хотя бы один насос подходит
         List<T> resultList = new ArrayList<>();
         for (T installation : installations) {
-            if(suitableInstallation(installation, flowRateForSearch, pressureForSearch)){
+            if (suitableInstallation(installation)) {
                 resultList.add(installation);
             }
         }
-        //сортируем так чтоб были ближе к 60 процентов
+
+        // Сортируем по оптимальности (ближе к 60% расхода)
         resultList.sort(Comparator.comparingDouble(pump -> getOptimalityScore(pump, flowRateForSearch)));
         return resultList.stream().limit(7).collect(Collectors.toList());
     }
 
-    private boolean suitableInstallation(ParentInstallations installation, float flowRateForSearch, float pressureForSearch) {
-        //для каждой установки находим ближайшую точку и если игрек/напор не выше то считаем точку подходящей
-        InstallationPoint closePoint = findClosePoint(installation.getInstallationPoints(), flowRateForSearch);
-        if(closePoint == null){
-            return pressureForSearch  <= closePoint.getY();
+    private boolean suitableInstallation(T installation) {
+        // Проверяем каждый насос в установке
+        for (Pump pump : installation.getPumps()) {
+            Point closePoint = findClosePoint(pump.getPointsPressure(), flowRateForSearch);
+            if (closePoint != null && pressureForSearch <= closePoint.getY()) {
+                return true; // Если хотя бы один насос подходит, установка считается подходящей
+            }
         }
         return false;
     }
 
-    private InstallationPoint findClosePoint(List<InstallationPoint> points, float flowRateForSearch) {
-        //находим точку ближайшую к рабочей точке
+    private Point findClosePoint(List<Point> points, float flowRateForSearch) {
+        // Находим точку ближайшую к рабочей точке для насоса
         return points.stream()
-                .min(Comparator.comparingDouble(point->
-                                Math.abs(point.getX()-flowRateForSearch)))
+                .min(Comparator.comparingDouble(point -> Math.abs(point.getX() - flowRateForSearch)))
                 .orElse(null);
     }
 
     private double getOptimalityScore(ParentInstallations installation, double flowRate) {
-        // Считаем, насколько близок расход к оптимальному диапазону 60-70%
-        double maxFlowRate = installation.getInstallationPoints().stream().max(Comparator.comparingDouble(p -> p.getX())).get().getX();
+        // Считаем оптимальность для установки (на основе оптимальных диапазонов расхода)
+        double maxFlowRate = installation.getPumps().stream()
+                .flatMap(pump -> pump.getPointsPressure().stream())
+                .max(Comparator.comparingDouble(Point::getX))
+                .get().getX();
         return Math.abs(flowRate - 0.65 * maxFlowRate);
     }
 
@@ -62,7 +68,7 @@ public class SearchComponent <T extends ParentInstallations>  {
         return (int) Math.ceil(((100 * flowRateForSearch) / 60) * 0.25);
     }
 
-    public int getMinFlowRate(){
+    public int getMinFlowRate() {
         return (int) Math.floor(((100 * flowRateForSearch) / 60) * 0.85);
     }
 }

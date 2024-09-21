@@ -6,7 +6,7 @@ import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.PumpTypeForSomeInstallation;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
-import org.simpel.pumpingUnits.model.installation.InstallationPoint;
+import org.simpel.pumpingUnits.model.installation.Point;
 import org.simpel.pumpingUnits.model.installation.PNSInstallationERW;
 import org.simpel.pumpingUnits.repository.PnsERWRepository;
 import org.simpel.pumpingUnits.service.FileStorageService;
@@ -31,7 +31,7 @@ public class PNSServiceERW implements InstallationServiceInterface<PNSInstallati
     }
 
     @Override
-    public PNSInstallationERW save(InstallationSaveRequest request, MultipartFile[] files, List<InstallationPoint> points) throws IOException {
+    public PNSInstallationERW save(InstallationSaveRequest request, MultipartFile[] files, List<Point> points) throws IOException {
         PNSInstallationERW pns = new PNSInstallationERW();
         pns.setCommonFields(request);
         pns.setSpecificFields(request);
@@ -52,7 +52,7 @@ public class PNSServiceERW implements InstallationServiceInterface<PNSInstallati
                 installationRequest.getTemperature(),
                 installationRequest.getCountMainPumps(),
                 installationRequest.getCountSparePumps(),
-                PumpTypeForSomeInstallation.valueOf(installationRequest.getPumpType()).toString(),
+                PumpTypeForSomeInstallation.valueOf(installationRequest.getPumpTypeForSomeInstallation()).toString(),
                 maxFlowRate,
                 minFlowRate);
         return searchComponent.get(suitableInstallations);

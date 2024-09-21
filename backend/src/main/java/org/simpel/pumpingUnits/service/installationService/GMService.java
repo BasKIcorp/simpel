@@ -6,7 +6,7 @@ import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
 import org.simpel.pumpingUnits.model.installation.GMInstallation;
-import org.simpel.pumpingUnits.model.installation.InstallationPoint;
+import org.simpel.pumpingUnits.model.installation.Point;
 import org.simpel.pumpingUnits.repository.GMRepository;
 import org.simpel.pumpingUnits.service.FileStorageService;
 import org.simpel.pumpingUnits.service.SearchComponent;
@@ -31,7 +31,7 @@ public class GMService implements InstallationServiceInterface<GMInstallation> {
     }
 
     @Override
-    public GMInstallation save(InstallationSaveRequest request, MultipartFile[] files, List<InstallationPoint> points) throws IOException {
+    public GMInstallation save(InstallationSaveRequest request, MultipartFile[] files, List<Point> points) throws IOException {
         GMInstallation gmInstallation = new GMInstallation();
         gmInstallation.setCommonFields(request);
         gmInstallation.setSpecificFields(request);

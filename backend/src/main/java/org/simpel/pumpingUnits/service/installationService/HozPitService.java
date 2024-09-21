@@ -7,7 +7,7 @@ import org.simpel.pumpingUnits.model.enums.PumpTypeForSomeInstallation;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.enums.subtypes.HozPitSubtypes;
 import org.simpel.pumpingUnits.model.installation.HozPitInstallation;
-import org.simpel.pumpingUnits.model.installation.InstallationPoint;
+import org.simpel.pumpingUnits.model.installation.Point;
 import org.simpel.pumpingUnits.repository.HozPitRepository;
 import org.simpel.pumpingUnits.service.FileStorageService;
 import org.simpel.pumpingUnits.service.SearchComponent;
@@ -32,7 +32,7 @@ public class HozPitService implements InstallationServiceInterface<HozPitInstall
     }
 
     @Override
-    public HozPitInstallation save(InstallationSaveRequest request, MultipartFile[] files, List<InstallationPoint> points) throws IOException {
+    public HozPitInstallation save(InstallationSaveRequest request, MultipartFile[] files, List<Point> points) throws IOException {
         HozPitInstallation hpi = new HozPitInstallation();
         hpi.setCommonFields(request);
         hpi.setSpecificFields(request);
@@ -53,7 +53,7 @@ public class HozPitService implements InstallationServiceInterface<HozPitInstall
                 installationRequest.getTemperature(),
                 installationRequest.getCountMainPumps(),
                 installationRequest.getCountSparePumps(),
-                PumpTypeForSomeInstallation.valueOf(installationRequest.getPumpType()).toString(),
+                PumpTypeForSomeInstallation.valueOf(installationRequest.getPumpTypeForSomeInstallation()).toString(),
                 maxFlowRate,
                 minFlowRate);
         return searchComponent.get(suitableInstallations);

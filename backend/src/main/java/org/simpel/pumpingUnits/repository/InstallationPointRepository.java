@@ -1,14 +1,10 @@
 package org.simpel.pumpingUnits.repository;
 
-import org.simpel.pumpingUnits.model.installation.InstallationPoint;
-import org.simpel.pumpingUnits.model.installation.ParentInstallations;
+import org.simpel.pumpingUnits.model.installation.Point;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
-
 @Repository
-public interface InstallationPointRepository extends JpaRepository<InstallationPoint, Long> {
+public interface InstallationPointRepository extends JpaRepository<Point, Long> {
 
 }

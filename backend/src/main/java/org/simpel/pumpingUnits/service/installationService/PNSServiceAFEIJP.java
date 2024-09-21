@@ -30,7 +30,7 @@ public class PNSServiceAFEIJP implements InstallationServiceInterface <PNSInstal
     }
 
     @Override
-    public PNSInstallationAFEIJP save(InstallationSaveRequest request, MultipartFile[] files, List<InstallationPoint> points) throws IOException {
+    public PNSInstallationAFEIJP save(InstallationSaveRequest request, MultipartFile[] files, List<Point> points) throws IOException {
         PNSInstallationAFEIJP pns = new PNSInstallationAFEIJP();
         pns.setCommonFields(request);
         pns.setSpecificFields(request);

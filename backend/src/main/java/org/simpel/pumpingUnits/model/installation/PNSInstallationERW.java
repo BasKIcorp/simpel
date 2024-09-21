@@ -45,7 +45,7 @@ public class PNSInstallationERW extends ParentInstallations {
     @Override
     public void setSpecificFields(InstallationRequest request) {
         this.setSubtype(PNSSubtypes.valueOf(request.getSubtype()));
-        this.setPumpType(PumpTypeForSomeInstallation.valueOf(request.getPumpType()));
+        this.setPumpType(PumpTypeForSomeInstallation.valueOf(request.getPumpTypeForSomeInstallation()));
     }
 
     public PumpTypeForSomeInstallation getPumpType() {

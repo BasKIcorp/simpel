@@ -1,16 +1,12 @@
 package org.simpel.pumpingUnits.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
-import org.simpel.pumpingUnits.model.enums.ControlType;
 import org.simpel.pumpingUnits.model.enums.Diameter;
-import org.simpel.pumpingUnits.model.enums.subtypes.PowerType;
 import org.simpel.pumpingUnits.model.enums.subtypes.PumpType;
-import org.simpel.pumpingUnits.model.installation.InstallationPoint;
-import org.simpel.pumpingUnits.service.FileStorageService;
-import org.springframework.web.multipart.MultipartFile;
+import org.simpel.pumpingUnits.model.installation.Point;
 
-import java.io.IOException;
 import java.util.List;
 
 @Entity
@@ -45,24 +41,61 @@ public class Pump {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "engine_id")
     private Engine engine;
+    @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Point> pointsPressure;
+    @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Point> pointsPower;
+    @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Point> pointsNPSH;
 
-    public void setFieldsForPumpSave(InstallationSaveRequest request) {
-        this.setName(request.getName());
-        this.setType(PumpType.valueOf(request.getPumpType()));
-        /*this.setManufacturer(request.getManufactureForPump());
+    public List<Point> getPointsPressure() {
+        return pointsPressure;
+    }
+
+    public void setPointsPressure(List<Point> pointsPressure) {
+        this.pointsPressure = pointsPressure;
+    }
+
+    public List<Point> getPointsPower() {
+        return pointsPower;
+    }
+
+    public void setPointsPower(List<Point> pointsPower) {
+        this.pointsPower = pointsPower;
+    }
+
+    public List<Point> getPointsNPSH() {
+        return pointsNPSH;
+    }
+
+    public void setPointsNPSH(List<Point> pointsNPSH) {
+        this.pointsNPSH = pointsNPSH;
+    }
+
+    public void setFieldsForPumpSave(InstallationSaveRequest request, Material material) {
+        this.setName(request.getNamePump());
+        this.setType(PumpType.valueOf(request.getPumpTypeForSomeInstallation()));
+        this.setManufacturer(request.getManufacturerForPump());
         this.setSpeed(request.getSpeed());
-        this.setNumberOfSteps(request.getNumberOfSteps());*/
+        this.setNumberOfSteps(request.getNumberOfSteps());
+        //наверное нужно отдельно прописать поле для насосов, но пока хз
         this.setMaximumPressure(request.getFlowRate());
         this.setMaximumHead(request.getPressure());
+
         this.setArticle(request.getArticle());
         this.setPrice(request.getPrice());
         this.setEfficiency(request.getEfficiency());
         this.setNPSH(request.getNPSH());
         this.setDM_in(request.getDM_in());
         this.setDM_out(request.getDM_out());
+        this.setMaterial(material);
         this.setEngine(new Engine());
         this.setInstallationLength(request.getInstallationLength());
         this.setDescription(request.getDescription());
+        //добавить добавление точек
     }
 
     public Engine getEngine() {

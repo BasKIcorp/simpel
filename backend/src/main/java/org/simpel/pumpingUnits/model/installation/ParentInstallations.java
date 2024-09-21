@@ -1,10 +1,8 @@
 package org.simpel.pumpingUnits.model.installation;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
-import org.simpel.pumpingUnits.model.Material;
 import org.simpel.pumpingUnits.model.Pump;
 import org.simpel.pumpingUnits.model.enums.ControlType;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
@@ -36,10 +34,14 @@ public abstract class ParentInstallations {
     private int pressure;
     private ControlType controlType;
     private PowerType powerType;
-    @OneToMany(mappedBy = "parentInstallations", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<InstallationPoint> installationPoints;
     private Diameter diameter;
+    private String name;
+
+    public Diameter getDiameter() {
+        return diameter;
+    }
+
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "installation_id") // Внешний ключ в таблице насосов
     private List<Pump> pumps = new ArrayList<>();
@@ -52,6 +54,7 @@ public abstract class ParentInstallations {
         this.pumps = pumps;
     }
 
+
     //full info
     //ToDo переписать запросы
     //ToDo убрать не нужные поля из отцовской установки
@@ -62,7 +65,7 @@ public abstract class ParentInstallations {
     //ToDo написать гет ручки для насосов и движков
     //ToDo посмотреть сервис подбора
     //ToDo написать методы для заполнения в классе движка
-    private String name;
+
 
     public void setCommonFields(InstallationRequest request) {
         this.setTypeInstallations(TypeInstallations.valueOf(request.getTypeInstallations()));
@@ -72,20 +75,20 @@ public abstract class ParentInstallations {
         this.setCountSparePumps(request.getCountSparePumps());
         this.setFlowRate(request.getFlowRate());
         this.setPressure(request.getPressure());
-        this.setControlType(ControlType.valueOf(request.getControlType()));
-        this.setPowerType(PowerType.valueOf(request.getPowerType()));
+
     }
 
     public abstract void setSpecificFields(InstallationRequest request);
 
-    public void setFieldsForSave(InstallationSaveRequest request, MultipartFile[] files, List<InstallationPoint> points, FileStorageService fileStorageService) throws IOException {
-        for(InstallationPoint point : points){
+    public void setFieldsForSave(InstallationSaveRequest request, MultipartFile[] files, List<Point> points, FileStorageService fileStorageService) throws IOException {
+        /*for(InstallationPoint point : points){
             point.setParentInstallations(this);
-        }
-        this.setInstallationPoints(points);
+        }*/
         List<String> pathFiles = fileStorageService.saveFiles(files,request.getTypeInstallations(), request.getSubtype());
         this.setDrawingsPath(pathFiles);
         this.setName(request.getName());
+        this.setControlType(ControlType.valueOf(request.getControlType()));
+        this.setPowerType(PowerType.valueOf(request.getPowerType()));
         this.setControlType(ControlType.valueOf(request.getControlType()));
         this.setPowerType(PowerType.valueOf(request.getPowerType()));
         this.setPumps(null);
@@ -190,6 +193,36 @@ public abstract class ParentInstallations {
     }
 
     public void setFlowRate(int flowRate) {
+        if (flowRate >= 0 && flowRate < 16) {
+            this.diameter = Diameter.DN50;
+        }
+        else if (flowRate >= 16 && flowRate < 27) {
+            this.diameter = Diameter.DN65;
+        }
+        else if (flowRate >= 27 && flowRate < 38) {
+            this.diameter = Diameter.DN80;
+        }
+        else if (flowRate >= 38 && flowRate < 64) {
+            this.diameter = Diameter.DN100;
+        }
+        else if (flowRate >= 64 && flowRate < 98) {
+            this.diameter = Diameter.DN125;
+        }
+        else if (flowRate >= 98 && flowRate < 143) {
+            this.diameter = Diameter.DN150;
+        }
+        else if (flowRate >= 143 && flowRate < 243) {
+            this.diameter = Diameter.DN200;
+        }
+        else if (flowRate >= 243 && flowRate < 383) {
+            this.diameter = Diameter.DN250;
+        }
+        else if (flowRate >= 383 && flowRate < 542) {
+            this.diameter = Diameter.DN300;
+        }
+        else if (flowRate >= 542 && flowRate < 652) {
+            this.diameter = Diameter.DN350;
+        }
         this.flowRate = flowRate;
     }
 
@@ -199,13 +232,5 @@ public abstract class ParentInstallations {
 
     public void setPressure(int pressure) {
         this.pressure = pressure;
-    }
-
-    public List<InstallationPoint> getInstallationPoints() {
-        return installationPoints;
-    }
-
-    public void setInstallationPoints(List<InstallationPoint> installationPoints) {
-        this.installationPoints = installationPoints;
     }
 }

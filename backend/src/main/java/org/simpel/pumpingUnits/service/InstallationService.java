@@ -4,9 +4,8 @@ import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationPo
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
-import org.simpel.pumpingUnits.model.installation.InstallationPoint;
+import org.simpel.pumpingUnits.model.installation.Point;
 import org.simpel.pumpingUnits.model.installation.ParentInstallations;
-import org.simpel.pumpingUnits.repository.InstallationPointRepository;
 import org.simpel.pumpingUnits.service.installationService.InstallationServiceFactory;
 import org.simpel.pumpingUnits.service.installationService.InstallationServiceInterface;
 import org.springframework.stereotype.Service;
@@ -31,8 +30,8 @@ public class InstallationService {
                                     MultipartFile[] files, InstallationPointRequest[] requestPoints) throws IOException {
         TypeInstallations typeInstallations = TypeInstallations.valueOf(request.getTypeInstallations());
         InstallationServiceInterface<?> installationsService = installationServiceFactory.getInstallationService(typeInstallations, request.getSubtype());
-        List<InstallationPoint> installationPoints = getPoints(requestPoints);
-        return installationsService.save(request,files, installationPoints);
+        List<Point> points = getPoints(requestPoints);
+        return installationsService.save(request,files, points);
     }
 
     public List<?> get(InstallationRequest request) {
@@ -41,10 +40,10 @@ public class InstallationService {
         return installationsService.getAll(request);
     }
 
-    public List<InstallationPoint> getPoints(InstallationPointRequest[] requests) {
-        List<InstallationPoint> points = new ArrayList<>();
+    public List<Point> getPoints(InstallationPointRequest[] requests) {
+        List<Point> points = new ArrayList<>();
         for (InstallationPointRequest request : requests) {
-            InstallationPoint point = new InstallationPoint();
+            Point point = new Point();
             point.setX(request.getX());
             point.setY(request.getY());
             points.add(point);

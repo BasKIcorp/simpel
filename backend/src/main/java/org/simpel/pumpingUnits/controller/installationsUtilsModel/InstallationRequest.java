@@ -9,29 +9,11 @@ public class InstallationRequest {
     private Integer countSparePumps;
     private Integer flowRate;
     private Integer pressure;
-    private String controlType;
-    private String powerType;
-
-    public String getControlType() {
-        return controlType;
-    }
-
-    public void setControlType(String controlType) {
-        this.controlType = controlType;
-    }
-
-    public String getPowerType() {
-        return powerType;
-    }
-
-    public void setPowerType(String powerType) {
-        this.powerType = powerType;
-    }
 
     //gm
     private Integer concentration;
     //hozPit and PnsERW
-    private String pumpType;
+    private String pumpTypeForSomeInstallation;
     //PnsAFEIJP
     private Integer totalCapacityOfJockeyPump;
     private Integer requiredJockeyPumpPressure;
@@ -108,12 +90,12 @@ public class InstallationRequest {
         this.concentration = concentration;
     }
 
-    public String getPumpType() {
-        return pumpType;
+    public String getPumpTypeForSomeInstallation() {
+        return pumpTypeForSomeInstallation;
     }
 
-    public void setPumpType(String pumpType) {
-        this.pumpType = pumpType;
+    public void setPumpTypeForSomeInstallation(String pumpTypeForSomeInstallation) {
+        this.pumpTypeForSomeInstallation = pumpTypeForSomeInstallation;
     }
 
     public int getTotalCapacityOfJockeyPump() {
@@ -131,4 +113,5 @@ public class InstallationRequest {
     public void setRequiredJockeyPumpPressure(int requiredJockeyPumpPressure) {
         this.requiredJockeyPumpPressure = requiredJockeyPumpPressure;
     }
+
 }
