@@ -45,6 +45,7 @@ public class PNSInstallationERW extends ParentInstallations {
     @Override
     public void setSpecificFields(InstallationRequest request) {
         this.setSubtype(PNSSubtypes.valueOf(request.getSubtype()));
+        this.setTemperature(request.getTemperature());
         this.setPumpType(PumpTypeForSomeInstallation.valueOf(request.getPumpTypeForSomeInstallation()));
     }
 
@@ -56,12 +57,11 @@ public class PNSInstallationERW extends ParentInstallations {
         this.pumpTypeForSomeInstallation = pumpTypeForSomeInstallation;
     }
 
-    @Override
     public int getTemperature() {
         return temperature;
     }
 
-    @Override
+
     public void setTemperature(int temperature) {
         if(temperature < 4 || temperature > 50){
             throw new IllegalArgumentException("PNSInstallationERW supports only 4 or 50");

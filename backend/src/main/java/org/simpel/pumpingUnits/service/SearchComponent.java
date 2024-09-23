@@ -76,10 +76,11 @@ public class SearchComponent<T extends ParentInstallations> {
     }
 
     public int getMaxFlowRate() {
-        return (int) Math.ceil(((100 * flowRateForSearch) / 60) * 0.25);
+        return (int) Math.floor(((100 * flowRateForSearch) / 60) * 0.85);
     }
 
     public int getMinFlowRate() {
-        return (int) Math.floor(((100 * flowRateForSearch) / 60) * 0.85);
+        return (int) Math.ceil(((100 * flowRateForSearch) / 60) * 0.25);
+
     }
 }

@@ -13,24 +13,15 @@ import java.util.List;
 
 @Repository
 public interface GMRepository extends JpaRepository<GMInstallation, Long> {
-    @Query("SELECT i FROM GMInstallation i LEFT JOIN FETCH i.pumps")/* +
-            "WHERE i.typeInstallations = ?1 " +
-            "AND i.subtype = ?2 " +
-            "AND i.coolantType = ?3 " +
-            "AND i.temperature = ?4 " +
-            "AND i.concentration = ?5 " +
-            "AND i.countMainPumps = ?6 " +
-            "AND i.countSparePumps = ?7 " +
-            "AND i.flowRate BETWEEN ?8 AND ?9 "
-    )*/
-    public List<GMInstallation> findInstallations(TypeInstallations typeInstallations,
-                                                   SubtypeForGm subtype,
-                                                   CoolantType coolantType,
-                                                   Integer temperature,
-                                                   Integer concentration,
-                                                   Integer countMainPumps,
-                                                   Integer countSparePumps,
-                                                   Integer minFlowRate,
-                                                   Integer maxFlowRate);
-
+    List<GMInstallation> findByTypeInstallationsAndSubtypeAndCoolantTypeAndTemperatureAndConcentrationAndCountMainPumpsAndCountSparePumpsAndFlowRateBetween(
+            TypeInstallations typeInstallations,
+            SubtypeForGm subtype,
+            CoolantType coolantType,
+            int temperature,
+            Integer concentration,
+            int countMainPumps,
+            int countSparePumps,
+            int minFlowRate,
+            int maxFlowRate
+    );
 }

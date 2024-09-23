@@ -1,6 +1,8 @@
 package org.simpel.pumpingUnits.model.installation;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.PumpTypeForSomeInstallation;
@@ -8,8 +10,11 @@ import org.simpel.pumpingUnits.model.enums.subtypes.HozPitSubtypes;
 
 @Entity
 public class HozPitInstallation extends ParentInstallations {
+    @Enumerated(EnumType.STRING)
     private CoolantType coolantType;
+    @Enumerated(EnumType.STRING)
     private HozPitSubtypes subtype;
+    @Enumerated(EnumType.STRING)
     private PumpTypeForSomeInstallation pumpTypeForSomeInstallation;
     private int temperature;
 
@@ -33,6 +38,7 @@ public class HozPitInstallation extends ParentInstallations {
     public void setSpecificFields(InstallationRequest request) {
         this.setSubtype(HozPitSubtypes.valueOf(request.getSubtype()));
         this.setPumpType(PumpTypeForSomeInstallation.valueOf(request.getPumpTypeForSomeInstallation()));
+        this.setTemperature(request.getTemperature());
     }
 
     @Override
@@ -53,12 +59,12 @@ public class HozPitInstallation extends ParentInstallations {
         this.pumpTypeForSomeInstallation = pumpTypeForSomeInstallation;
     }
 
-    @Override
+
     public int getTemperature() {
         return temperature;
     }
 
-    @Override
+
     public void setTemperature(int temperature) {
         if(temperature < 4 || temperature > 70){
             throw new IllegalArgumentException("HozPitInstallation supports only 4 or 70");

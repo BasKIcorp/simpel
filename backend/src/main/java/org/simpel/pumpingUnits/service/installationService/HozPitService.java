@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -43,20 +44,27 @@ public class HozPitService implements InstallationServiceInterface<HozPitInstall
         Pump pump = new Pump();
         pump.setFieldsForPumpSave(request, engine, pointsPressure, pointPower, pointNPSH);
         pump.setMaterial(materialRepo.findById(request.getMaterial()));
-        HozPitInstallation pns = new HozPitInstallation();
-        pns.setCommonFields(request);
-        pns.setSpecificFields(request);
-        pns.setFieldsForSave(request,files,fileStorageService);
-        return repository.save(pns);
+        HozPitInstallation hozPit = new HozPitInstallation();
+        hozPit.setCommonFields(request);
+        hozPit.setSpecificFields(request);
+        hozPit.setFieldsForSave(request,files,fileStorageService);
+        List<Pump> pumps = new ArrayList<>();
+        pumps.add(pump);
+        hozPit.setPumps(pumps);
+        pump.getInstallations().add(hozPit);
+        return repository.save(hozPit);
     }
 
     @Override
     public List<HozPitInstallation> getAll(InstallationRequest installationRequest) {
+        HozPitInstallation hozPit = new HozPitInstallation();
+        hozPit.setCommonFields(installationRequest);
+        hozPit.setSpecificFields(installationRequest);
         searchComponent.setFlowRateForSearch(installationRequest.getFlowRate());
         searchComponent.setPressureForSearch(installationRequest.getPressure());
         int maxFlowRate = searchComponent.getMaxFlowRate();
         int minFlowRate = searchComponent.getMinFlowRate();
-        List<HozPitInstallation> suitableInstallations = repository.findInstallations(
+        List<HozPitInstallation> suitableInstallations = repository.findByTypeInstallationsAndSubtypeAndCoolantTypeAndTemperatureAndCountMainPumpsAndCountSparePumpsAndPumpTypeForSomeInstallationAndFlowRateBetween(
                 TypeInstallations.valueOf(installationRequest.getTypeInstallations()),
                 HozPitSubtypes.valueOf(installationRequest.getSubtype()),
                 CoolantType.valueOf(installationRequest.getCoolantType()),

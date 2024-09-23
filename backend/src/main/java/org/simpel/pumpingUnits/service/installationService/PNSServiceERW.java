@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -47,16 +48,23 @@ public class PNSServiceERW implements InstallationServiceInterface<PNSInstallati
         pns.setCommonFields(request);
         pns.setSpecificFields(request);
         pns.setFieldsForSave(request,files,fileStorageService);
+        List<Pump> pumps = new ArrayList<>();
+        pumps.add(pump);
+        pns.setPumps(pumps);
+        pump.getInstallations().add(pns);
         return repository.save(pns);
     }
 
     @Override
     public List<PNSInstallationERW> getAll(InstallationRequest installationRequest) {
+        PNSInstallationERW pns = new PNSInstallationERW();
+        pns.setCommonFields(installationRequest);
+        pns.setSpecificFields(installationRequest);
         searchComponent.setFlowRateForSearch(installationRequest.getFlowRate());
         searchComponent.setPressureForSearch(installationRequest.getPressure());
         int maxFlowRate = searchComponent.getMaxFlowRate();
         int minFlowRate = searchComponent.getMinFlowRate();
-        List<PNSInstallationERW> suitableInstallations = repository.findInstallations(
+        List<PNSInstallationERW> suitableInstallations = repository.findByTypeInstallationsAndSubtypeAndCoolantTypeAndTemperatureAndCountMainPumpsAndCountSparePumpsAndPumpTypeForSomeInstallationAndFlowRateBetween(
                 TypeInstallations.valueOf(installationRequest.getTypeInstallations()),
                 PNSSubtypes.valueOf(installationRequest.getSubtype()),
                 CoolantType.valueOf(installationRequest.getCoolantType()),

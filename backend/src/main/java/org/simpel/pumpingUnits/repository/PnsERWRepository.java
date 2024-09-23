@@ -14,22 +14,17 @@ import java.util.List;
 
 @Repository
 public interface PnsERWRepository extends JpaRepository<PNSInstallationERW, Long> {
-    @Query("SELECT i FROM PNSInstallationERW i " +
-            "WHERE i.typeInstallations = :typeInstallations " +
-            "AND i.subtype = :subtype " +
-            "AND i.coolantType = :coolantType " +
-            "AND i.temperature = :temperature " +
-            "AND i.countMainPumps = :countMainPumps " +
-            "AND i.countSparePumps = :countSparePumps " +
-            "AND i.pumpTypeForSomeInstallation = :pumpTypeForSomeInstallation " +
-            "AND i.flowRate BETWEEN :minFlowRate AND :maxFlowRate ")
-    public List<PNSInstallationERW> findInstallations(@Param("typeInstallations") TypeInstallations typeInstallations,
-                                                      @Param("subtype") PNSSubtypes subtype,
-                                                      @Param("coolantType") CoolantType coolantType,
-                                                      @Param("temperature") Integer temperature,
-                                                      @Param("countMainPumps") Integer countMainPumps,
-                                                      @Param("countSparePumps") Integer countSparePumps,
-                                                      @Param("pumpTypeForSomeInstallation") PumpTypeForSomeInstallation pumpTypeForSomeInstallation,
-                                                      @Param("minFlowRate") Integer minFlowRate,
-                                                      @Param("maxFlowRate") Integer maxFlowRate);
+
+    List<PNSInstallationERW> findByTypeInstallationsAndSubtypeAndCoolantTypeAndTemperatureAndCountMainPumpsAndCountSparePumpsAndPumpTypeForSomeInstallationAndFlowRateBetween(
+            TypeInstallations typeInstallations,
+            PNSSubtypes subtype,
+            CoolantType coolantType,
+            Integer temperature,
+            Integer countMainPumps,
+            Integer countSparePumps,
+            PumpTypeForSomeInstallation pumpTypeForSomeInstallation,
+            Integer minFlowRate,
+            Integer maxFlowRate
+    );
 }
+

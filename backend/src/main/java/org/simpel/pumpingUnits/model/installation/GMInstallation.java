@@ -1,44 +1,27 @@
 package org.simpel.pumpingUnits.model.installation;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
-import org.simpel.pumpingUnits.model.Pump;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
-import org.simpel.pumpingUnits.model.enums.subtypes.PNSSubtypes;
 import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
-import org.simpel.pumpingUnits.validation.ValidTemperature;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@ValidTemperature
 public class GMInstallation extends ParentInstallations {
     @Enumerated(EnumType.STRING)
     private CoolantType coolantType;
     @Enumerated(EnumType.STRING)
     private SubtypeForGm subtype;
     private Integer concentration;
+    @Column(name = "temperature")
     private int temperature;
 
-    public GMInstallation(CoolantType coolantType, SubtypeForGm subtype, Integer concentration, int temperature) {
-        this.coolantType = coolantType;
-        this.subtype = subtype;
-        this.concentration = concentration;
-        this.temperature = temperature;
-    }
-
-    public GMInstallation() {
-
-    }
     @Override
     public void setSpecificFields(InstallationRequest request){
         this.setSubtype(SubtypeForGm.valueOf(request.getSubtype()));
         this.setConcentration(request.getConcentration());
+        this.setTemperature(request.getTemperature());
     }
 
     @Override
@@ -79,7 +62,7 @@ public class GMInstallation extends ParentInstallations {
         this.concentration = concentration;
     }
 
-    @Override
+
     public void setTemperature(int temperature) {
         if (this.coolantType == CoolantType.WATER) {
             if (temperature < 4 || temperature > 70) {
@@ -94,7 +77,7 @@ public class GMInstallation extends ParentInstallations {
         this.temperature = temperature;
     }
 
-    @Override
+
     public int getTemperature() {
         return temperature;
     }

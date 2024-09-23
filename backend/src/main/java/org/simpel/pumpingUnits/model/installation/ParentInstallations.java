@@ -30,20 +30,17 @@ public abstract class ParentInstallations {
     private List<String> drawingsPath = new ArrayList<>();
     @Enumerated(EnumType.STRING)
     private TypeInstallations typeInstallations;
-    private int temperature;
     private int countMainPumps;
     private int countSparePumps;
     private int flowRate;
     private int pressure;
+    @Enumerated(EnumType.STRING)
     private ControlType controlType;
+    @Enumerated(EnumType.STRING)
     private PowerType powerType;
+    @Enumerated(EnumType.STRING)
     private Diameter diameter;
     private String name;
-
-    public Diameter getDiameter() {
-        return diameter;
-    }
-
 
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -60,24 +57,10 @@ public abstract class ParentInstallations {
     public void setPumps(List<Pump> pumps) {
         this.pumps = pumps;
     }
-
-
     //full info
-    //ToDo переписать запросы
-    //ToDo убрать не нужные поля из отцовской установки
-    //ToDo перенсти точки в насосы
-    //ToDo сделать 3 разных точки
-    //ToDo посмотреть что из движка должно быть и в насосе по типу типа насоса
-    //ToDo сервисы переписать
-    //ToDo написать гет ручки для насосов и движков
-    //ToDo посмотреть сервис подбора
-    //ToDo написать методы для заполнения в классе движка
-
-
     public void setCommonFields(InstallationRequest request) {
         this.setTypeInstallations(TypeInstallations.valueOf(request.getTypeInstallations()));
         this.setCoolantType(CoolantType.valueOf(request.getCoolantType()));
-        this.setTemperature(request.getTemperature());
         this.setCountMainPumps(request.getCountMainPumps());
         this.setCountSparePumps(request.getCountSparePumps());
         this.setFlowRate(request.getFlowRate());
@@ -88,9 +71,6 @@ public abstract class ParentInstallations {
     public abstract void setSpecificFields(InstallationRequest request);
 
     public void setFieldsForSave(InstallationSaveRequest request, MultipartFile[] files,  FileStorageService fileStorageService) throws IOException {
-        /*for(InstallationPoint point : points){
-            point.setParentInstallations(this);
-        }*/
         List<String> pathFiles = fileStorageService.saveFiles(files,request.getTypeInstallations(), request.getSubtype());
         this.setDrawingsPath(pathFiles);
         this.setName(request.getNameForInstallation());
@@ -98,15 +78,6 @@ public abstract class ParentInstallations {
         this.setPowerType(PowerType.valueOf(request.getPowerType()));
         this.setControlType(ControlType.valueOf(request.getControlType()));
         this.setPowerType(PowerType.valueOf(request.getPowerType()));
-        /*this.setArticle(request.getArticle());
-        this.setPrice(request.getPrice());
-        this.setPower(request.getPower());
-        this.setEfficiency(request.getEfficiency());
-        this.setNPSH(request.getNPSH());
-        this.setDM_in(request.getDM_in());
-        this.setDM_out(request.getDM_out());
-        this.setInstallationLength(request.getInstallationLength());
-        this.setDescription(request.getDescription());*/
     }
 
 
@@ -170,14 +141,6 @@ public abstract class ParentInstallations {
 
     public abstract void setCoolantType(CoolantType coolantType);
 
-    public int getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(int temperature) {
-        this.temperature = temperature;
-    }
-
     public int getCountMainPumps() {
         return countMainPumps;
     }
@@ -238,5 +201,8 @@ public abstract class ParentInstallations {
 
     public void setPressure(int pressure) {
         this.pressure = pressure;
+    }
+    public Diameter getDiameter() {
+        return diameter;
     }
 }

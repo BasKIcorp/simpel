@@ -49,30 +49,33 @@ public class GMService implements InstallationServiceInterface<GMInstallation> {
         gmInstallation.setSpecificFields(request);
         gmInstallation.setFieldsForSave(request,files,fileStorageService);
         List<Pump> pumps = new ArrayList<>();
-        pumps.add(pump); // Добавляем насос в список насосов
+        pumps.add(pump);
         gmInstallation.setPumps(pumps);
         pump.getInstallations().add(gmInstallation);
+        System.out.println("qweeqeqweqeqweqweqweqwweqweqweqweqweqweqwe");
+        System.out.println(gmInstallation.getTemperature());
         return repository.save(gmInstallation);
     }
 
     @Override
     public List<GMInstallation> getAll(InstallationRequest installationRequest) {
+        GMInstallation gmInstallation = new GMInstallation();
+        gmInstallation.setCommonFields(installationRequest);
+        gmInstallation.setSpecificFields(installationRequest);
         searchComponent.setFlowRateForSearch(installationRequest.getFlowRate());
         searchComponent.setPressureForSearch(installationRequest.getPressure());
         int maxFlowRate = searchComponent.getMaxFlowRate();
         int minFlowRate = searchComponent.getMinFlowRate();
-        return repository.findAll();
-        /*List<GMInstallation> suitableInstallations = repository.findInstallations(
-                TypeInstallations.valueOf(installationRequest.getTypeInstallations()),
+        List<GMInstallation> suitableInstallations = repository.findByTypeInstallationsAndSubtypeAndCoolantTypeAndTemperatureAndConcentrationAndCountMainPumpsAndCountSparePumpsAndFlowRateBetween(TypeInstallations.valueOf(installationRequest.getTypeInstallations()),
                 SubtypeForGm.valueOf(installationRequest.getSubtype()),
                 CoolantType.valueOf(installationRequest.getCoolantType()),
                 installationRequest.getTemperature(),
                 installationRequest.getConcentration(),
                 installationRequest.getCountMainPumps(),
                 installationRequest.getCountSparePumps(),
-                maxFlowRate,
-                minFlowRate);
-        return searchComponent.get(suitableInstallations);*/
+                minFlowRate,
+                maxFlowRate);
+        return searchComponent.get(suitableInstallations);
     }
 
 
