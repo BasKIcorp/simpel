@@ -3,9 +3,11 @@ package org.simpel.pumpingUnits.service;
 import org.simpel.pumpingUnits.model.installation.Point;
 import org.simpel.pumpingUnits.model.installation.ParentInstallations;
 import org.simpel.pumpingUnits.model.Pump;
+import org.simpel.pumpingUnits.model.installation.PointPressure;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +29,7 @@ public class SearchComponent<T extends ParentInstallations> {
         // Выбираем установки, в которых хотя бы один насос подходит
         List<T> resultList = new ArrayList<>();
         for (T installation : installations) {
+            System.out.println(installation.getPumps());
             if (suitableInstallation(installation)) {
                 resultList.add(installation);
             }
@@ -48,19 +51,27 @@ public class SearchComponent<T extends ParentInstallations> {
         return false;
     }
 
-    private Point findClosePoint(List<Point> points, float flowRateForSearch) {
+    private PointPressure findClosePoint(List<PointPressure> points, float flowRateForSearch) {
         // Находим точку ближайшую к рабочей точке для насоса
+        points.forEach(point -> System.out.println("Point x: " + point.getX()));
+        System.out.println("Flow rate for search: " + flowRateForSearch);
         return points.stream()
                 .min(Comparator.comparingDouble(point -> Math.abs(point.getX() - flowRateForSearch)))
                 .orElse(null);
     }
 
-    private double getOptimalityScore(ParentInstallations installation, double flowRate) {
+    private double getOptimalityScore(T installation, double flowRate) {
         // Считаем оптимальность для установки (на основе оптимальных диапазонов расхода)
-        double maxFlowRate = installation.getPumps().stream()
+        List<PointPressure> allPointsPressure = (List<PointPressure>) installation.getPumps().stream()
                 .flatMap(pump -> pump.getPointsPressure().stream())
-                .max(Comparator.comparingDouble(Point::getX))
-                .get().getX();
+                .collect(Collectors.toList()); // Собираем все точки давления в один список
+
+        // Находим максимальную точку давления
+        double maxFlowRate = allPointsPressure.stream()
+                .max(Comparator.comparingDouble(PointPressure::getX))
+                .map(PointPressure::getX) // Получаем значение X
+                .orElseThrow(() -> new NullPointerException("No points pressure found")); // Обработка отсутствия значений
+
         return Math.abs(flowRate - 0.65 * maxFlowRate);
     }
 

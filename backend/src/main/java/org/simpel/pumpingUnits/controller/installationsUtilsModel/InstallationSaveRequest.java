@@ -1,10 +1,5 @@
 package org.simpel.pumpingUnits.controller.installationsUtilsModel;
 
-import org.simpel.pumpingUnits.model.enums.ControlType;
-import org.simpel.pumpingUnits.model.enums.Diameter;
-import org.simpel.pumpingUnits.model.enums.subtypes.PowerType;
-import org.simpel.pumpingUnits.model.enums.subtypes.PumpType;
-
 import java.util.List;
 
 public class InstallationSaveRequest extends InstallationRequest {
@@ -39,9 +34,9 @@ public class InstallationSaveRequest extends InstallationRequest {
     private Float price;
 
     private Integer efficiency;
-    private Float NPSH;
-    private Float DM_in;
-    private Float DM_out;
+    private Float npsh;
+    private Float dmIn;
+    private Float dmOut;
     private Float installationLength;
     private String description;
     private String material;
@@ -157,28 +152,28 @@ public class InstallationSaveRequest extends InstallationRequest {
         this.efficiency = efficiency;
     }
 
-    public Float getNPSH() {
-        return NPSH;
+    public Float getNpsh() {
+        return npsh;
     }
 
-    public void setNPSH(Float NPSH) {
-        this.NPSH = NPSH;
+    public void setNpsh(Float npsh) {
+        this.npsh = npsh;
     }
 
-    public Float getDM_in() {
-        return DM_in;
+    public Float getDmIn() {
+        return dmIn;
     }
 
-    public void setDM_in(Float DM_in) {
-        this.DM_in = DM_in;
+    public void setDmIn(Float dmIn) {
+        this.dmIn = dmIn;
     }
 
-    public Float getDM_out() {
-        return DM_out;
+    public Float getDmOut() {
+        return dmOut;
     }
 
-    public void setDM_out(Float DM_out) {
-        this.DM_out = DM_out;
+    public void setDmOut(Float dmOut) {
+        this.dmOut = dmOut;
     }
 
     public Float getInstallationLength() {

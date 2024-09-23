@@ -25,7 +25,7 @@ public class InstallationsController {
         this.installationService = installationService;
     }
 
-    @PostMapping("/save")
+    @PostMapping(value="/save")
     public ResponseEntity<?> save(@RequestPart("request")InstallationSaveRequest request,
                                   @RequestPart("files") MultipartFile[] files,
                                   @RequestPart("points")InstallationPointRequest[] pointRequests) throws IOException {

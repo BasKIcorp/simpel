@@ -1,13 +1,20 @@
 package org.simpel.pumpingUnits.model.installation;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.simpel.pumpingUnits.model.Pump;
 
-abstract public class Point {
+@Entity
+public class PointPower extends Point{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "pumps_id", nullable = false)
+    @JsonBackReference
     private Pump pump;
     private double x;
     private double y;

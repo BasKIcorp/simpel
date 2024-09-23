@@ -1,13 +1,17 @@
 package org.simpel.pumpingUnits.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
 import org.simpel.pumpingUnits.model.enums.Diameter;
 import org.simpel.pumpingUnits.model.enums.subtypes.PumpType;
-import org.simpel.pumpingUnits.model.installation.Point;
+import org.simpel.pumpingUnits.model.installation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @Entity
 public class Pump {
@@ -35,67 +39,92 @@ public class Pump {
     private float DM_out;
     private float installationLength;
     private String description;
+
     @ManyToOne
     @JoinColumn(name = "material_name", referencedColumnName = "name")
     private Material material;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "engine_id")
+    @JsonManagedReference
     private Engine engine;
-    @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Point> pointsPressure;
-    @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Point> pointsPower;
-    @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Point> pointsNPSH;
 
-    public List<Point> getPointsPressure() {
+    @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<PointPressure> pointsPressure ;
+
+    @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<PointPower> pointsPower;
+
+    @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<PointNPSH> pointsNPSH;
+
+    @ManyToMany(mappedBy = "pumps", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonBackReference
+    private List<ParentInstallations> installations = new ArrayList<>();
+
+    public List<ParentInstallations> getInstallations() {
+        return installations;
+    }
+
+
+    public List<PointPressure> getPointsPressure() {
         return pointsPressure;
     }
 
-    public void setPointsPressure(List<Point> pointsPressure) {
+    public void setPointsPressure(List<PointPressure> pointsPressure) {
         this.pointsPressure = pointsPressure;
     }
 
-    public List<Point> getPointsPower() {
+    public List<PointPower> getPointsPower() {
         return pointsPower;
     }
 
-    public void setPointsPower(List<Point> pointsPower) {
+    public void setPointsPower(List<PointPower> pointsPower) {
         this.pointsPower = pointsPower;
     }
 
-    public List<Point> getPointsNPSH() {
+    public List<PointNPSH> getPointsNPSH() {
         return pointsNPSH;
     }
 
-    public void setPointsNPSH(List<Point> pointsNPSH) {
+    public void setPointsNPSH(List<PointNPSH> pointsNPSH) {
         this.pointsNPSH = pointsNPSH;
     }
 
-    public void setFieldsForPumpSave(InstallationSaveRequest request, Material material) {
+    public void setFieldsForPumpSave(InstallationSaveRequest request,Engine engine, List<PointPressure> pointsPressure, List<PointPower> pointPower, List<PointNPSH> pointNPSH) {
         this.setName(request.getNamePump());
-        this.setType(PumpType.valueOf(request.getPumpTypeForSomeInstallation()));
-        this.setManufacturer(request.getManufacturerForPump());
         this.setSpeed(request.getSpeed());
         this.setNumberOfSteps(request.getNumberOfSteps());
         //наверное нужно отдельно прописать поле для насосов, но пока хз
-        this.setMaximumPressure(request.getFlowRate());
-        this.setMaximumHead(request.getPressure());
+        this.setMaximumPressure(request.getMaximumPressure());
+        this.setMaximumHead(request.getMaximumHead());
 
         this.setArticle(request.getArticle());
         this.setPrice(request.getPrice());
         this.setEfficiency(request.getEfficiency());
-        this.setNPSH(request.getNPSH());
-        this.setDM_in(request.getDM_in());
-        this.setDM_out(request.getDM_out());
-        this.setMaterial(material);
-        this.setEngine(new Engine());
+        /*this.setNPSH(request.getNPSH());*/
+        this.setDM_in(request.getDmIn());
+        this.setDM_out(request.getDmOut());
         this.setInstallationLength(request.getInstallationLength());
         this.setDescription(request.getDescription());
         //добавить добавление точек
+        this.setPointsPressure(pointsPressure);
+        this.setPointsPower(pointPower);
+        this.setPointsNPSH(pointNPSH);
+        Stream<Point> combinedStream = Stream.concat(
+                Stream.concat(pointsPressure.stream(), pointsPower.stream()),
+                pointsNPSH.stream()
+        );
+
+        combinedStream.forEach(point -> {
+            point.setPump(this);
+        });
+        this.setEngine(engine);
+        this.setType(engine.getPumpType());
+        
     }
 
     public Engine getEngine() {
@@ -110,8 +139,9 @@ public class Pump {
         return material;
     }
 
-    public void setMaterial(Material material) {
-        this.material = material;
+    public void setMaterial(Optional<Material> material) {
+
+        this.material =  material.get();
     }
 
     public String getDescription() {

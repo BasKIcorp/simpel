@@ -1,5 +1,7 @@
 package org.simpel.pumpingUnits.model.installation;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
@@ -26,6 +28,7 @@ public abstract class ParentInstallations {
     @CollectionTable(name = "installation_photos", joinColumns = @JoinColumn(name = "installation_id"))
     @Column(name = "file_name")
     private List<String> drawingsPath = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
     private TypeInstallations typeInstallations;
     private int temperature;
     private int countMainPumps;
@@ -42,8 +45,12 @@ public abstract class ParentInstallations {
     }
 
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "installation_id") // Внешний ключ в таблице насосов
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "installation_pump",
+            joinColumns = @JoinColumn(name = "installation_id"),
+            inverseJoinColumns = @JoinColumn(name = "pump_id"))
+    @JsonManagedReference
     private List<Pump> pumps = new ArrayList<>();
 
     public List<Pump> getPumps() {
@@ -80,18 +87,17 @@ public abstract class ParentInstallations {
 
     public abstract void setSpecificFields(InstallationRequest request);
 
-    public void setFieldsForSave(InstallationSaveRequest request, MultipartFile[] files, List<Point> points, FileStorageService fileStorageService) throws IOException {
+    public void setFieldsForSave(InstallationSaveRequest request, MultipartFile[] files,  FileStorageService fileStorageService) throws IOException {
         /*for(InstallationPoint point : points){
             point.setParentInstallations(this);
         }*/
         List<String> pathFiles = fileStorageService.saveFiles(files,request.getTypeInstallations(), request.getSubtype());
         this.setDrawingsPath(pathFiles);
-        this.setName(request.getName());
+        this.setName(request.getNameForInstallation());
         this.setControlType(ControlType.valueOf(request.getControlType()));
         this.setPowerType(PowerType.valueOf(request.getPowerType()));
         this.setControlType(ControlType.valueOf(request.getControlType()));
         this.setPowerType(PowerType.valueOf(request.getPowerType()));
-        this.setPumps(null);
         /*this.setArticle(request.getArticle());
         this.setPrice(request.getPrice());
         this.setPower(request.getPower());

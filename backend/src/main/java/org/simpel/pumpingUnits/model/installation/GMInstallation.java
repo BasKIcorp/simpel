@@ -1,18 +1,26 @@
 package org.simpel.pumpingUnits.model.installation;
 
-import jakarta.persistence.Entity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 
 
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
+import org.simpel.pumpingUnits.model.Pump;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.subtypes.PNSSubtypes;
 import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
 import org.simpel.pumpingUnits.validation.ValidTemperature;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @ValidTemperature
 public class GMInstallation extends ParentInstallations {
+    @Enumerated(EnumType.STRING)
     private CoolantType coolantType;
+    @Enumerated(EnumType.STRING)
     private SubtypeForGm subtype;
     private Integer concentration;
     private int temperature;

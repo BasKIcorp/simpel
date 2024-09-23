@@ -2,12 +2,16 @@ package org.simpel.pumpingUnits.service.installationService;
 
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
+import org.simpel.pumpingUnits.model.Engine;
+import org.simpel.pumpingUnits.model.Material;
+import org.simpel.pumpingUnits.model.Pump;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.PumpTypeForSomeInstallation;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
+import org.simpel.pumpingUnits.model.enums.subtypes.PNSSubtypes;
 import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
-import org.simpel.pumpingUnits.model.installation.Point;
-import org.simpel.pumpingUnits.model.installation.PNSInstallationERW;
+import org.simpel.pumpingUnits.model.installation.*;
+import org.simpel.pumpingUnits.repository.MaterialRepo;
 import org.simpel.pumpingUnits.repository.PnsERWRepository;
 import org.simpel.pumpingUnits.service.FileStorageService;
 import org.simpel.pumpingUnits.service.SearchComponent;
@@ -21,21 +25,28 @@ import java.util.List;
 @Service
 public class PNSServiceERW implements InstallationServiceInterface<PNSInstallationERW> {
     private final PnsERWRepository repository;
+    private final MaterialRepo materialRepo;
     private final FileStorageService fileStorageService;
     private final SearchComponent<PNSInstallationERW> searchComponent;
 
-    public PNSServiceERW(PnsERWRepository repository, FileStorageService fileStorageService, SearchComponent<PNSInstallationERW> searchComponent) {
+    public PNSServiceERW(PnsERWRepository repository, MaterialRepo materialRepo, FileStorageService fileStorageService, SearchComponent<PNSInstallationERW> searchComponent) {
         this.repository = repository;
+        this.materialRepo = materialRepo;
         this.fileStorageService = fileStorageService;
         this.searchComponent = searchComponent;
     }
 
     @Override
-    public PNSInstallationERW save(InstallationSaveRequest request, MultipartFile[] files, List<Point> points) throws IOException {
+    public PNSInstallationERW save(InstallationSaveRequest request, MultipartFile[] files, List<PointPressure> pointsPressure, List<PointPower> pointPower, List<PointNPSH> pointNPSH) throws IOException {
+        Engine engine = new Engine();
+        engine.setFieldsForPumpSave(request);
+        Pump pump = new Pump();
+        pump.setFieldsForPumpSave(request, engine, pointsPressure, pointPower, pointNPSH);
+        pump.setMaterial(materialRepo.findById(request.getMaterial()));
         PNSInstallationERW pns = new PNSInstallationERW();
         pns.setCommonFields(request);
         pns.setSpecificFields(request);
-        pns.setFieldsForSave(request,files,points,fileStorageService);
+        pns.setFieldsForSave(request,files,fileStorageService);
         return repository.save(pns);
     }
 
@@ -46,13 +57,13 @@ public class PNSServiceERW implements InstallationServiceInterface<PNSInstallati
         int maxFlowRate = searchComponent.getMaxFlowRate();
         int minFlowRate = searchComponent.getMinFlowRate();
         List<PNSInstallationERW> suitableInstallations = repository.findInstallations(
-                TypeInstallations.valueOf(installationRequest.getTypeInstallations()).toString(),
-                SubtypeForGm.valueOf(installationRequest.getSubtype()).toString(),
-                CoolantType.valueOf(installationRequest.getCoolantType()).toString(),
+                TypeInstallations.valueOf(installationRequest.getTypeInstallations()),
+                PNSSubtypes.valueOf(installationRequest.getSubtype()),
+                CoolantType.valueOf(installationRequest.getCoolantType()),
                 installationRequest.getTemperature(),
                 installationRequest.getCountMainPumps(),
                 installationRequest.getCountSparePumps(),
-                PumpTypeForSomeInstallation.valueOf(installationRequest.getPumpTypeForSomeInstallation()).toString(),
+                PumpTypeForSomeInstallation.valueOf(installationRequest.getPumpTypeForSomeInstallation()),
                 maxFlowRate,
                 minFlowRate);
         return searchComponent.get(suitableInstallations);

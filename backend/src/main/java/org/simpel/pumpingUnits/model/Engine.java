@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
+import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
 import org.simpel.pumpingUnits.model.enums.subtypes.PumpType;
 
 @Entity
@@ -22,6 +24,17 @@ public class Engine {
     private String insulationClass;
     private String color;
     public Engine() {}
+    public void setFieldsForPumpSave(InstallationSaveRequest request){
+        this.manufacturer = request.getManufacturerForEngine();
+        this.execution = request.getExecution();
+        this.pumpType = PumpType.valueOf(request.getPumpType());
+        this.power = request.getPower();
+        this.amperage = request.getAmperage();
+        this.turnovers = request.getTurnovers();
+        this.typeOfProtection = request.getTypeOfProtection();
+        this.insulationClass = request.getInsulationClass();
+        this.color = request.getColor();
+    }
     public String getManufacturer() {
         return manufacturer;
     }
