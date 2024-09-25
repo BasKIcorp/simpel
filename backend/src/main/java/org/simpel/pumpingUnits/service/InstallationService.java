@@ -47,9 +47,9 @@ public class InstallationService {
 
     public List<PointPressure> getPointPressure(InstallationPointRequest[] requests) {
         List<PointPressure> points = new ArrayList<>();
-        PointPressure point = new PointPressure();
         for (InstallationPointRequest request : requests) {
             if (request.getType().equals("Pressure")) {
+                PointPressure point = new PointPressure();
                 point.setX(request.getX());
                 point.setY(request.getY());
                 points.add(point);
@@ -71,9 +71,10 @@ public class InstallationService {
     };
     public List<PointPower> getPointPower(InstallationPointRequest[] requests) {
         List<PointPower> points = new ArrayList<>();
-        PointPower point = new PointPower();
+
         for (InstallationPointRequest request : requests) {
             if (request.getType().equals("Power")) {
+                PointPower point = new PointPower();
                 point.setX(request.getX());
                 point.setY(request.getY());
                 points.add(point);
@@ -84,9 +85,10 @@ public class InstallationService {
     };
     public List<PointNPSH> getPointNPSH(InstallationPointRequest[] requests) {
         List<PointNPSH> points = new ArrayList<>();
-        PointNPSH point = new PointNPSH();;
+
         for (InstallationPointRequest request : requests) {
              if (request.getType().equals("NPSH")) {
+                 PointNPSH point = new PointNPSH();
                 point.setX(request.getX());
                 point.setY(request.getY());
                 points.add(point);

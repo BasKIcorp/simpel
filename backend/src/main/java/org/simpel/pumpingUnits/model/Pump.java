@@ -34,7 +34,7 @@ public class Pump {
     private float price;
     /*private float power;*/
     private int efficiency;
-    private float NPSH;
+    private float Npsh;
     private float DM_in;
     private float DM_out;
     private float installationLength;
@@ -105,23 +105,22 @@ public class Pump {
         this.setArticle(request.getArticle());
         this.setPrice(request.getPrice());
         this.setEfficiency(request.getEfficiency());
-        /*this.setNPSH(request.getNPSH());*/
+        this.setNpsh(request.getNpsh());
         this.setDM_in(request.getDmIn());
         this.setDM_out(request.getDmOut());
         this.setInstallationLength(request.getInstallationLength());
         this.setDescription(request.getDescription());
         //добавить добавление точек
-        this.setPointsPressure(pointsPressure);
-        this.setPointsPower(pointPower);
-        this.setPointsNPSH(pointNPSH);
         Stream<Point> combinedStream = Stream.concat(
-                Stream.concat(pointsPressure.stream(), pointsPower.stream()),
-                pointsNPSH.stream()
+                Stream.concat(pointsPressure.stream(), pointPower.stream()),
+                pointNPSH.stream()
         );
-
         combinedStream.forEach(point -> {
             point.setPump(this);
         });
+        this.setPointsPressure(pointsPressure);
+        this.setPointsPower(pointPower);
+        this.setPointsNPSH(pointNPSH);
         this.setEngine(engine);
         this.setType(engine.getPumpType());
         
@@ -176,12 +175,12 @@ public class Pump {
         this.DM_in = DM_in;
     }
 
-    public float getNPSH() {
-        return NPSH;
+    public float getNpsh() {
+        return Npsh;
     }
 
-    public void setNPSH(float NPSH) {
-        this.NPSH = NPSH;
+    public void setNpsh(float npsh) {
+        this.Npsh = npsh;
     }
 
     public int getEfficiency() {
