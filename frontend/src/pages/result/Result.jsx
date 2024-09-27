@@ -3,6 +3,7 @@ import styles from './result.module.css';
 import {Header} from "../../components/UI/Header";
 import Graph from "../../components/UI/Graph";
 import testData from "../selection_results/test_data.json";
+import {useSelector} from "react-redux";
 
 function Result() {
     const [selectedImage, setSelectedImage] = useState("drawing1");
@@ -10,44 +11,76 @@ function Result() {
     const [selectedGraphType, setSelectedGraphType] = useState("1"); // 1 - расход/напор, 2 - расход/мощность, 3 - расход/квитанционный запас
     const [graphData, setGraphData] = useState([]);
     const [legendNames, setLegendNames] = useState([]);
-
+    const generalInfo = useSelector((state) => state.pump.generalInfo);
+    const pumpData = useSelector((state) => state.pump.pumpData);
+    const motorData = useSelector((state) => state.pump.motorData);
+    const materials = useSelector((state) => state.pump.materials);
+    const points = useSelector((state) => state.pump.points)
     const handleImageChange = (e) => {
         setSelectedImage(e.target.value);
     };
 
 
     useEffect(() => {
-        const selectedPumpData = testData[selectedPump];
-
-        if (!selectedPumpData) return;
+        if (!selectedPump) return;
 
         switch (selectedGraphType) {
-            case "1": // График расход/напор
-                setGraphData(selectedPumpData.pressureFlow);
-                setLegendNames([
-                    {key: "flow", label: "Расход", color: "#82ca9d"},
-                    {key: "pressure", label: "Напор", color: "#8884d8"},
-                ]);
+            case "1": // Pressure/Flow graph
+                if (Array.isArray(points.pointsPressure)) {
+                    const pressureFlowData = points.pointsPressure.map(point => ({
+                        name: point.id.toString(),
+                        pressure: point.y,
+                        flow: point.x,
+                    }));
+                    setGraphData(pressureFlowData);
+                    setLegendNames([
+                        {key: "flow", label: "Flow", color: "#82ca9d"},
+                        {key: "pressure", label: "Pressure", color: "#8884d8"},
+                    ]);
+                } else {
+                    setGraphData([]);
+                    console.error('points.pointsPressure is not an array');
+                }
                 break;
-            case "2": // График расход/мощность
-                setGraphData(selectedPumpData.powerFlow);
-                setLegendNames([
-                    {key: "flow", label: "Расход", color: "#82ca9d"},
-                    {key: "power", label: "Мощность", color: "#ff7300"},
-                ]);
+            case "2": // Power/Flow graph
+                if (Array.isArray(points.pointsPower)) {
+                    const powerFlowData = points.pointsPower.map(point => ({
+                        name: point.id.toString(),
+                        power: point.y,
+                        flow: point.x,
+                    }));
+                    setGraphData(powerFlowData);
+                    setLegendNames([
+                        {key: "flow", label: "Flow", color: "#82ca9d"},
+                        {key: "power", label: "Power", color: "#ff7300"},
+                    ]);
+                } else {
+                    setGraphData([]);
+                    console.error('points.pointsPower is not an array');
+                }
                 break;
-            case "3": // График расход/квитанционный запас
-                setGraphData(selectedPumpData.suctionReserveFlow);
-                setLegendNames([
-                    {key: "flow", label: "Расход", color: "#82ca9d"},
-                    {key: "suctionReserve", label: "Квитанционный запас", color: "#8884d8"},
-                ]);
+            case "3": // NPSH/Flow graph
+                if (Array.isArray(points.pointsNPSH)) {
+                    const npshFlowData = points.pointsNPSH.map(point => ({
+                        name: point.id.toString(),
+                        suctionReserve: point.y,
+                        flow: point.x,
+                    }));
+                    setGraphData(npshFlowData);
+                    setLegendNames([
+                        {key: "flow", label: "Flow", color: "#82ca9d"},
+                        {key: "suctionReserve", label: "NPSH", color: "#8884d8"},
+                    ]);
+                } else {
+                    setGraphData([]);
+                    console.error('points.pointsNPSH is not an array');
+                }
                 break;
             default:
                 setGraphData([]);
                 setLegendNames([]);
         }
-    }, [selectedPump, selectedGraphType]);
+    }, [selectedPump, selectedGraphType, points]);
 
     return (
         <div>
@@ -89,47 +122,47 @@ function Result() {
                                 <tbody>
                                 <tr>
                                     <td>Основной насос</td>
-                                    <td>BL 8-6R</td>
+                                    <td>{generalInfo.mainPump || 'BL 8-6R'}</td>
                                 </tr>
                                 <tr>
                                     <td>Жидкость</td>
-                                    <td>Вода</td>
+                                    <td>{generalInfo.liquid || 'Вода'}</td>
                                 </tr>
                                 <tr>
                                     <td>Рабочая температура</td>
-                                    <td>4°C</td>
+                                    <td>{generalInfo.operatingTemperature || '4°C'}</td>
                                 </tr>
                                 <tr>
                                     <td>Тип насоса</td>
-                                    <td>Вертикальный многоступенчатый</td>
+                                    <td>{generalInfo.pumpType || 'Вертикальный многоступенчатый'}</td>
                                 </tr>
                                 <tr>
                                     <td>Количество насосов</td>
-                                    <td>3</td>
+                                    <td>{generalInfo.numberOfPumps || '3'}</td>
                                 </tr>
                                 <tr>
                                     <td>Рабочих</td>
-                                    <td>2</td>
+                                    <td>{generalInfo.workingPumps || '2'}</td>
                                 </tr>
                                 <tr>
                                     <td>Резервных</td>
-                                    <td>1</td>
+                                    <td>{generalInfo.reservePumps || '1'}</td>
                                 </tr>
                                 <tr>
                                     <td>Управление</td>
-                                    <td>Частотное управление</td>
+                                    <td>{generalInfo.controlType || 'Частотное управление'}</td>
                                 </tr>
                                 <tr>
                                     <td>Номинальная подача</td>
-                                    <td>11,93 м³/ч</td>
+                                    <td>{generalInfo.ratedFlow || '11,93 м³/ч'}</td>
                                 </tr>
                                 <tr>
                                     <td>Номинальный напор</td>
-                                    <td>55,4 м вод. ст.</td>
+                                    <td>{generalInfo.ratedPressure || '55,4 м вод. ст.'}</td>
                                 </tr>
                                 <tr>
                                     <td>Опции</td>
-                                    <td>нет</td>
+                                    <td>{generalInfo.options || 'нет'}</td>
                                 </tr>
                                 <tr>
                                     <th className={styles.tableTitle}>Данные насоса</th>
@@ -137,27 +170,27 @@ function Result() {
                                 </tr>
                                 <tr>
                                     <td>Производительность</td>
-                                    <td>MAS DAF</td>
+                                    <td>{pumpData.manufacturer || 'MAS DAF'}</td>
                                 </tr>
                                 <tr>
                                     <td>Скорость</td>
-                                    <td>2900</td>
+                                    <td>{pumpData.speed || '2900'}</td>
                                 </tr>
                                 <tr>
                                     <td>Количество ступеней</td>
-                                    <td>06</td>
+                                    <td>{pumpData.numberOfStages || '06'}</td>
                                 </tr>
                                 <tr>
                                     <td>Максимальное давление</td>
-                                    <td>21</td>
+                                    <td>{pumpData.maxPressure || '21'}</td>
                                 </tr>
                                 <tr>
                                     <td>Максимальный напор</td>
-                                    <td>63</td>
+                                    <td>{pumpData.maxHead || '63'}</td>
                                 </tr>
                                 <tr>
                                     <td>Диаметр раб. колеса</td>
-                                    <td>нет</td>
+                                    <td>{pumpData.impellerDiameter || 'нет'}</td>
                                 </tr>
 
                                 <tr>
@@ -166,43 +199,43 @@ function Result() {
                                 </tr>
                                 <tr>
                                     <td>Производитель</td>
-                                    <td>IMP Pumps</td>
+                                    <td>{motorData.manufacturer || 'IMP Pumps'}</td>
                                 </tr>
                                 <tr>
                                     <td>Исполнение</td>
-                                    <td>IE3</td>
+                                    <td>{motorData.execution || 'IE3'}</td>
                                 </tr>
                                 <tr>
                                     <td>Тип</td>
-                                    <td>Вертикальный многоступенчатый</td>
+                                    <td>{motorData.type || 'Вертикальный многоступенчатый'}</td>
                                 </tr>
                                 <tr>
                                     <td>Мощность</td>
-                                    <td>2,2</td>
+                                    <td>{motorData.power || '2,2'}</td>
                                 </tr>
                                 <tr>
                                     <td>Сила тока</td>
-                                    <td>4,72</td>
+                                    <td>{motorData.current || '4,72'}</td>
                                 </tr>
                                 <tr>
                                     <td>Напряжение</td>
-                                    <td>380</td>
+                                    <td>{motorData.voltage || '380'}</td>
                                 </tr>
                                 <tr>
                                     <td>Обороты</td>
-                                    <td>2900</td>
+                                    <td>{motorData.speed || '2900'}</td>
                                 </tr>
                                 <tr>
                                     <td>Вид защиты</td>
-                                    <td>IP55</td>
+                                    <td>{motorData.protectionType || 'IP55'}</td>
                                 </tr>
                                 <tr>
                                     <td>Класс изоляции</td>
-                                    <td>F</td>
+                                    <td>{motorData.insulationClass || 'F'}</td>
                                 </tr>
                                 <tr>
                                     <td>Цвет</td>
-                                    <td>нет</td>
+                                    <td>{motorData.color || 'нет'}</td>
                                 </tr>
 
                                 <tr>
@@ -211,43 +244,43 @@ function Result() {
                                 </tr>
                                 <tr>
                                     <td>Коллектор</td>
-                                    <td>Нержавеющая сталь</td>
+                                    <td>{materials.collector || 'Нержавеющая сталь'}</td>
                                 </tr>
                                 <tr>
                                     <td>Запорные клапаны</td>
-                                    <td>Чугун</td>
+                                    <td>{materials.shutOffValves || 'Чугун'}</td>
                                 </tr>
                                 <tr>
                                     <td>Обратные клапаны</td>
-                                    <td>Чугун</td>
+                                    <td>{materials.checkValves || 'Чугун'}</td>
                                 </tr>
                                 <tr>
                                     <td>Реле давления</td>
-                                    <td>Хромованадиевый цинковый сплав</td>
+                                    <td>{materials.pressureRelay || 'Хромованадиевый цинковый сплав'}</td>
                                 </tr>
                                 <tr>
                                     <td>Датчики давления</td>
-                                    <td>AISI 316</td>
+                                    <td>{materials.pressureSensors || 'AISI 316'}</td>
                                 </tr>
                                 <tr>
                                     <td>Заглушки, фланцы</td>
-                                    <td>Нержавеющая сталь</td>
+                                    <td>{materials.plugsFlanges || 'Нержавеющая сталь'}</td>
                                 </tr>
                                 <tr>
                                     <td>Стойка</td>
-                                    <td>Окрашенная сталь</td>
+                                    <td>{materials.rack || 'Окрашенная сталь'}</td>
                                 </tr>
                                 <tr>
                                     <td>Рама-основание</td>
-                                    <td>Окрашенная сталь</td>
+                                    <td>{materials.baseFrame || 'Окрашенная сталь'}</td>
                                 </tr>
                                 <tr>
                                     <td>Корпус насоса</td>
-                                    <td>Чугун</td>
+                                    <td>{materials.pumpBody || 'Чугун'}</td>
                                 </tr>
                                 <tr>
                                     <td>Внешний кожух</td>
-                                    <td>Чугун</td>
+                                    <td>{materials.outerCover || 'Чугун'}</td>
                                 </tr>
                                 </tbody>
                             </table>

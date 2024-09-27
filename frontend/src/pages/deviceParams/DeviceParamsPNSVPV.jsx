@@ -4,15 +4,18 @@ import {useState} from "react";
 import arrow from '../../assets/next-page.svg';
 import locationArrow from '../../assets/location-arrow.svg';
 import {useNavigate} from "react-router-dom";
+import {setGeneralInfo} from "../../store/pumpSlice";
+import {useDispatch} from "react-redux";
 
 export const DeviceParamsPNSVPV = () => {
     const navigate = useNavigate();
 
-    const [liquidType, setLiquidType] = useState('water');
+    const [liquidType, setLiquidType] = useState('WATER');
     const [temperature, setTemperature] = useState('');
     const [performance, setPerformance] = useState('');
     const [pressure, setPressure] = useState('');
     const [pumpType, setPumpType] = useState('');
+    const dispatch = useDispatch();
 
     // Отключить кнопку, если форма не заполнена полностью
     const isFormComplete = () => {
@@ -27,6 +30,11 @@ export const DeviceParamsPNSVPV = () => {
 
     const handleArrowClick = async (e) => {
         e.preventDefault();
+        dispatch(setGeneralInfo({ liquid: liquidType }));
+        dispatch(setGeneralInfo({ operatingTemperature: temperature }));
+        dispatch(setGeneralInfo({ ratedPressure: pressure }));
+        dispatch(setGeneralInfo({ ratedFlow: performance }));
+        dispatch(setGeneralInfo({ pumpType: pumpType }));
         if (isFormComplete()) {
             navigate("/selection/selection_results");
         }
@@ -36,7 +44,7 @@ export const DeviceParamsPNSVPV = () => {
         const selectedLiquid = e.target.value;
         setLiquidType(selectedLiquid);
         // Сбросить температуру, если выбрана не вода
-        if (selectedLiquid !== 'water') {
+        if (selectedLiquid !== 'WATER') {
             setTemperature('');
         }
     };

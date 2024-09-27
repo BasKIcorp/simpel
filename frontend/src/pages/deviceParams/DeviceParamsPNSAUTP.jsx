@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import arrow from '../../assets/next-page.svg';
 import locationArrow from '../../assets/location-arrow.svg';
 import { useNavigate } from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {setGeneralInfo} from "../../store/pumpSlice";
 
 export const DeviceParamsPNSAUTP = () => {
     const navigate = useNavigate();
@@ -17,6 +19,7 @@ export const DeviceParamsPNSAUTP = () => {
     const [pumpType, setPumpType] = useState('');
     const [performanceJokeyError, setPerformanceJokeyError] = useState('');
     const [pressureJokeyError, setPressureJokeyError] = useState('');
+    const dispatch = useDispatch();
 
     // Validate performance of jockey pump (1 to 5 m³/h)
     function validatePerformanceJokey(value) {
@@ -53,7 +56,13 @@ export const DeviceParamsPNSAUTP = () => {
 
     const handleArrowClick = async (e) => {
         e.preventDefault();
-
+        dispatch(setGeneralInfo({ liquid: liquidType }));
+        dispatch(setGeneralInfo({ operatingTemperature: temperature }));
+        dispatch(setGeneralInfo({ ratedPressure: pressure }));
+        dispatch(setGeneralInfo({ ratedFlow: performance }));
+        dispatch(setGeneralInfo({ pumpType: pumpType }));
+        dispatch(setGeneralInfo({ totalCapacityOfJockeyPump: performanceJokey }));
+        dispatch(setGeneralInfo({ requiredJockeyPumpPressure: pressureJokey }));
         if (isFormComplete) {
             navigate("/selection/selection_results");
         }

@@ -4,6 +4,8 @@ import {useState} from "react";
 import arrow from "../../assets/next-page.svg";
 import locationArrow from "../../assets/location-arrow.svg";
 import {useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {setGeneralInfo, setPumpData} from "../../store/pumpSlice";
 
 export const InstallationChoice = () => {
     const [installationType, setInstallationType] = useState("");
@@ -11,17 +13,26 @@ export const InstallationChoice = () => {
     const [workingPumps, setWorkingPumps] = useState(1);
     const [reservePumps, setReservePumps] = useState(1);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleArrowClick = async (e) => {
         e.preventDefault();
 
         if (!installationType) return;
-
-        if (installationType === "hydra") {
+        dispatch(setGeneralInfo({
+            installationType: installationType,
+            subType: hydromoduleType,
+            workingPumps: workingPumps,
+            reservePumps: reservePumps,
+            numberOfPumps: workingPumps + reservePumps
+        }));
+        console.log(workingPumps)
+        console.log(reservePumps)
+        if (installationType === "GM") {
             navigate("/selection/device_params_hydromodule");
-        } else if (installationType === "hvs") {
+        } else if (installationType === "HOZPIT") {
             navigate("/selection/device_params_hvs");
-        } else if (installationType === "pns") {
+        } else if (installationType === "PNS") {
             if (hydromoduleType === "1") {
                 navigate("/selection/device_params_pns_vpv");
 
@@ -38,13 +49,13 @@ export const InstallationChoice = () => {
     };
 
     const isFormComplete = () => {
-        if (installationType === "hydra" && !hydromoduleType) {
+        if (installationType === "GM" && !hydromoduleType) {
             return false;
         }
-        if (installationType === "hvs" && !hydromoduleType) {
+        if (installationType === "HOZPIT" && !hydromoduleType) {
             return false;
         }
-        if (installationType === "pns" && !hydromoduleType) {
+        if (installationType === "PNS" && !hydromoduleType) {
             return false;
         }
         return installationType && workingPumps && reservePumps;
@@ -62,15 +73,15 @@ export const InstallationChoice = () => {
                             <div className={styles.selectWrapper}>
                                 <select className={styles.select} onChange={handleInstallationTypeChange}>
                                     <option value="">Выберите тип установки</option>
-                                    <option value="hydra">Гидромодуль</option>
-                                    <option value="hvs">Хоз-пит</option>
-                                    <option value="pns">ПНС</option>
+                                    <option value="GM">Гидромодуль</option>
+                                    <option value="HOZPIT">Хоз-пит</option>
+                                    <option value="PNS">ПНС</option>
                                 </select>
                             </div>
                         </div>
 
                         {/* В зависимости от выбранного типа установки показываем дополнительные поля */}
-                        {installationType === "hydra" && (
+                        {installationType === "GM" && (
                             <div className={styles.formGroup}>
                                 <h2 className={styles.formSubtitle}>Тип гидромодуля</h2>
                                 <div className={styles.radioGroup}>
@@ -78,7 +89,7 @@ export const InstallationChoice = () => {
                                         <input
                                             type="radio"
                                             name="hydromodule"
-                                            value="1"
+                                            value="FREQUENCY_CONTROLLED"
                                             onChange={(e) => setHydromoduleType(e.target.value)}
                                         />{" "}
                                         С частотным управлением по давлению на выходе
@@ -88,9 +99,9 @@ export const InstallationChoice = () => {
                                         <input
                                             type="radio"
                                             name="hydromodule"
-                                            value="2"
+                                            value="FREQUENCY_CONTROLLED"
                                             onChange={(e) => setHydromoduleType(e.target.value)}
-                                        />{" "}
+                                        />{""}
                                         С частотным управлением по перепаду давления
                                     </label>
                                     <br/>
@@ -98,9 +109,9 @@ export const InstallationChoice = () => {
                                         <input
                                             type="radio"
                                             name="hydromodule"
-                                            value="3"
+                                            value="RELAY_CONTROL"
                                             onChange={(e) => setHydromoduleType(e.target.value)}
-                                        />{" "}
+                                        />{""}
                                         С релейным управлением по давлению на выходе
                                     </label>
                                     <br/>
@@ -118,7 +129,7 @@ export const InstallationChoice = () => {
                             </div>
                         )}
 
-                        {installationType === "hvs" && (
+                        {installationType === "HOZPIT" && (
                             <div className={styles.formGroup}>
                                 <h2 className={styles.formSubtitle}>Тип хоз-пит</h2>
                                 <div className={styles.radioGroup}>
@@ -126,7 +137,7 @@ export const InstallationChoice = () => {
                                         <input
                                             type="radio"
                                             name="hydromodule"
-                                            value="1"
+                                            value="FREQUENCY_CONTROLLED"
                                             onChange={(e) => setHydromoduleType(e.target.value)}
                                         />{" "}
                                         С мульти-частотным регулированием (ПЧ на каждый насос)
@@ -136,7 +147,7 @@ export const InstallationChoice = () => {
                                         <input
                                             type="radio"
                                             name="hydromodule"
-                                            value="2"
+                                            value="RELAY_CONTROL"
                                             onChange={(e) => setHydromoduleType(e.target.value)}
                                         />{" "}
                                         С релейным управлением
@@ -145,7 +156,7 @@ export const InstallationChoice = () => {
                             </div>
                         )}
 
-                        {installationType === "pns" && (
+                        {installationType === "PNS" && (
                             <div className={styles.formGroup}>
                                 <h2 className={styles.formSubtitle}>Тип ПНС</h2>
                                 <div className={styles.radioGroup}>
@@ -153,7 +164,7 @@ export const InstallationChoice = () => {
                                         <input
                                             type="radio"
                                             name="hydromodule"
-                                            value="1"
+                                            value="ERW_SYSTEM,"
                                             onChange={(e) => setHydromoduleType(e.target.value)}
                                         />{" "}
                                         Установка для системы ВПВ
@@ -163,7 +174,7 @@ export const InstallationChoice = () => {
                                         <input
                                             type="radio"
                                             name="hydromodule"
-                                            value="2"
+                                            value="AFEIJP"
                                             onChange={(e) => setHydromoduleType(e.target.value)}
                                         />{" "}
                                         Установка автоматического пожаротушения с жокей-насосом (АУПТ)

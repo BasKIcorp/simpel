@@ -4,6 +4,8 @@ import {useState} from "react";
 import arrow from '../../assets/next-page.svg';
 import locationArrow from '../../assets/location-arrow.svg';
 import {useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {setGeneralInfo} from "../../store/pumpSlice";
 
 export const DeviceParamsHVS = () => {
     const navigate = useNavigate();
@@ -14,7 +16,7 @@ export const DeviceParamsHVS = () => {
     const [pressure, setPressure] = useState('');
     const [pumpType, setPumpType] = useState('');
     const [temperatureError, setTemperatureError] = useState('');
-
+    const dispatch = useDispatch();
     // Отключить кнопку, если форма не заполнена полностью
     const isFormComplete = () => {
         return (
@@ -28,6 +30,10 @@ export const DeviceParamsHVS = () => {
 
     const handleArrowClick = async (e) => {
         e.preventDefault();
+        dispatch(setGeneralInfo({ liquid: liquidType }));
+        dispatch(setGeneralInfo({ operatingTemperature: temperature }));
+        dispatch(setGeneralInfo({ ratedPressure: pressure }));
+
         if (isFormComplete()) {
             navigate("/selection/selection_results");
         }
@@ -37,7 +43,7 @@ export const DeviceParamsHVS = () => {
         const selectedLiquid = e.target.value;
         setLiquidType(selectedLiquid);
         // Сбросить температуру, если выбрана не вода
-        if (selectedLiquid !== 'water') {
+        if (selectedLiquid !== 'WATER') {
             setTemperature('');
         }
     };
@@ -71,7 +77,7 @@ export const DeviceParamsHVS = () => {
                                 {/*    Вода*/}
                                 {/*</label>*/}
                                 <label>
-                                    <input type="radio" name="hydromodule" value="1" defaultChecked={true}
+                                    <input type="radio" name="hydromodule" value="WATER" defaultChecked={true}
                                            onChange={handleLiquidChange}/> Вода
                                 </label>
                             </div>

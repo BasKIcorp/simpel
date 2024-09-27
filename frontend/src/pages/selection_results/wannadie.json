@@ -1,0 +1,239 @@
+[
+  {
+    "id": 1,
+    "drawingsPath": [
+      "uploads/GM/RELAY_CONTROL/78475110-0dee-45ad-b43d-928c91f3c3b6 для установки GM RELAY_CONTROL.jpg"
+    ],
+    "typeInstallations": "GM",
+    "countMainPumps": 2,
+    "countSparePumps": 1,
+    "flowRate": 30,
+    "pressure": 5,
+    "controlType": "asd",
+    "powerType": "ONE_PHASE",
+    "diameter": "DN80",
+    "name": "Имя установки",
+    "pumps": [
+      {
+        "name": "Имя насоса",
+        "type": "VERTICAL_MULTISTAGE",
+        "manufacturer": null,
+        "speed": 1500,
+        "numberOfSteps": 3,
+        "maximumPressure": 10,
+        "maximumHead": 25.5,
+        "diameter": "DN50",
+        "article": "123456",
+        "price": 1500.0,
+        "efficiency": 85,
+        "installationLength": 5.0,
+        "description": "Описание установки",
+        "material": {
+          "name": "BL",
+          "collector": "Нержавеющая сталь",
+          "shutOffValves": "Чугун",
+          "checkValves": "Чугун",
+          "pressureSwitch": "Хромированный цинковый сплав",
+          "pressureSensors": "AISI 316",
+          "plugsOrFlanges": "Нержавеющая сталь",
+          "rack": "Окрашенная сталь",
+          "frameBase": "Окрашенная сталь",
+          "pumpHousing": "Чугун",
+          "externalCasing": "Чугун"
+        },
+        "engine": {
+          "manufacturer": "Производитель двигателя",
+          "execution": "Исполнение",
+          "pumpType": "VERTICAL_MULTISTAGE",
+          "power": 5.5,
+          "amperage": 10.0,
+          "voltage": 0.0,
+          "turnovers": 3000,
+          "typeOfProtection": "Тип защиты",
+          "insulationClass": "Класс изоляции",
+          "color": "Цвет"
+        },
+        "pointsPressure": [
+          {
+            "id": 1,
+            "x": 3.0,
+            "y": 3.0
+          }
+        ],
+        "pointsPower": [],
+        "pointsNPSH": [
+          {
+            "id": 1,
+            "x": 4.0,
+            "y": 4.0
+          }
+        ],
+        "npsh": 2.5,
+        "dm_in": 100.0,
+        "dm_out": 80.0
+      }
+    ],
+    "coolantType": "WATER",
+    "subtype": "RELAY_CONTROL",
+    "concentration": null,
+    "temperature": 60
+  },
+  {
+    "id": 2,
+    "drawingsPath": [
+      "uploads/GM/RELAY_CONTROL/ea0cb327-2591-48f6-b795-05dae893877f для установки GM RELAY_CONTROL.jpg"
+    ],
+    "typeInstallations": "GM",
+    "countMainPumps": 2,
+    "countSparePumps": 1,
+    "flowRate": 30,
+    "pressure": 5,
+    "controlType": "asd",
+    "powerType": "ONE_PHASE",
+    "diameter": "DN80",
+    "name": "Имя установки",
+    "pumps": [
+      {
+        "name": "Имя насоса",
+        "type": "VERTICAL_MULTISTAGE",
+        "manufacturer": null,
+        "speed": 1500,
+        "numberOfSteps": 3,
+        "maximumPressure": 10,
+        "maximumHead": 25.5,
+        "diameter": "DN50",
+        "article": "123456",
+        "price": 1500.0,
+        "efficiency": 85,
+        "installationLength": 5.0,
+        "description": "Описание установки",
+        "material": {
+          "name": "BL",
+          "collector": "Нержавеющая сталь",
+          "shutOffValves": "Чугун",
+          "checkValves": "Чугун",
+          "pressureSwitch": "Хромированный цинковый сплав",
+          "pressureSensors": "AISI 316",
+          "plugsOrFlanges": "Нержавеющая сталь",
+          "rack": "Окрашенная сталь",
+          "frameBase": "Окрашенная сталь",
+          "pumpHousing": "Чугун",
+          "externalCasing": "Чугун"
+        },
+        "engine": {
+          "manufacturer": "Производитель двигателя",
+          "execution": "Исполнение",
+          "pumpType": "VERTICAL_MULTISTAGE",
+          "power": 5.5,
+          "amperage": 10.0,
+          "voltage": 0.0,
+          "turnovers": 3000,
+          "typeOfProtection": "Тип защиты",
+          "insulationClass": "Класс изоляции",
+          "color": "Цвет"
+        },
+        "pointsPressure": [
+          {
+            "id": 2,
+            "x": 3.0,
+            "y": 3.0
+          }
+        ],
+        "pointsPower": [],
+        "pointsNPSH": [
+          {
+            "id": 2,
+            "x": 4.0,
+            "y": 4.0
+          }
+        ],
+        "npsh": 2.5,
+        "dm_in": 100.0,
+        "dm_out": 80.0
+      }
+    ],
+    "coolantType": "WATER",
+    "subtype": "RELAY_CONTROL",
+    "concentration": null,
+    "temperature": 60
+  },
+  {
+    "id": 3,
+    "drawingsPath": [
+      "uploads/GM/RELAY_CONTROL/b248a345-f446-4b95-a964-e722c86a3c33 для установки GM RELAY_CONTROL.jpg"
+    ],
+    "typeInstallations": "GM",
+    "countMainPumps": 2,
+    "countSparePumps": 1,
+    "flowRate": 30,
+    "pressure": 5,
+    "controlType": "asd",
+    "powerType": "ONE_PHASE",
+    "diameter": "DN80",
+    "name": "Имя установки",
+    "pumps": [
+      {
+        "name": "Имя насоса",
+        "type": "VERTICAL_MULTISTAGE",
+        "manufacturer": null,
+        "speed": 1500,
+        "numberOfSteps": 3,
+        "maximumPressure": 10,
+        "maximumHead": 25.5,
+        "diameter": "DN50",
+        "article": "123456",
+        "price": 1500.0,
+        "efficiency": 85,
+        "installationLength": 5.0,
+        "description": "Описание установки",
+        "material": {
+          "name": "BL",
+          "collector": "Нержавеющая сталь",
+          "shutOffValves": "Чугун",
+          "checkValves": "Чугун",
+          "pressureSwitch": "Хромированный цинковый сплав",
+          "pressureSensors": "AISI 316",
+          "plugsOrFlanges": "Нержавеющая сталь",
+          "rack": "Окрашенная сталь",
+          "frameBase": "Окрашенная сталь",
+          "pumpHousing": "Чугун",
+          "externalCasing": "Чугун"
+        },
+        "engine": {
+          "manufacturer": "Производитель двигателя",
+          "execution": "Исполнение",
+          "pumpType": "VERTICAL_MULTISTAGE",
+          "power": 5.5,
+          "amperage": 10.0,
+          "voltage": 0.0,
+          "turnovers": 3000,
+          "typeOfProtection": "Тип защиты",
+          "insulationClass": "Класс изоляции",
+          "color": "Цвет"
+        },
+        "pointsPressure": [
+          {
+            "id": 3,
+            "x": 3.0,
+            "y": 3.0
+          }
+        ],
+        "pointsPower": [],
+        "pointsNPSH": [
+          {
+            "id": 3,
+            "x": 4.0,
+            "y": 4.0
+          }
+        ],
+        "npsh": 2.5,
+        "dm_in": 100.0,
+        "dm_out": 80.0
+      }
+    ],
+    "coolantType": "WATER",
+    "subtype": "RELAY_CONTROL",
+    "concentration": null,
+    "temperature": 60
+  }
+]

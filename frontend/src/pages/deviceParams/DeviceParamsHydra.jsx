@@ -4,6 +4,8 @@ import { useState, useMemo } from "react";
 import arrow from '../../assets/next-page.svg';
 import locationArrow from '../../assets/location-arrow.svg';
 import { useNavigate } from "react-router-dom";
+import {setGeneralInfo} from "../../store/pumpSlice";
+import {useDispatch} from "react-redux";
 
 //TODO: fix margins
 export const DeviceParamsHydra = () => {
@@ -16,16 +18,16 @@ export const DeviceParamsHydra = () => {
     const [pressure, setPressure] = useState('');
     const [pumpType, setPumpType] = useState('');
     const [temperatureError, setTemperatureError] = useState('');
-
+    const dispatch = useDispatch();
     // Валидация температуры
     const validateTemperature = (temp, fluid) => {
         let tempValue = parseFloat(temp);
-        if (fluid === '1') { // Вода
+        if (fluid === 'WATER') { // Вода
             if (tempValue < 4 || tempValue > 70) {
                 setTemperatureError('Для воды допустимый диапазон температуры: +4 … +70°C');
                 return false;
             }
-        } else if (fluid === '2' || fluid === '3') { // Растворы
+        } else if (fluid === 'PROPYLENE_GLYCOL' || fluid === 'ETHYLENE_GLYCOL') { // Растворы
             if (tempValue < -10 || tempValue > 70) {
                 setTemperatureError('Для растворов допустимый диапазон температуры: -10 … +70°C');
                 return false;
@@ -57,7 +59,11 @@ export const DeviceParamsHydra = () => {
 
     const handleArrowClick = async (e) => {
         e.preventDefault();
-        console.log(isFormComplete)
+        dispatch(setGeneralInfo({ liquid: fluidType }));
+        dispatch(setGeneralInfo({ operatingTemperature: temperature }));
+        dispatch(setGeneralInfo({ ratedPressure: pressure }));
+        dispatch(setGeneralInfo({ ratedFlow: performance }));
+        dispatch(setGeneralInfo({ pumpType: pumpType }));
         if (isFormComplete) {
             navigate("/selection/selection_results");
         }
@@ -79,7 +85,7 @@ export const DeviceParamsHydra = () => {
                                     <input
                                         type="radio"
                                         name="hydromodule"
-                                        value="1"
+                                        value="WATER"
                                         onChange={handleFluidTypeChange}
                                     /> Вода
                                 </label>
@@ -88,7 +94,7 @@ export const DeviceParamsHydra = () => {
                                     <input
                                         type="radio"
                                         name="hydromodule"
-                                        value="2"
+                                        value="PROPYLENE_GLYCOL"
                                         onChange={handleFluidTypeChange}
                                     /> Водный раствор пропиленгликоля
                                     <select className={styles.concentraitionSelect}>
@@ -104,7 +110,7 @@ export const DeviceParamsHydra = () => {
                                     <input
                                         type="radio"
                                         name="hydromodule"
-                                        value="3"
+                                        value="ETHYLENE_GLYCOL"
                                         onChange={handleFluidTypeChange}
                                     /> Водный раствор этиленгликоля
                                     <select className={styles.concentraitionSelect}>
@@ -174,7 +180,7 @@ export const DeviceParamsHydra = () => {
                                     <input
                                         type="radio"
                                         name="workingPumps"
-                                        value="1"
+                                        value="VERTICAL"
                                         onChange={(e) => setPumpType(e.target.value)}
                                     /> Вертикальные
                                 </label>
@@ -183,7 +189,7 @@ export const DeviceParamsHydra = () => {
                                     <input
                                         type="radio"
                                         name="workingPumps"
-                                        value="2"
+                                        value="HORIZONTAL"
                                         onChange={(e) => setPumpType(e.target.value)}
                                     /> Горизонтальные
                                 </label>

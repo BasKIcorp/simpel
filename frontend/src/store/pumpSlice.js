@@ -3,6 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     generalInfo: {
         mainPump: '',
+        installationType: '',
+        subType: '',
         liquid: '',
         operatingTemperature: '',
         pumpType: '',
@@ -11,11 +13,13 @@ const initialState = {
         reservePumps: 0,
         controlType: '',
         ratedFlow: '',
-        ratedHead: '',
-        options: ''
+        ratedPressure: '',
+        options: '',
+        totalCapacityOfJockeyPump: '',
+        requiredJockeyPumpPressure: ''
     },
     pumpData: {
-        performance: '',
+        manufacturer: '',
         speed: '',
         numberOfStages: '',
         maxPressure: '',
@@ -45,6 +49,11 @@ const initialState = {
         baseFrame: '',
         pumpBody: '',
         outerCover: ''
+    },
+    points:{
+        pointsPressure: {},
+        pointsPower: {},
+        pointsNPSH: {}
     }
 };
 
@@ -79,10 +88,16 @@ const pumpSlice = createSlice({
                 ...state.materials,
                 ...action.payload // Обновляем только переданные поля
             };
+        },
+        setPoints: (state, action) => {
+            state.points = {
+                ...state.points,
+                ...action.payload // Обновляем только переданные поля
+            };
         }
     }
 });
 
-export const { setGeneralInfo, setPumpData, setMotorData, setMaterials } = pumpSlice.actions;
+export const { setGeneralInfo, setPumpData, setMotorData, setMaterials, setPoints } = pumpSlice.actions;
 
 export default pumpSlice.reducer;

@@ -14,7 +14,7 @@ import {DeviceParamsPNSVPV} from "./pages/deviceParams/DeviceParamsPNSVPV";
 import {DeviceParamsPNSAUTP} from "./pages/deviceParams/DeviceParamsPNSAUTP";
 
 function App() {
-    const token = useSelector((state) => state.token);
+    const token = useSelector((state) => state.user.token);
     const isAuthenticated = token !== "";
 
     return (
