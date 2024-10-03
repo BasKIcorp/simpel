@@ -205,4 +205,5 @@ public abstract class ParentInstallations {
     public Diameter getDiameter() {
         return diameter;
     }
+    public abstract int getTemperature();
 }

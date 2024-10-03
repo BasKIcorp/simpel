@@ -98,6 +98,7 @@ public class Pump {
         this.setName(request.getNamePump());
         this.setSpeed(request.getSpeed());
         this.setNumberOfSteps(request.getNumberOfSteps());
+        this.setManufacturer(request.getManufacturerForPump());
         //наверное нужно отдельно прописать поле для насосов, но пока хз
         this.setMaximumPressure(request.getMaximumPressure());
         this.setMaximumHead(request.getMaximumHead());

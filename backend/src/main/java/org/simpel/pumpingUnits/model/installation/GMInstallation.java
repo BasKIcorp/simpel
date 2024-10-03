@@ -77,7 +77,7 @@ public class GMInstallation extends ParentInstallations {
         this.temperature = temperature;
     }
 
-
+    @Override
     public int getTemperature() {
         return temperature;
     }
