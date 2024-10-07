@@ -6,15 +6,6 @@ public class InstallationSaveRequest extends InstallationRequest {
     //для установок
     private String controlType;
     private String powerType;
-    private String nameForInstallation;
-
-    public String getNameForInstallation() {
-        return nameForInstallation;
-    }
-
-    public void setNameForInstallation(String nameForInstallation) {
-        this.nameForInstallation = nameForInstallation;
-    }
 
     //разница между запросом на сохранение и запросом на гет в том что в запросе на сохранение надо вставлять больше информации поэтому унаследовался от запроса на гет
     //для насосов

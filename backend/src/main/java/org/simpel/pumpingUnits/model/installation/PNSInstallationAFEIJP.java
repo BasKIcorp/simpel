@@ -79,4 +79,14 @@ public class PNSInstallationAFEIJP extends ParentInstallations{
         }
         this.temperature = temperature;
     }
+
+    @Override
+    public void setName() {
+        String form = "Насосная станция пожаротушения FPS-%s%d%d-%s+%s";
+        this.name = String.format(form,this.subtype.getCode(),
+                this.getCountMainPumps() + this.getCountSparePumps(),
+                this.getCountSparePumps(),
+                this.getPumps().get(0).getName(),
+                this.getPumps().get(1).getName());
+    }
 }

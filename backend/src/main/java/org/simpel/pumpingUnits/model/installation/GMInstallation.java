@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
+import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
 
 @Entity
@@ -18,10 +19,11 @@ public class GMInstallation extends ParentInstallations {
     private int temperature;
 
     @Override
-    public void setSpecificFields(InstallationRequest request){
+    public void setSpecificFields(InstallationRequest request) {
         this.setSubtype(SubtypeForGm.valueOf(request.getSubtype()));
         this.setConcentration(request.getConcentration());
         this.setTemperature(request.getTemperature());
+        this.setName();
     }
 
     @Override
@@ -52,10 +54,9 @@ public class GMInstallation extends ParentInstallations {
     }
 
     public void setConcentration(Integer concentration) {
-        if(coolantType == CoolantType.WATER && concentration != null) {
+        if (coolantType == CoolantType.WATER && concentration != null) {
             throw new IllegalArgumentException("Water should not have concentration");
-        }
-        else if(coolantType != CoolantType.WATER && concentration == null) {
+        } else if (coolantType != CoolantType.WATER && concentration == null) {
             throw new IllegalArgumentException("Concentration should not be null for Solution");
         }
 
@@ -70,8 +71,7 @@ public class GMInstallation extends ParentInstallations {
             }
         } else if (temperature < -10 || temperature > 70) {
             throw new IllegalArgumentException("Temperature should be between -10 and 70 degrees Celsius for Solution");
-        }
-        else if(this.coolantType == null) {
+        } else if (this.coolantType == null) {
             throw new IllegalArgumentException("Choose CoolantType before setting the temperature");
         }
         this.temperature = temperature;
@@ -81,4 +81,13 @@ public class GMInstallation extends ParentInstallations {
     public int getTemperature() {
         return temperature;
     }
+
+
+    public void setName() {
+        String form = "Насосная станция BPS-C%s%d%d-%s";
+        this.name = String.format(form, this.subtype.getCode(),
+                this.getCountMainPumps() + this.getCountSparePumps(), this.getCountSparePumps(),
+                this.getPumps().get(0).getName());
+    }
+
 }

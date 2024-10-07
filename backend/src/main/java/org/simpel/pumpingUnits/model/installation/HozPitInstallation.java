@@ -71,4 +71,12 @@ public class HozPitInstallation extends ParentInstallations {
         }
         this.temperature = temperature;
     }
+    @Override
+    public void setName() {
+        String form = "Насосная станция BPS-W-%s%d%d-%s";
+        this.name = String.format(form,this.subtype.getCode(),
+                this.getCountMainPumps() + this.getCountSparePumps(),
+                this.getCountSparePumps(),
+                this.getPumps().get(0).getName());
+    }
 }

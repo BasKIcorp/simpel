@@ -58,9 +58,11 @@ public class InstallationsController {
     @GetMapping("/generate")
     public ResponseEntity<byte[]> generatePdf(@RequestParam Long installationId,
                                               @RequestParam TypeInstallations typeInstallations,
-                                              @RequestParam String subtype) {
+                                              @RequestParam String subtype,
+                                              @RequestParam float x,
+                                              @RequestParam float y) {
         try {
-            byte[] pdfBytes = pdfComponent.createPdf(installationId, typeInstallations, subtype);
+            byte[] pdfBytes = pdfComponent.createPdf(installationId, typeInstallations, subtype,x,y);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);

@@ -8,9 +8,11 @@ import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.border.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.UnitValue;
 import org.simpel.pumpingUnits.model.Material;
 import org.simpel.pumpingUnits.model.Pump;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
@@ -37,7 +39,7 @@ public class PdfComponent<T extends ParentInstallations> {
     }
 
 
-    public byte[] createPdf(/*List<String> options,*/ Long installationId, TypeInstallations typeInstallations, String subtype) throws IOException {
+    public byte[] createPdf(/*List<String> options,*/ Long installationId, TypeInstallations typeInstallations, String subtype, float x, float y) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
             PdfWriter writer = new PdfWriter(outputStream);
@@ -54,9 +56,29 @@ public class PdfComponent<T extends ParentInstallations> {
             List<PointPressure> pointPressure = pump.getPointsPressure();
             List<PointPower> pointPowers = pump.getPointsPower();
             List<PointNPSH> pointNPSH = pump.getPointsNPSH();
-            byte[] graphFirst = GraphCreated.createGraph(pointPressure, "Pressure", countPumps);
-            byte[] graphSecond = GraphCreated.createGraph(pointPowers, "Power", countPumps);
-            byte[] graphThird = GraphCreated.createGraph(pointNPSH, "NPSH", countPumps);
+            byte[] graphFirst = GraphCreated.createGraph(pointPressure, "Pressure", countPumps,x,y);
+            byte[] graphSecond = GraphCreated.createGraph(pointPowers, "Power", countPumps,x,y);
+            byte[] graphThird = GraphCreated.createGraph(pointNPSH, "NPSH", countPumps,x,y);
+
+            Paragraph line1 = new Paragraph(installations.getName())
+                    .setFont(font)
+                    .setFontSize(16)
+                    .setBold()
+                    .setTextAlignment(com.itextpdf.layout.property.TextAlignment.LEFT);
+
+            Paragraph line2 = new Paragraph("Ваша вторая строка текста")
+                    .setFont(font)
+                    .setFontSize(16)
+                    .setBold()
+                    .setTextAlignment(com.itextpdf.layout.property.TextAlignment.LEFT);
+
+            // Устанавливаем позиции для строк
+            line1.setFixedPosition(1,10, 800); // Позиция (x, y) для первой строки
+            line2.setFixedPosition(1,10, 780); // Позиция (x, y) для второй строки
+
+            // Добавляем строки в документ
+            document.add(line1);
+            document.add(line2);
 
         /*BufferedImage imageFirst = ImageIO.read(new ByteArrayInputStream(graphFirst));
         BufferedImage imageSecond = ImageIO.read(new ByteArrayInputStream(graphSecond));
@@ -66,23 +88,40 @@ public class PdfComponent<T extends ParentInstallations> {
             Image pdfImageSecond = new Image(ImageDataFactory.create(graphSecond));
             Image pdfImageThird = new Image(ImageDataFactory.create(graphThird));
 
+            pdfImageFirst.setFixedPosition(10, 525);
+            pdfImageSecond.setFixedPosition(10, 275);
+            pdfImageThird.setFixedPosition(10, 25);
+
             document.add(pdfImageFirst);
             document.add(pdfImageSecond);
             document.add(pdfImageThird);
 
-            pdfImageFirst.setFixedPosition(50, 800);
-            pdfImageSecond.setFixedPosition(50, 525);
-            pdfImageThird.setFixedPosition(50, 250);
+
 
             Table infoTable = createInfoTable(font);
-            infoTable.setFixedPosition(300, 250, 225); // Задаем позицию таблицы справа от графиков
+            infoTable.setFixedPosition(300, 275, 250);
             document.add(infoTable);
-            pdfDoc.addNewPage();
 
             Table pumpTable = createPumpInfoTable(font);
-            pumpTable.setFixedPosition(2,50, 142, 500); // Таблица с другими координатами на новой странице
+            pumpTable.setFixedPosition(2,50, 50, 500);
             document.add(pumpTable);
-            
+
+            /*Table materialTable = createMaterialTable(font);
+            materialTable.setFixedPosition(2,50, 0, 500);
+            document.add(materialTable);*/
+
+            Image imageFirst = new Image(ImageDataFactory.create(installations.getDrawingsPath().get(0)));
+            Image imageSecond = new Image(ImageDataFactory.create(installations.getDrawingsPath().get(1)));
+            Image imageThird = new Image(ImageDataFactory.create(installations.getDrawingsPath().get(2)));
+
+            imageFirst.setFixedPosition(3,0, 421);
+            imageSecond.setFixedPosition(4,0, 421);
+            imageThird.setFixedPosition(5,0, 421);
+
+            document.add(imageFirst);
+            document.add(imageSecond);
+            document.add(imageThird);
+
             document.close();
         }catch (Exception e){
             e.printStackTrace();
@@ -91,12 +130,12 @@ public class PdfComponent<T extends ParentInstallations> {
     }
     private Table createInfoTable(PdfFont font) {
         Table table = new Table(2);
-        Cell headerCell = new Cell(1, 2) // Объединяем две ячейки в одну для заголовка
+        Cell headerCell = new Cell(1, 2)
                 .add(new Paragraph("Информация о установке"))
                 .setBold()
                 .setFont(font)
                 .setFontSize(16)
-                .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER); // Центрируем текст
+                .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER);
         table.addHeaderCell(headerCell);
         table.setFont(font).setFontSize(14);
         table.addCell("Название насоса");
@@ -164,14 +203,15 @@ public class PdfComponent<T extends ParentInstallations> {
     }
     private Table createPumpInfoTable(PdfFont font) {
         Table table = new Table(2);
-        Cell headerCell = new Cell(1, 2) // Объединяем две ячейки в одну для заголовка
+        Cell headerCell = new Cell(1, 2)
                 .add(new Paragraph("Информация о насосе"))
                 .setBold()
                 .setFont(font)
-                .setFontSize(16)
+                .setFontSize(14)
                 .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER);
         table.addHeaderCell(headerCell);
-        table.setFont(font).setFontSize(14);
+        table.setFont(font).setFontSize(10);
+
         table.addCell("Артикул");
         table.addCell(pump.getName());
 
@@ -208,14 +248,57 @@ public class PdfComponent<T extends ParentInstallations> {
         table.addCell("Установочная длина");
         table.addCell(String.valueOf(pump.getInstallationLength()));
 
-        Cell dividerCell = new Cell(1, 2) // Объединяем две ячейки в одну для разделителя
-                .add(new Paragraph("Материалы")) // Добавляем разделительную строку или текст
-                .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER); // Центрируем текст
+        table.addCell("Производитель");
+        if(pump.getManufacturer() != null) {
+            table.addCell(pump.getManufacturer().toString());
+        }else{
+            table.addCell("Тут пока ничего нет");
+        }
+
+        Cell dividerCell = new Cell(1, 2)
+                .add(new Paragraph("Информация про двигатель"))
+                .setBold()
+                .setFont(font)
+                .setFontSize(14)
+                .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER);
         table.addCell(dividerCell);
 
-        /*table.addCell("Производитель");
-        System.out.println(pump.getManufacturer());
-        table.addCell(pump.getManufacturer().toString());*/
+        table.addCell("Мощность");
+        table.addCell(String.valueOf(pump.getEngine().getPower()));
+
+        table.addCell("Сила тока");
+        table.addCell(String.valueOf(pump.getEngine().getAmperage()));
+
+        table.addCell("Напряжение");
+        table.addCell(String.valueOf(pump.getEngine().getVoltage()));
+
+        table.addCell("Обороты");
+        table.addCell(String.valueOf(pump.getEngine().getTurnovers()));
+
+        table.addCell("Тип защиты");
+        table.addCell(pump.getEngine().getTypeOfProtection());
+
+        table.addCell("Тип изоляции");
+        table.addCell(pump.getEngine().getInsulationClass());
+
+        table.addCell("Исполнение");
+        table.addCell(pump.getEngine().getExecution());
+
+        table.addCell("Производитель");
+        table.addCell(pump.getEngine().getManufacturer());
+
+        table.addCell("Цвет");
+        table.addCell(pump.getEngine().getColor());
+
+        table.addCell("Тип насоса");
+        table.addCell(pump.getEngine().getPumpType().toString());
+        Cell cell = new Cell(1, 2) // Объединяем две ячейки в одну для разделителя
+                .add(new Paragraph("Материалы")) // Добавляем разделительную строку или текст
+                .setBold()
+                .setFont(font)
+                .setFontSize(14)
+                .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER); // Центрируем текст
+        table.addCell(cell);
 
         table.addCell("Название сборки материалов");
         table.addCell(material.getName());
@@ -249,7 +332,54 @@ public class PdfComponent<T extends ParentInstallations> {
 
         table.addCell("Внешний кожух");
         table.addCell(material.getExternalCasing());
+
         return table;
     }
+    /*private Table createMaterialTable(PdfFont font) {
+        Table table = new Table(2);
+        Cell headerCell = new Cell(1, 2) // Объединяем две ячейки в одну для заголовка
+                .add(new Paragraph("Материалы"))
+                .setBold()
+                .setFont(font)
+                .setFontSize(16)
+                .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER);
+        table.addHeaderCell(headerCell);
+        table.setFont(font).setFontSize(14);
+        table.setAutoLayout();
+        table.addCell("Название сборки материалов");
+        table.addCell(material.getName());
+
+        table.addCell("Коллектор");
+        table.addCell(material.getCollector());
+
+        table.addCell("Запорный клапан");
+        table.addCell(material.getShutOffValves());
+
+        table.addCell("Обратный клапан");
+        table.addCell(material.getCheckValves());
+
+        table.addCell("Датчик давления");
+        table.addCell(material.getPressureSensors());
+
+        table.addCell("Реле давления");
+        table.addCell(material.getPressureSwitch());
+
+        table.addCell("Заглушки/фланцы");
+        table.addCell(material.getPlugsOrFlanges());
+
+        table.addCell("Стойка");
+        table.addCell(material.getRack());
+
+        table.addCell("Рама-основание");
+        table.addCell(material.getFrameBase());
+
+        table.addCell("Корпус насоса");
+        table.addCell(material.getPumpHousing());
+
+        table.addCell("Внешний кожух");
+        table.addCell(material.getExternalCasing());
+        return table;
+    }*/
+
 
 }

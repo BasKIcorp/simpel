@@ -45,7 +45,7 @@ public class InstallationServiceFactory {
             case HOZPIT:
                 return hozPitService;
             case PNS:
-                if (subtype.equals("ERW_SYSTEM")) {
+                if (subtype.equals("ERW_SYSTEM") || subtype.equals("AFEIJP2")) {
                     return pnsServiceERW;
                 }
                 else if (subtype.equals("AFEIJP")) {
@@ -65,7 +65,7 @@ public class InstallationServiceFactory {
             case HOZPIT:
                 return hozPitRepository;
             case PNS:
-                if (subtype.equals("ERW_SYSTEM")) {
+                if (subtype.equals("ERW_SYSTEM") || subtype.equals("AFEIJP2")) {
                     return pnsERWRepository;
                 }
                 else if (subtype.equals("AFEIJP")) {

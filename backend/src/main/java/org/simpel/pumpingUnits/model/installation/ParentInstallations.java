@@ -40,7 +40,7 @@ public abstract class ParentInstallations {
     private PowerType powerType;
     @Enumerated(EnumType.STRING)
     private Diameter diameter;
-    private String name;
+    protected String name;
 
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -73,7 +73,6 @@ public abstract class ParentInstallations {
     public void setFieldsForSave(InstallationSaveRequest request, MultipartFile[] files,  FileStorageService fileStorageService) throws IOException {
         List<String> pathFiles = fileStorageService.saveFiles(files,request.getTypeInstallations(), request.getSubtype());
         this.setDrawingsPath(pathFiles);
-        this.setName(request.getNameForInstallation());
         this.setControlType(ControlType.valueOf(request.getControlType()));
         this.setPowerType(PowerType.valueOf(request.getPowerType()));
         this.setControlType(ControlType.valueOf(request.getControlType()));
@@ -85,9 +84,8 @@ public abstract class ParentInstallations {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public abstract void setName();
+
 
     public ControlType getControlType() {
         return controlType;

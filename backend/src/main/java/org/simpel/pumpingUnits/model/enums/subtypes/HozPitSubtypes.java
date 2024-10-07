@@ -1,7 +1,21 @@
 package org.simpel.pumpingUnits.model.enums.subtypes;
 
 public enum HozPitSubtypes {
-    MULTI_FREQUENCY_REGULATION,
-    CASCADE_FREQUENCY_CONTROL,
-    RELAY_CONTROL
+    FREQUENCY_CONTROLLED("Управление релейное выходному давлению","R"),
+    RELAY_CONTROL("Управление частотное выходному давлению","I");
+    private final String translation;
+    private final String code;
+
+    HozPitSubtypes(String translation, String code) {
+        this.translation = translation;
+        this.code = code;
+    }
+
+    public String getTranslation() {
+        return translation;
+    }
+
+    public String getCode() {
+        return code;
+    }
 }
