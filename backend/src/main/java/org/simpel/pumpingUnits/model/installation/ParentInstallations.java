@@ -32,8 +32,8 @@ public abstract class ParentInstallations {
     private TypeInstallations typeInstallations;
     private int countMainPumps;
     private int countSparePumps;
-    private int flowRate;
-    private int pressure;
+    private float flowRate;
+    private float pressure;
     @Enumerated(EnumType.STRING)
     private ControlType controlType;
     @Enumerated(EnumType.STRING)
@@ -63,8 +63,8 @@ public abstract class ParentInstallations {
         this.setCoolantType(CoolantType.valueOf(request.getCoolantType()));
         this.setCountMainPumps(request.getCountMainPumps());
         this.setCountSparePumps(request.getCountSparePumps());
-        this.setFlowRate(request.getFlowRate());
-        this.setPressure(request.getPressure());
+        this.setFlowRate(pumps.get(0).getMaximumPressure());
+        this.setPressure(pumps.get(0).getMaximumHead());
 
     }
 
@@ -155,11 +155,11 @@ public abstract class ParentInstallations {
         this.countSparePumps = countSparePumps;
     }
 
-    public int getFlowRate() {
+    public float getFlowRate() {
         return flowRate;
     }
 
-    public void setFlowRate(int flowRate) {
+    public void setFlowRate(float flowRate) {
         if (flowRate >= 0 && flowRate < 16) {
             this.diameter = Diameter.DN50;
         }
@@ -193,11 +193,11 @@ public abstract class ParentInstallations {
         this.flowRate = flowRate;
     }
 
-    public int getPressure() {
+    public float getPressure() {
         return pressure;
     }
 
-    public void setPressure(int pressure) {
+    public void setPressure(float pressure) {
         this.pressure = pressure;
     }
     public Diameter getDiameter() {

@@ -45,14 +45,14 @@ public class GMService implements InstallationServiceInterface<GMInstallation> {
         pump.setFieldsForPumpSave(request, engine, pointsPressure, pointPower, pointNPSH);
         pump.setMaterial(materialRepo.findById(request.getMaterial()));
         GMInstallation gmInstallation = new GMInstallation();
-        gmInstallation.setCommonFields(request);
-        gmInstallation.setSpecificFields(request);
-        gmInstallation.setFieldsForSave(request,files,fileStorageService);
         List<Pump> pumps = new ArrayList<>();
         pumps.add(pump);
         gmInstallation.setPumps(pumps);
         pump.getInstallations().add(gmInstallation);
         System.out.println("qweeqeqweqeqweqweqweqwweqweqweqweqweqweqwe");
+        gmInstallation.setCommonFields(request);
+        gmInstallation.setFieldsForSave(request,files,fileStorageService);
+        gmInstallation.setSpecificFields(request);
         System.out.println(gmInstallation.getTemperature());
         return repository.save(gmInstallation);
     }

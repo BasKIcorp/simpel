@@ -39,7 +39,7 @@ public class PdfComponent<T extends ParentInstallations> {
     }
 
 
-    public byte[] createPdf(/*List<String> options,*/ Long installationId, TypeInstallations typeInstallations, String subtype, float x, float y) throws IOException {
+    public byte[] createPdf(Options options, Long installationId, TypeInstallations typeInstallations, String subtype, float x, float y) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
             PdfWriter writer = new PdfWriter(outputStream);
@@ -60,21 +60,19 @@ public class PdfComponent<T extends ParentInstallations> {
             byte[] graphSecond = GraphCreated.createGraph(pointPowers, "Power", countPumps,x,y);
             byte[] graphThird = GraphCreated.createGraph(pointNPSH, "NPSH", countPumps,x,y);
 
-            Paragraph line1 = new Paragraph(installations.getName())
+            Paragraph line1 = new Paragraph("Код установки: " + installations.getName())
                     .setFont(font)
                     .setFontSize(16)
-                    .setBold()
                     .setTextAlignment(com.itextpdf.layout.property.TextAlignment.LEFT);
 
-            Paragraph line2 = new Paragraph("Ваша вторая строка текста")
+            Paragraph line2 = new Paragraph("Код комплектации: "+options.createCode(installations))
                     .setFont(font)
-                    .setFontSize(16)
-                    .setBold()
+                    .setFontSize(14)
                     .setTextAlignment(com.itextpdf.layout.property.TextAlignment.LEFT);
 
             // Устанавливаем позиции для строк
-            line1.setFixedPosition(1,10, 800); // Позиция (x, y) для первой строки
-            line2.setFixedPosition(1,10, 780); // Позиция (x, y) для второй строки
+            line1.setFixedPosition(1,10,810, 800); // Позиция (x, y) для первой строки
+            line2.setFixedPosition(1, 10,790,800 ); // Позиция (x, y) для второй строки
 
             // Добавляем строки в документ
             document.add(line1);
@@ -89,8 +87,8 @@ public class PdfComponent<T extends ParentInstallations> {
             Image pdfImageThird = new Image(ImageDataFactory.create(graphThird));
 
             pdfImageFirst.setFixedPosition(10, 525);
-            pdfImageSecond.setFixedPosition(10, 275);
-            pdfImageThird.setFixedPosition(10, 25);
+            pdfImageSecond.setFixedPosition(10, 265);
+            pdfImageThird.setFixedPosition(10, 15);
 
             document.add(pdfImageFirst);
             document.add(pdfImageSecond);
@@ -99,7 +97,7 @@ public class PdfComponent<T extends ParentInstallations> {
 
 
             Table infoTable = createInfoTable(font);
-            infoTable.setFixedPosition(300, 275, 250);
+            infoTable.setFixedPosition(300, 255, 250);
             document.add(infoTable);
 
             Table pumpTable = createPumpInfoTable(font);
@@ -142,7 +140,7 @@ public class PdfComponent<T extends ParentInstallations> {
         table.addCell(pump.getName());
 
         table.addCell("Тип Установки");
-        table.addCell(installations.getTypeInstallations().toString());
+        table.addCell(installations.getTypeInstallations().getTranslation());
 
         table.addCell("Подтип Установки");
         table.addCell(installations.getSubtype().toString());

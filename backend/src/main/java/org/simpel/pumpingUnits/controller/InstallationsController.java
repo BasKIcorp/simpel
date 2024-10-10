@@ -1,5 +1,6 @@
 package org.simpel.pumpingUnits.controller;
 
+import org.simpel.pumpingUnits.controller.installationsUtilsModel.GeneratePdfRequest;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationPointRequest;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
@@ -55,14 +56,17 @@ public class InstallationsController {
             return ResponseEntity.badRequest().body("Some data is missing, fill out the form completely and submit again");
         }
     }
-    @GetMapping("/generate")
-    public ResponseEntity<byte[]> generatePdf(@RequestParam Long installationId,
-                                              @RequestParam TypeInstallations typeInstallations,
-                                              @RequestParam String subtype,
-                                              @RequestParam float x,
-                                              @RequestParam float y) {
+    @PostMapping("/generate")
+    public ResponseEntity<byte[]> generatePdf(@RequestBody GeneratePdfRequest request) {
         try {
-            byte[] pdfBytes = pdfComponent.createPdf(installationId, typeInstallations, subtype,x,y);
+            byte[] pdfBytes = pdfComponent.createPdf(
+                    request.getOptions(),
+                    request.getInstallationId(),
+                    request.getTypeInstallations(),
+                    request.getSubtype(),
+                    request.getX(),
+                    request.getY()
+            );
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
