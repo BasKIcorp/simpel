@@ -15,7 +15,11 @@ import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.UnitValue;
 import org.simpel.pumpingUnits.model.Material;
 import org.simpel.pumpingUnits.model.Pump;
+import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
+import org.simpel.pumpingUnits.model.enums.subtypes.HozPitSubtypes;
+import org.simpel.pumpingUnits.model.enums.subtypes.PNSSubtypes;
+import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
 import org.simpel.pumpingUnits.model.installation.*;
 import org.simpel.pumpingUnits.service.installationService.InstallationServiceFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -56,9 +60,9 @@ public class PdfComponent<T extends ParentInstallations> {
             List<PointPressure> pointPressure = pump.getPointsPressure();
             List<PointPower> pointPowers = pump.getPointsPower();
             List<PointNPSH> pointNPSH = pump.getPointsNPSH();
-            byte[] graphFirst = GraphCreated.createGraph(pointPressure, "Pressure", countPumps,x,y);
-            byte[] graphSecond = GraphCreated.createGraph(pointPowers, "Power", countPumps,x,y);
-            byte[] graphThird = GraphCreated.createGraph(pointNPSH, "NPSH", countPumps,x,y);
+            byte[] graphFirst = GraphCreated.createGraph(pointPressure, "Pressure", countPumps,x,y,true,false);
+            byte[] graphSecond = GraphCreated.createGraph(pointPowers, "Power", countPumps,x,y,false,false);
+            byte[] graphThird = GraphCreated.createGraph(pointNPSH, "NPSH", countPumps,x,y,false,true);
 
             Paragraph line1 = new Paragraph("Код установки: " + installations.getName())
                     .setFont(font)
@@ -82,27 +86,32 @@ public class PdfComponent<T extends ParentInstallations> {
         BufferedImage imageSecond = ImageIO.read(new ByteArrayInputStream(graphSecond));
         BufferedImage imageThird = ImageIO.read(new ByteArrayInputStream(graphThird));*/
 
-            Image pdfImageFirst = new Image(ImageDataFactory.create(graphFirst));
-            Image pdfImageSecond = new Image(ImageDataFactory.create(graphSecond));
-            Image pdfImageThird = new Image(ImageDataFactory.create(graphThird));
+//            Image pdfImageFirst = new Image(ImageDataFactory.create(graphFirst));
+//            Image pdfImageSecond = new Image(ImageDataFactory.create(graphSecond));
+//            Image pdfImageThird = new Image(ImageDataFactory.create(graphThird));
 
-            pdfImageFirst.setFixedPosition(10, 525);
-            pdfImageSecond.setFixedPosition(10, 265);
-            pdfImageThird.setFixedPosition(10, 15);
+            Image image = new Image(ImageDataFactory.create(GraphCreated.createCombinedGraph(pump.getPointsPressure(),pump.getPointsPower(),pump.getPointsNPSH(),installations.getCountMainPumps(),x,y)));
+            image.setFixedPosition(1,10, 30);
+            document.add(image);
 
-            document.add(pdfImageFirst);
-            document.add(pdfImageSecond);
-            document.add(pdfImageThird);
+//            pdfImageFirst.setFixedPosition(10, 530);
+//            pdfImageSecond.setFixedPosition(10, 280);
+//            pdfImageThird.setFixedPosition(10, 30);
+//
+//            document.add(pdfImageFirst);
+//            document.add(pdfImageSecond);
+//            document.add(pdfImageThird);
+
 
 
 
             Table infoTable = createInfoTable(font);
-            infoTable.setFixedPosition(300, 255, 250);
+            infoTable.setFixedPosition(1,275,457,250);
             document.add(infoTable);
 
-            Table pumpTable = createPumpInfoTable(font);
+            /*Table pumpTable = createPumpInfoTable(font);
             pumpTable.setFixedPosition(2,50, 50, 500);
-            document.add(pumpTable);
+            document.add(pumpTable);*/
 
             /*Table materialTable = createMaterialTable(font);
             materialTable.setFixedPosition(2,50, 0, 500);
@@ -112,9 +121,17 @@ public class PdfComponent<T extends ParentInstallations> {
             Image imageSecond = new Image(ImageDataFactory.create(installations.getDrawingsPath().get(1)));
             Image imageThird = new Image(ImageDataFactory.create(installations.getDrawingsPath().get(2)));
 
-            imageFirst.setFixedPosition(3,0, 421);
-            imageSecond.setFixedPosition(4,0, 421);
-            imageThird.setFixedPosition(5,0, 421);
+            float availableWidth = (document.getPdfDocument().getDefaultPageSize().getWidth() - document.getLeftMargin() - document.getRightMargin()) / 2;
+            float topHeight = 200;
+            float bottomHeight = 250;
+
+            imageFirst.scaleToFit(availableWidth, topHeight);
+            imageSecond.scaleToFit(availableWidth, topHeight);
+            imageThird.scaleToFit(document.getPdfDocument().getDefaultPageSize().getWidth() - document.getLeftMargin() - document.getRightMargin(), bottomHeight);
+
+            imageFirst.setFixedPosition(2, document.getLeftMargin(), 400);
+            imageSecond.setFixedPosition(2, document.getLeftMargin() + availableWidth, 400);
+            imageThird.setFixedPosition(2, document.getLeftMargin(), 100);
 
             document.add(imageFirst);
             document.add(imageSecond);
@@ -127,62 +144,80 @@ public class PdfComponent<T extends ParentInstallations> {
         return outputStream.toByteArray();
     }
     private Table createInfoTable(PdfFont font) {
-        Table table = new Table(2);
-        Cell headerCell = new Cell(1, 2)
+        Table table = new Table(4);
+        Cell headerCell = new Cell(1, 4)
                 .add(new Paragraph("Информация о установке"))
                 .setBold()
                 .setFont(font)
                 .setFontSize(16)
                 .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER);
+        table.setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER);
+        table.setFont(font);
+        table.setFontSize(12);
         table.addHeaderCell(headerCell);
         table.setFont(font).setFontSize(14);
-        table.addCell("Название насоса");
-        table.addCell(pump.getName());
 
-        table.addCell("Тип Установки");
-        table.addCell(installations.getTypeInstallations().getTranslation());
+        table.addCell(new Cell(1,2).add(new Paragraph("Название насоса")));
+        table.addCell(new Cell(1,2).add(new Paragraph(pump.getName())));
 
-        table.addCell("Подтип Установки");
-        table.addCell(installations.getSubtype().toString());
+        table.addCell(new Cell(1,2).add(new Paragraph("Тип Установки")));
+        table.addCell(new Cell(1,2).add(new Paragraph(installations.getTypeInstallations().getTranslation())));
 
-        table.addCell("Количество насосов");
-        table.addCell(String.valueOf(installations.getCountMainPumps()+installations.getCountSparePumps()));
 
-        table.addCell("Количество основных насосов");
-        table.addCell(String.valueOf(installations.getCountMainPumps()));
+        table.addCell(new Cell(1,2).add(new Paragraph("Подтип Установки")));
 
-        table.addCell("Количество резервных насосов");
-        table.addCell(String.valueOf(installations.getCountSparePumps()));
+        switch (installations.getClass().getSimpleName()){
+            case "GMInstallation":
+                table.addCell(new Cell(1,2).add(new Paragraph( SubtypeForGm.valueOf(installations.getSubtype().toString()).getTranslation())));
+                break;
+            case "HozPitInstallation"  :
+                table.addCell(new Cell(1,2).add(new Paragraph( HozPitSubtypes.valueOf(installations.getSubtype().toString()).getTranslation())));
+                break;
+            case "PNSInstallationAFEIJP" :
+                table.addCell(new Cell(1,2).add(new Paragraph( PNSSubtypes.valueOf(installations.getSubtype().toString()).getTranslation())));
+                break;
+            case "PNSInstallationERW":
+                table.addCell(new Cell(1,2).add(new Paragraph( PNSSubtypes.valueOf(installations.getSubtype().toString()).getTranslation())));
+        }
+
+
+//        table.addCell("Количество насосов");
+//        table.addCell(String.valueOf(installations.getCountMainPumps()+installations.getCountSparePumps()));
+//        table.addCell("Количество основных насосов");
+//        table.addCell(String.valueOf(installations.getCountMainPumps()));
+//        table.addCell("Количество резервных насосов");
+//        table.addCell(String.valueOf(installations.getCountSparePumps()));
+
+        table.addCell(new Cell().add(new Paragraph("Количество основных насосов")));
+        table.addCell(new Cell().add(new Paragraph(String.valueOf(installations.getCountMainPumps()))));
+        table.addCell(new Cell().add(new Paragraph("Количество резервных насосов")));
+        table.addCell(new Cell().add(new Paragraph(String.valueOf(installations.getCountSparePumps()))));
 
         table.addCell("Тип жидкости");
         table.addCell(String.valueOf(installations.getCoolantType().getTranslation()));
+        table.addCell("Концентрация");
+        if(installations.getConcentration() != null){
+            table.addCell(String.valueOf(installations.getConcentration()));
+        }else {
+            table.addCell("Концентрация отсутствует");
+        }
 
-        table.addCell("Температура");
-        table.addCell(String.valueOf(installations.getTemperature()));
+        table.addCell(new Cell(1,2).add(new Paragraph("Температура")));
+        table.addCell(new Cell(1,2).add(new Paragraph(String.valueOf(installations.getTemperature()))));
 
-        table.addCell("Тип управления");
-        table.addCell(String.valueOf(installations.getControlType().toString()));
+        table.addCell(new Cell(1,2).add(new Paragraph("Тип управления")));
+        table.addCell(new Cell(1,2).add(new Paragraph(String.valueOf(installations.getControlType().toString()))));
 
         table.addCell("Подача");
         table.addCell(String.valueOf(installations.getFlowRate()));
-
         table.addCell("Напор");
         table.addCell(String.valueOf(installations.getPressure()));
 
         switch (installations.getClass().getSimpleName()){
-            case "GMInstallation":
-                GMInstallation gmInstallation = (GMInstallation) installations;
-                table.addCell("Концентрация");
-                if(gmInstallation.getConcentration() != null){
-                    table.addCell(String.valueOf(gmInstallation.getConcentration()));
-                }else {
-                    table.addCell("Концентрация отсутствует");
-                }
-                break;
             case "HozPitInstallation"  :
                 HozPitInstallation hpInstallation = (HozPitInstallation) installations;
-                table.addCell("Вид насоса");
-                table.addCell( hpInstallation.getPumpType().toString());
+                table.addCell(new Cell(1,2).add(new Paragraph("Вид насоса")));
+                table.addCell(new Cell(1,2).add(new Paragraph(hpInstallation.getPumpType().toString())));
                 break;
             case "PNSInstallationAFEIJP" :
                 PNSInstallationAFEIJP pnsInstallation = (PNSInstallationAFEIJP) installations;
@@ -193,8 +228,10 @@ public class PdfComponent<T extends ParentInstallations> {
                 break;
             case "PNSInstallationERW":
                 PNSInstallationERW pnsInstallationErw = (PNSInstallationERW) installations;
-                table.addCell("Вид насоса");
-                table.addCell( pnsInstallationErw.getPumpType().toString());
+                table.addCell(new Cell(1,2).add(new Paragraph("Вид насоса")));
+                table.addCell(new Cell(1,2).add(new Paragraph(pnsInstallationErw.getPumpType().toString())));
+            default:
+                break;
         }
 
         return table;

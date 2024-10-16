@@ -23,7 +23,7 @@ public class GMInstallation extends ParentInstallations {
         this.setSubtype(SubtypeForGm.valueOf(request.getSubtype()));
         this.setConcentration(request.getConcentration());
         this.setTemperature(request.getTemperature());
-        this.setName();
+
     }
 
     @Override

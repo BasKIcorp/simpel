@@ -72,8 +72,8 @@ public class PNSServiceAFEIJP implements InstallationServiceInterface <PNSInstal
                 installationRequest.getCountSparePumps(),
                 installationRequest.getTotalCapacityOfJockeyPump(),
                 installationRequest.getRequiredJockeyPumpPressure(),
-                maxFlowRate,
-                minFlowRate);
+                minFlowRate,
+                maxFlowRate);
         return searchComponent.get(suitableInstallations);
     }
 }

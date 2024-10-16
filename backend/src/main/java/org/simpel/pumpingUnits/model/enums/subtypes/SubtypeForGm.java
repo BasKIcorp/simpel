@@ -6,8 +6,6 @@ public enum SubtypeForGm {
     PRESSURE_DROP_FREQUENCY_CONTROLLED("Управление частотное по перепаду давления", "2I"),
     PRESSURE_DROP_RELAY_CONTROL("Управление релейное по перепаду давления", "2R");
     private final String translation;
-
-
     private final String code;
 
     SubtypeForGm(String translation, String code) {

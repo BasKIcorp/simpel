@@ -72,8 +72,8 @@ public class PNSServiceERW implements InstallationServiceInterface<PNSInstallati
                 installationRequest.getCountMainPumps(),
                 installationRequest.getCountSparePumps(),
                 PumpTypeForSomeInstallation.valueOf(installationRequest.getPumpTypeForSomeInstallation()),
-                maxFlowRate,
-                minFlowRate);
+                minFlowRate,
+                maxFlowRate);
         return searchComponent.get(suitableInstallations);
     }
 }

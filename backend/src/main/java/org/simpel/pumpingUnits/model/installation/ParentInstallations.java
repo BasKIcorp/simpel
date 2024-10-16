@@ -63,8 +63,7 @@ public abstract class ParentInstallations {
         this.setCoolantType(CoolantType.valueOf(request.getCoolantType()));
         this.setCountMainPumps(request.getCountMainPumps());
         this.setCountSparePumps(request.getCountSparePumps());
-        this.setFlowRate(pumps.get(0).getMaximumPressure());
-        this.setPressure(pumps.get(0).getMaximumHead());
+
 
     }
 
@@ -77,6 +76,10 @@ public abstract class ParentInstallations {
         this.setPowerType(PowerType.valueOf(request.getPowerType()));
         this.setControlType(ControlType.valueOf(request.getControlType()));
         this.setPowerType(PowerType.valueOf(request.getPowerType()));
+        this.setFlowRate(pumps.get(0).getMaximumPressure());
+        this.setPressure(pumps.get(0).getMaximumHead());
+        this.setName();
+
     }
 
 
@@ -204,4 +207,5 @@ public abstract class ParentInstallations {
         return diameter;
     }
     public abstract int getTemperature();
+    public abstract Integer getConcentration();
 }

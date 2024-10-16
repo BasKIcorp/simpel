@@ -64,6 +64,11 @@ public class HozPitInstallation extends ParentInstallations {
         return temperature;
     }
 
+    @Override
+    public Integer getConcentration() {
+        return null;
+    }
+
 
     public void setTemperature(int temperature) {
         if(temperature < 4 || temperature > 70){
