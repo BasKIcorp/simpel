@@ -14,8 +14,8 @@ export const DeviceParamsHydra = () => {
     // Состояния для полей формы
     const [fluidType, setFluidType] = useState('');
     const [temperature, setTemperature] = useState('');
-    const [performance, setPerformance] = useState('');
-    const [pressure, setPressure] = useState('');
+    const [performance, setPerformance] = useState(0);
+    const [pressure, setPressure] = useState(0);
     const [pumpType, setPumpType] = useState('');
     const [temperatureError, setTemperatureError] = useState('');
     const dispatch = useDispatch();
@@ -59,6 +59,7 @@ export const DeviceParamsHydra = () => {
 
     const handleArrowClick = async (e) => {
         e.preventDefault();
+
         dispatch(setGeneralInfo({ liquid: fluidType }));
         dispatch(setGeneralInfo({ operatingTemperature: temperature }));
         dispatch(setGeneralInfo({ ratedPressure: pressure }));

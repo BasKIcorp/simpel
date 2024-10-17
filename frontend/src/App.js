@@ -12,11 +12,16 @@ import Result from "./pages/result/Result";
 import {DeviceParamsHVS} from "./pages/deviceParams/DeviceParamsHVS";
 import {DeviceParamsPNSVPV} from "./pages/deviceParams/DeviceParamsPNSVPV";
 import {DeviceParamsPNSAUTP} from "./pages/deviceParams/DeviceParamsPNSAUTP";
-
+import {RedirectOnRefresh} from "./components/RedirectOnRefresh"
+import {useEffect} from "react";
 function App() {
     const token = useSelector((state) => state.user.token);
     const isAuthenticated = token !== "";
-
+    useEffect(() => {
+        if (performance.getEntriesByType("navigation")[0].type === "reload" && window.location.href.includes("/selection")) {
+            window.location.href = '/selection/installation_choice';
+        }
+    }, []);
     return (
         <Routes>
             {/* Корневой маршрут */}

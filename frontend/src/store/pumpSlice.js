@@ -12,11 +12,12 @@ const initialState = {
         workingPumps: 0,
         reservePumps: 0,
         controlType: '',
-        ratedFlow: '',
-        ratedPressure: '',
+        ratedFlow: 0,
+        ratedPressure: 0,
         options: '',
         totalCapacityOfJockeyPump: '',
-        requiredJockeyPumpPressure: ''
+        requiredJockeyPumpPressure: '',
+        pumpTypeForSomeInstallation: '',
     },
     pumpData: {
         manufacturer: '',
@@ -50,10 +51,39 @@ const initialState = {
         pumpBody: '',
         outerCover: ''
     },
-    points:{
+    points: {
         pointsPressure: {},
         pointsPower: {},
         pointsNPSH: {}
+    },
+    options: {
+        execution: '', // Стандартное
+        collectorMaterial: '', // AISI304
+        connectionType: '', // грувлок (victaulic)
+        vibrationSupports: '', // нет
+        vibrationCompensators: '',
+        filter: '', // нет
+        membraneTank: '', // нет
+        bufferTank: '', // нет
+        bufferTankMaterial: '', // Сталь 20
+        bufferTankVolume: '', // 200 л
+        safetyValve: '', // нет
+        pressureSetting: '',
+        automaticAirVent: '', // нет
+        fillModule: '', // нет
+        fillPressure: '', // 4 бар
+        fillVolume: '', // 200 л
+        remoteControl: {
+            softStart: false,
+            freeCooling: false,
+            remoteSwitch: false,
+            modbusRTU: false,
+            modbusTCP: false,
+            gprsModule: false,
+            remoteStart: false,
+            errorSignal: false,
+            pumpRunningSignal: false,
+        }
     }
 };
 
@@ -61,28 +91,24 @@ const pumpSlice = createSlice({
     name: 'pump',
     initialState,
     reducers: {
-        // Для обновления только части полей generalInfo
         setGeneralInfo: (state, action) => {
             state.generalInfo = {
                 ...state.generalInfo,
                 ...action.payload // Обновляем только переданные поля
             };
         },
-        // Для обновления только части полей pumpData
         setPumpData: (state, action) => {
             state.pumpData = {
                 ...state.pumpData,
                 ...action.payload // Обновляем только переданные поля
             };
         },
-        // Для обновления только части полей motorData
         setMotorData: (state, action) => {
             state.motorData = {
                 ...state.motorData,
                 ...action.payload // Обновляем только переданные поля
             };
         },
-        // Для обновления только части полей materials
         setMaterials: (state, action) => {
             state.materials = {
                 ...state.materials,
@@ -94,10 +120,16 @@ const pumpSlice = createSlice({
                 ...state.points,
                 ...action.payload // Обновляем только переданные поля
             };
+        },
+        setAdditionalOptions: (state, action) => {
+            state.options = {
+                ...state.options,
+                ...action.payload // Обновляем только переданные поля
+            };
         }
     }
 });
 
-export const { setGeneralInfo, setPumpData, setMotorData, setMaterials, setPoints } = pumpSlice.actions;
+export const { setGeneralInfo, setPumpData, setMotorData, setMaterials, setPoints, setAdditionalOptions } = pumpSlice.actions;
 
 export default pumpSlice.reducer;

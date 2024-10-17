@@ -10,10 +10,10 @@ import {setGeneralInfo} from "../../store/pumpSlice";
 export const DeviceParamsHVS = () => {
     const navigate = useNavigate();
 
-    const [liquidType, setLiquidType] = useState('water');
+    const [liquidType, setLiquidType] = useState('WATER');
     const [temperature, setTemperature] = useState('');
-    const [performance, setPerformance] = useState('');
-    const [pressure, setPressure] = useState('');
+    const [performance, setPerformance] = useState(0);
+    const [pressure, setPressure] = useState(0);
     const [pumpType, setPumpType] = useState('');
     const [temperatureError, setTemperatureError] = useState('');
     const dispatch = useDispatch();
@@ -27,13 +27,15 @@ export const DeviceParamsHVS = () => {
             pumpType
         );
     };
-
+    {        console.log(performance)
+    }
     const handleArrowClick = async (e) => {
         e.preventDefault();
         dispatch(setGeneralInfo({ liquid: liquidType }));
         dispatch(setGeneralInfo({ operatingTemperature: temperature }));
         dispatch(setGeneralInfo({ ratedPressure: pressure }));
-
+        dispatch(setGeneralInfo({ ratedFlow: performance }));
+        dispatch(setGeneralInfo({ pumpTypeForSomeInstallation: pumpType}))
         if (isFormComplete()) {
             navigate("/selection/selection_results");
         }
@@ -134,13 +136,13 @@ export const DeviceParamsHVS = () => {
                             <h3 className={styles.formSubtitle}>Тип насосов</h3>
                             <div className={styles.radioGroup}>
                                 <label>
-                                    <input type="radio" name="workingPumps" value="1"
+                                    <input type="radio" name="workingPumps" value="VERTICAL"
                                            onChange={(e) => setPumpType(e.target.value)}
                                     /> Вертикальные
                                 </label>
                                 <br/>
                                 <label>
-                                    <input type="radio" name="workingPumps" value="2"
+                                    <input type="radio" name="workingPumps" value="HORIZONTAL"
                                            onChange={(e) => setPumpType(e.target.value)}
                                     /> Горизонтальные
                                 </label>

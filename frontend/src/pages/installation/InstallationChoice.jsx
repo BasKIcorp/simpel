@@ -33,9 +33,8 @@ export const InstallationChoice = () => {
         } else if (installationType === "HOZPIT") {
             navigate("/selection/device_params_hvs");
         } else if (installationType === "PNS") {
-            if (hydromoduleType === "1") {
+            if (hydromoduleType === "ERW_SYSTEM") {
                 navigate("/selection/device_params_pns_vpv");
-
             } else {
                 navigate("/selection/device_params_pns_autp");
             }
@@ -101,8 +100,8 @@ export const InstallationChoice = () => {
                                             name="hydromodule"
                                             value="FREQUENCY_CONTROLLED"
                                             onChange={(e) => setHydromoduleType(e.target.value)}
-                                        />{""}
-                                        С частотным управлением по перепаду давления
+                                        />{" "}
+                                         С частотным управлением по перепаду давления
                                     </label>
                                     <br/>
                                     <label>
@@ -111,8 +110,8 @@ export const InstallationChoice = () => {
                                             name="hydromodule"
                                             value="RELAY_CONTROL"
                                             onChange={(e) => setHydromoduleType(e.target.value)}
-                                        />{""}
-                                        С релейным управлением по давлению на выходе
+                                        />{" "}
+                                         С релейным управлением по давлению на выходе
                                     </label>
                                     <br/>
                                     <label>
@@ -137,7 +136,7 @@ export const InstallationChoice = () => {
                                         <input
                                             type="radio"
                                             name="hydromodule"
-                                            value="FREQUENCY_CONTROLLED"
+                                            value="CASCADE_FREQUENCY_CONTROL"
                                             onChange={(e) => setHydromoduleType(e.target.value)}
                                         />{" "}
                                         С мульти-частотным регулированием (ПЧ на каждый насос)
@@ -164,7 +163,7 @@ export const InstallationChoice = () => {
                                         <input
                                             type="radio"
                                             name="hydromodule"
-                                            value="ERW_SYSTEM,"
+                                            value="ERW_SYSTEM"
                                             onChange={(e) => setHydromoduleType(e.target.value)}
                                         />{" "}
                                         Установка для системы ВПВ

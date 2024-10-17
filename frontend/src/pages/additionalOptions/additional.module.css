@@ -25,6 +25,7 @@
     position: relative;
     background-color: white;
     padding: 20px; /* Настройте отступы по вашему усмотрению */
+
 }
 
 .rightSide {
@@ -67,7 +68,7 @@
     -moz-appearance: none;
     background-color: white;
     padding: 8px 40px 8px 12px; /* Отступ справа для стрелки */
-    width: 100%;
+    width: 43%;
     font-size: 16px;
     border: 1px solid #000;
     border-radius: 6px;
@@ -139,4 +140,42 @@
 .arrowWrapper {
 
     position: relative; /* Задаем родителю относительное позиционирование */
+}
+
+/* additional.module.css */
+.leftSide {
+    max-height: 80vh; /* Ограничиваем высоту панели */
+    overflow-y: scroll; /* Включаем вертикальную прокрутку */
+    padding-right: 10px; /* Добавляем немного пространства справа */
+}
+
+.temperatureInput {
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #000; /* Стандартная граница */
+    border-radius: 6px;
+    height: 30px;
+    width: 43%; /* Ширина инпута */
+    transition: border-color 0.3s ease; /* Плавный переход для рамки */
+}
+
+.anotherInput {
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #000; /* Стандартная граница */
+    border-radius: 6px;
+    height: 30px;
+    width: 43%; /* Ширина инпута */
+    transition: border-color 0.3s ease; /* Плавный переход для рамки */
+}
+h3{
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+label{
+    margin-bottom: 5px;
+}
+h4{
+    margin-top: 10px;
+    font-weight: 550;
 }

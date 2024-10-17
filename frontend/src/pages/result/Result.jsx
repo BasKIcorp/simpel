@@ -16,6 +16,99 @@ function Result() {
     const motorData = useSelector((state) => state.pump.motorData);
     const materials = useSelector((state) => state.pump.materials);
     const points = useSelector((state) => state.pump.points)
+    const options = useSelector((state) => state.pump.options)
+
+    const remoteControlNames = {
+        freeCooling: 'Режим "фрикулинга" /сниженной нагрузки',
+        remoteStart: 'Удаленный пуск',
+        errorSignal: 'Сигнал ошибки/аварии насоса',
+        pumpRunningSignal: 'Сигнал работы насоса',
+        remoteSwitch: 'Удаленное переключение режимов зима/лето',
+        modbusRTU: 'ModBus RTU',
+        modbusTCP: 'Modbus TCP',
+        gprsModule: 'Модуль GPRS оповещения',
+        softStart: 'Плавный пуск'
+    };
+
+    const executionOptions = {
+        1: 'Стандартное',
+        2: 'В уличном кожухе',
+        3: 'В утепленном кожухе с обогревом',
+        4: 'Арктическое',
+    };
+
+    const collectorMaterialOptions = {
+        1: 'AISI304',
+        2: 'AISI316',
+        3: 'Окрашенная углеродистая сталь',
+        4: 'Сталь 20',
+    };
+
+    const connectionTypeOptions = {
+        1: 'грувлок (victaulic)',
+        2: 'фланцевое',
+    };
+
+    const vibrationSupportsOptions = {
+        1: 'нет',
+        2: 'да',
+    };
+
+    const filterOptions = {
+        1: 'нет',
+        2: '1 на коллекторе',
+        3: 'на каждый насос',
+    };
+
+    const membraneTankOptions = {
+        0: 'нет',
+        1: '8л',
+        2: '12л',
+        3: '18л',
+        4: '24л',
+        5: '35л',
+        6: '35л (отдельностоящий)',
+        7: '50л',
+        8: '50л (отдельностоящий)',
+        9: '80л',
+        10: '80л (отдельностоящий)',
+        11: '100л',
+        12: '100 л',
+        13: '200 л',
+        14: '300л',
+        15: '500л',
+        16: '750 л',
+        17: '1000л',
+        18: '1500 л',
+    };
+
+    const bufferTankOptions = {
+        0: 'нет',
+        1: 'вертикальный',
+        2: 'горизонтальный',
+    };
+
+    const bufferTankMaterialOptions = {
+        1: 'Сталь 20',
+        2: 'AISI304',
+    };
+
+    const safetyValveOptions = {
+        1: 'нет',
+        2: 'да',
+    };
+
+    const automaticAirVentOptions = {
+        1: 'нет',
+        2: 'на коллекторе',
+    };
+
+    const fillModuleOptions = {
+        1: 'нет',
+        2: 'с вмонтированной емкостью',
+    };
+
+
     const handleImageChange = (e) => {
         setSelectedImage(e.target.value);
     };
@@ -160,10 +253,7 @@ function Result() {
                                     <td>Номинальный напор</td>
                                     <td>{generalInfo.ratedPressure || '55,4 м вод. ст.'}</td>
                                 </tr>
-                                <tr>
-                                    <td>Опции</td>
-                                    <td>{generalInfo.options || 'нет'}</td>
-                                </tr>
+
                                 <tr>
                                     <th className={styles.tableTitle}>Данные насоса</th>
                                     <th className={styles.tableTitle}>Значение</th>
@@ -281,6 +371,92 @@ function Result() {
                                 <tr>
                                     <td>Внешний кожух</td>
                                     <td>{materials.outerCover || 'Чугун'}</td>
+                                </tr>
+                                <tr>
+                                    <td className={styles.tableTitle}>Опции</td>
+                                    <td className={styles.tableTitle}>Значения</td>
+                                </tr>
+                                <tr>
+                                    <td>Исполнение</td>
+                                    <td>{executionOptions[options.execution]}</td>
+                                </tr>
+                                <tr>
+                                    <td>Материал коллекторов</td>
+                                    <td>{collectorMaterialOptions[options.collectorMaterial]}</td>
+                                </tr>
+                                {generalInfo.installationType === "GM" && (<tr>
+                                    <td>Тип подключения</td>
+                                    <td>{connectionTypeOptions[options.connectionType]}</td>
+                                </tr>)}
+                                <tr>
+                                    <td>Виброопоры</td>
+                                    <td>{vibrationSupportsOptions[options.vibrationSupports]}</td>
+                                </tr>
+                                <tr>
+                                    <td>Фильтр</td>
+                                    <td>{filterOptions[options.filter]}</td>
+                                </tr>
+                                <tr>
+                                    <td>Мембранный бак</td>
+                                    <td>{membraneTankOptions[options.membraneTank]}</td>
+                                </tr>
+                                {generalInfo.installationType === "GM" && (
+                                    <>
+                                    <tr>
+                                    <td>Буферный бак</td>
+                                    <td>{bufferTankOptions[options.bufferTank]}</td>
+                                </tr>
+                                {options.bufferTank !== "0" && (
+                                    <>
+                                        <tr>
+                                            <td>Материал буферного бака</td>
+                                            <td>{bufferTankMaterialOptions[options.bufferTankMaterial]}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Объем буферного бака</td>
+                                            <td>{["200 л", "300 л", "500 л", "750 л", "1000 л", "1500 л", "2000 л", "2500 л", "3000 л", "3500 л", "4000 л", "50000 л"][options.bufferTankVolume]}</td>
+                                        </tr>
+                                    </>
+                                )}
+                                <tr>
+                                    <td>Предохранительный клапан</td>
+                                    <td>{safetyValveOptions[options.safetyValve]}</td>
+                                </tr>
+                                {options.safetyValve === "2" && (
+                                    <tr>
+                                        <td>Давление настройки</td>
+                                        <td>{options.pressureSetting ? `${options.pressureSetting} бар` : 'Не задано'}</td>
+                                    </tr>
+                                )}
+                                <tr>
+                                    <td>Автоматический воздухоотводчик</td>
+                                    <td>{automaticAirVentOptions[options.automaticAirVent]}</td>
+                                </tr>
+                                <tr>
+                                    <td>Заливочный модуль</td>
+                                    <td>{fillModuleOptions[options.fillModule]}</td>
+                                </tr>
+                                {options.fillModule === "2" && (
+                                    <>
+                                        <tr>
+                                            <td>Давление</td>
+                                            <td>{options.fillPressure} бар</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Объем</td>
+                                            <td>{options.fillVolume} л</td>
+                                        </tr>
+                                    </>
+                                )}</>)}
+                                {/* Отображение опций дистанционного управления */}
+                                <tr>
+                                    <td>Дистанционное управление</td>
+                                    <td style={{whiteSpace: 'pre-wrap'}}>
+                                        {Object.entries(options.remoteControl)
+                                            .filter(([key, value]) => value === true)
+                                            .map(([key]) => remoteControlNames[key] || key)
+                                            .join('\n') || 'нет'}
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>

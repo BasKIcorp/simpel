@@ -10,7 +10,7 @@ import {setGeneralInfo} from "../../store/pumpSlice";
 export const DeviceParamsPNSAUTP = () => {
     const navigate = useNavigate();
 
-    const [liquidType, setLiquidType] = useState('water');
+    const [liquidType, setLiquidType] = useState('WATER');
     const [temperature, setTemperature] = useState('');
     const [performance, setPerformance] = useState('');
     const [performanceJokey, setPerformanceJokey] = useState('');
@@ -85,7 +85,7 @@ export const DeviceParamsPNSAUTP = () => {
                     <div className={styles.leftSide}>
                         <h1 className={styles.formTitle}>Параметры прибора</h1>
 
-                        {liquidType === 'water' && (
+                        {liquidType === 'WATER' && (
                             <div className={styles.temperatureGroup} style={{ marginTop: 20 }}>
                                 <h2 className={styles.formSubtitle}>Температура воды</h2>
                                 {/*(4°C – 50°C)*/}

@@ -34,7 +34,7 @@ export const DeviceParamsPNSVPV = () => {
         dispatch(setGeneralInfo({ operatingTemperature: temperature }));
         dispatch(setGeneralInfo({ ratedPressure: pressure }));
         dispatch(setGeneralInfo({ ratedFlow: performance }));
-        dispatch(setGeneralInfo({ pumpType: pumpType }));
+        dispatch(setGeneralInfo({ pumpTypeForSomeInstallation: pumpType }));
         if (isFormComplete()) {
             navigate("/selection/selection_results");
         }
@@ -69,7 +69,7 @@ export const DeviceParamsPNSVPV = () => {
                                 {/*    Вода*/}
                                 {/*</label>*/}
                                 <label>
-                                    <input type="radio" name="hydromodule" value="1"
+                                    <input type="radio" name="hydromodule" value="WATER"
                                            onChange={handleLiquidChange}/> Вода
                                 </label>
                             </div>
@@ -123,13 +123,13 @@ export const DeviceParamsPNSVPV = () => {
                             <h3 className={styles.formSubtitle}>Тип насосов</h3>
                             <div className={styles.radioGroup}>
                                 <label>
-                                    <input type="radio" name="workingPumps" value="1"
+                                    <input type="radio" name="workingPumps" value="VERTICAL"
                                            onChange={(e) => setPumpType(e.target.value)}
                                     /> Вертикальные
                                 </label>
                                 <br/>
                                 <label>
-                                    <input type="radio" name="workingPumps" value="2"
+                                    <input type="radio" name="workingPumps" value="HORIZONTAL"
                                            onChange={(e) => setPumpType(e.target.value)}
                                     /> Горизонтальные
                                 </label>
