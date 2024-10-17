@@ -118,7 +118,7 @@ public class Options {
         return execution;
     }
 
-    public String isVibrationMounts() {
+    public String getVibrationMounts() {
         return vibrationMounts;
     }
 
@@ -154,7 +154,7 @@ public class Options {
         return fuse;
     }
 
-    public String isAirVent() {
+    public String getAirVent() {
         return airVent;
     }
 
@@ -220,7 +220,7 @@ public class Options {
 
         if (expansionTankMap.containsKey(expansionTank)) {
             st.append("/ET");
-            st.append(expansionTank);
+            st.append(expansionTankMap.get(expansionTank));
         } else {
             st.append("/0");
         }
@@ -270,7 +270,7 @@ public class Options {
 
         if (expansionTankMap.containsKey(expansionTank)) {
             st.append("/ET");
-            st.append(expansionTank);
+            st.append(expansionTankMap.get(expansionTank));
         } else {
             st.append("/0");
         }
@@ -317,7 +317,7 @@ public class Options {
 
         if (expansionTankMap.containsKey(expansionTank)) {
             st.append("/ET");
-            st.append(expansionTank);
+            st.append(expansionTankMap.get(expansionTank));
         } else {
             st.append("/0");
         }
@@ -325,7 +325,7 @@ public class Options {
         if (bufferTankMap.containsKey(bufferTank)) {
             st.append(bufferTankMap.get(bufferTank));
             if (bufferTankSizeMap.containsKey(bufferTankSize)) {
-                st.append(bufferTankSize);
+                st.append(bufferTankSizeMap.get(bufferTankSize));
             } else {
                 throw new NullPointerException("Нет данных о объеме");
             }
@@ -341,7 +341,7 @@ public class Options {
         st.append(")");
         st.append("(");
 
-        if (fuse == null) {
+        if (fuse != null) {
             st.append("SV");
             st.append(fuse);
         }
