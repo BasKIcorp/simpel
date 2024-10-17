@@ -6,19 +6,20 @@ import java.util.HashMap;
 
 public class Options {
     private String execution;
-    private boolean vibrationMounts;
+    private String vibrationMounts;
     private String collector;
     private String flangesOrGrooveLock;
+    private String vibrationLock;
     private String filter;
-    private Integer expansionTank;
+    private String expansionTank;
     private String bufferTank;
-    private Integer bufferTankSize;
+    private String bufferTankSize;
     private String bufferTankType;
-    private Float fuse;
-    private boolean airVent;
+    private String fuse;
+    private String airVent;
     private String makeUpMamOrPap;
-    private Integer pressureMamOrPap;
-    private Integer volumeMamOrPap;
+    private String pressureMamOrPap;
+    private String volumeMamOrPap;
 
     private static final HashMap<String, String> executionMap = new HashMap<>();
     private static final HashMap<String, String> collectorMap = new HashMap<>();
@@ -28,31 +29,75 @@ public class Options {
     private static final HashMap<String, String> bufferTankTypeMap = new HashMap<>();
     private static final HashMap<String, String> makeUpMamOrPapMap = new HashMap<>();
 
+    //Ваниные гавняшки
+
+    private static final HashMap<String, String> expansionTankMap = new HashMap<>();
+    private static final HashMap<String, String> bufferTankSizeMap = new HashMap<>();
+    private static final HashMap<String, String> fuseMap = new HashMap<>();
+
+
     static {
-        executionMap.put("исполнение стандартное", "S0");
-        executionMap.put("исполнение в уличном кожухе", "S1");
-        executionMap.put("исполнение в уличном кожухе с обогревом", "S2");
-        executionMap.put("исполнение ариктическое", "S3");
+        executionMap.put("1", "S0");
+        executionMap.put("2", "S1");
+        executionMap.put("3", "S2");
+        executionMap.put("4", "S3");
 
-        collectorMap.put("AISI304", "-A4");
-        collectorMap.put("AISI316", "-A6");
-        collectorMap.put("Углеродистая сталь", "-C2");
+        collectorMap.put("1", "-A4");
+        collectorMap.put("2", "-A6");
+        collectorMap.put("3", "-C2");
 
-        flangesOrGrooveLockMap.put("грувлок", "-V");
-        flangesOrGrooveLockMap.put("фланец", "-F");
+        flangesOrGrooveLockMap.put("1", "-V");
+        flangesOrGrooveLockMap.put("2", "-F");
         flangesOrGrooveLockMap.put("фланец с вибровставкой", "-Fv");
 
-        filterMap.put("MS", "-MS");
-        filterMap.put("PS", "-PS");
+        filterMap.put("2", "-MS");
+        filterMap.put("3", "-PS");
 
-        bufferTankMap.put("Буферный бак из нержавеющей стали", "/SST");
-        bufferTankMap.put("Буферный бак из углеродистой стали", "/CST");
+        bufferTankMap.put("1", "/SST");
+        bufferTankMap.put("2", "/CST");
 
-        bufferTankTypeMap.put("гооизонтальный", "H");
-        bufferTankTypeMap.put("вертикальный", "V");
+        bufferTankTypeMap.put("2", "H");
+        bufferTankTypeMap.put("1", "V");
 
-        makeUpMamOrPapMap.put("подпиточный клапан", "MuP");
-        makeUpMamOrPapMap.put("подпиточный модуль", "MuM");
+        makeUpMamOrPapMap.put("1", "MuP");
+        makeUpMamOrPapMap.put("2", "MuM");
+
+        //ваннины сыны
+
+        expansionTankMap.put("1", "8");
+        expansionTankMap.put("2", "12");
+        expansionTankMap.put("3", "18");
+        expansionTankMap.put("4", "8");
+        expansionTankMap.put("5", "8");
+        expansionTankMap.put("6", "8");
+        expansionTankMap.put("7", "8");
+        expansionTankMap.put("8", "8");
+        expansionTankMap.put("9", "8");
+        expansionTankMap.put("10", "8");
+        expansionTankMap.put("11", "8");
+        expansionTankMap.put("12", "8");
+        expansionTankMap.put("13", "8");
+        expansionTankMap.put("14", "8");
+        expansionTankMap.put("15", "8");
+        expansionTankMap.put("16", "8");
+        expansionTankMap.put("17", "8");
+        expansionTankMap.put("18", "8");
+
+
+        bufferTankSizeMap.put("1","200");
+        bufferTankSizeMap.put("2","300");
+        bufferTankSizeMap.put("3","500");
+        bufferTankSizeMap.put("4","750");
+        bufferTankSizeMap.put("5","1000");
+        bufferTankSizeMap.put("6","1500");
+        bufferTankSizeMap.put("7","2000");
+        bufferTankSizeMap.put("8","2500");
+        bufferTankSizeMap.put("9","3000");
+        bufferTankSizeMap.put("10","3500");
+        bufferTankSizeMap.put("11","4000");
+        bufferTankSizeMap.put("12","50000");
+
+
     }
 
     public <T extends ParentInstallations> String createCode(T installations) {
@@ -73,7 +118,7 @@ public class Options {
         return execution;
     }
 
-    public boolean isVibrationMounts() {
+    public String isVibrationMounts() {
         return vibrationMounts;
     }
 
@@ -89,7 +134,7 @@ public class Options {
         return filter;
     }
 
-    public int getExpansionTank() {
+    public String getExpansionTank() {
         return expansionTank;
     }
 
@@ -97,7 +142,7 @@ public class Options {
         return bufferTank;
     }
 
-    public int getBufferTankSize() {
+    public String getBufferTankSize() {
         return bufferTankSize;
     }
 
@@ -105,11 +150,11 @@ public class Options {
         return bufferTankType;
     }
 
-    public float getFuse() {
+    public String getFuse() {
         return fuse;
     }
 
-    public boolean isAirVent() {
+    public String isAirVent() {
         return airVent;
     }
 
@@ -117,11 +162,11 @@ public class Options {
         return makeUpMamOrPap;
     }
 
-    public int getPressureMamOrPap() {
+    public String getPressureMamOrPap() {
         return pressureMamOrPap;
     }
 
-    public int getVolumeMamOrPap() {
+    public String getVolumeMamOrPap() {
         return volumeMamOrPap;
     }
 
@@ -138,7 +183,7 @@ public class Options {
             throw new NullPointerException("Неправильные исполнение");
         }
 
-        if (vibrationMounts) {
+        if (vibrationMounts.equals("2")) {
             st.append("-Lg");
         } else {
             st.append("-0");
@@ -153,11 +198,11 @@ public class Options {
             throw new NullPointerException("Неправильный коллектор");
         }
 
-        if(collector.equals("сталь 20")){
+        if(collector.equals("4")){
             st.append("-CS");
         }
 
-        if(flangesOrGrooveLock != null){
+        if(vibrationLock.equals("1")){
             st.append("-V");
         }
         else{
@@ -173,7 +218,7 @@ public class Options {
         st.append(")");
         st.append("(");
 
-        if (expansionTank != null) {
+        if (expansionTankMap.containsKey(expansionTank)) {
             st.append("/ET");
             st.append(expansionTank);
         } else {
@@ -193,7 +238,7 @@ public class Options {
             throw new NullPointerException("Неправильные исполнение");
         }
 
-        if (vibrationMounts) {
+        if (vibrationMounts.equals("2")) {
             st.append("-Lg");
         } else {
             st.append("-0");
@@ -207,7 +252,7 @@ public class Options {
         } else {
             throw new NullPointerException("Неправильный коллектор");
         }
-        if(flangesOrGrooveLock != null){
+        if(vibrationLock.equals("1")){
             st.append("-V");
         }
         else{
@@ -223,7 +268,7 @@ public class Options {
         st.append(")");
         st.append("(");
 
-        if (expansionTank != null) {
+        if (expansionTankMap.containsKey(expansionTank)) {
             st.append("/ET");
             st.append(expansionTank);
         } else {
@@ -243,7 +288,7 @@ public class Options {
             throw new NullPointerException("Неправильные исполнение");
         }
 
-        if (vibrationMounts) {
+        if (vibrationMounts.equals("2")) {
             st.append("-Lg");
         } else {
             st.append("-0");
@@ -270,7 +315,7 @@ public class Options {
         st.append(")");
         st.append("(");
 
-        if (expansionTank != null) {
+        if (expansionTankMap.containsKey(expansionTank)) {
             st.append("/ET");
             st.append(expansionTank);
         } else {
@@ -279,7 +324,7 @@ public class Options {
 
         if (bufferTankMap.containsKey(bufferTank)) {
             st.append(bufferTankMap.get(bufferTank));
-            if (bufferTankSize != null) {
+            if (bufferTankSizeMap.containsKey(bufferTankSize)) {
                 st.append(bufferTankSize);
             } else {
                 throw new NullPointerException("Нет данных о объеме");
@@ -296,7 +341,7 @@ public class Options {
         st.append(")");
         st.append("(");
 
-        if (fuse != null) {
+        if (fuse == null) {
             st.append("SV");
             st.append(fuse);
         }
@@ -304,7 +349,7 @@ public class Options {
             st.append("0");
         }
 
-        if (airVent){
+        if (airVent.equals("2")){
             st.append("-AV");
         }
         else {
