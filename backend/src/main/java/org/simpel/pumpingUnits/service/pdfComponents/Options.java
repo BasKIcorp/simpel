@@ -341,7 +341,7 @@ public class Options {
         st.append(")");
         st.append("(");
 
-        if (fuse != null) {
+        if (!fuse.equals("")) {
             st.append("SV");
             st.append(fuse);
         }
@@ -361,13 +361,13 @@ public class Options {
 
         if (makeUpMamOrPapMap.containsKey(makeUpMamOrPap)) {
             st.append(makeUpMamOrPapMap.get(makeUpMamOrPap));
-            if (pressureMamOrPap != null) {
+            if (!pressureMamOrPap.equals("")) {
                 st.append(pressureMamOrPap);
             }
             else {
                 throw new NullPointerException("Нехватает давления мам пап");
             }
-            if (volumeMamOrPap != null) {
+            if (!volumeMamOrPap.equals("")) {
                 st.append("-");
                 st.append(volumeMamOrPap);
             }
