@@ -97,8 +97,7 @@ public class InstallationsController {
                     request.getY()
             );
                 postService.sendPdf(pdfBytes);
-                postService.sendUsers();
-
+//                postService.sendUsers();
 
             return ResponseEntity.ok("Письмо успешно отправлено");
 

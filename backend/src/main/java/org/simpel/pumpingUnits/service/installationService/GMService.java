@@ -11,6 +11,7 @@ import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
 import org.simpel.pumpingUnits.model.installation.*;
 import org.simpel.pumpingUnits.repository.GMRepository;
 import org.simpel.pumpingUnits.repository.MaterialRepo;
+import org.simpel.pumpingUnits.repository.PumpRepo;
 import org.simpel.pumpingUnits.service.FileStorageService;
 import org.simpel.pumpingUnits.service.SearchComponent;
 import org.springframework.stereotype.Service;
@@ -29,12 +30,14 @@ public class GMService implements InstallationServiceInterface<GMInstallation> {
     private final MaterialRepo materialRepo;
     private final FileStorageService fileStorageService;
     private final SearchComponent<GMInstallation> searchComponent;
+    private final PumpRepo pumpRepo;
 
-    public GMService(GMRepository repository, MaterialRepo materialRepo, FileStorageService fileStorageService, SearchComponent<GMInstallation> searchComponent) {
+    public GMService(GMRepository repository, MaterialRepo materialRepo, FileStorageService fileStorageService, SearchComponent<GMInstallation> searchComponent, PumpRepo pumpRepo) {
         this.repository = repository;
         this.materialRepo = materialRepo;
         this.fileStorageService = fileStorageService;
         this.searchComponent = searchComponent;
+        this.pumpRepo = pumpRepo;
     }
 
     @Override
@@ -42,6 +45,10 @@ public class GMService implements InstallationServiceInterface<GMInstallation> {
         Engine engine = new Engine();
         engine.setFieldsForPumpSave(request);
         Pump pump = new Pump();
+        Optional<Pump> existingPump = pumpRepo.findByName(request.getNamePump());
+        if (existingPump.isPresent()) {
+            throw new NullPointerException("Имя насоса уже существует");
+        }
         pump.setFieldsForPumpSave(request, engine, pointsPressure, pointPower, pointNPSH);
         pump.setMaterial(materialRepo.findById(request.getMaterial()));
         GMInstallation gmInstallation = new GMInstallation();
@@ -51,8 +58,9 @@ public class GMService implements InstallationServiceInterface<GMInstallation> {
         pump.getInstallations().add(gmInstallation);
         System.out.println("qweeqeqweqeqweqweqweqwweqweqweqweqweqweqwe");
         gmInstallation.setCommonFields(request);
-        gmInstallation.setFieldsForSave(request,files,fileStorageService);
         gmInstallation.setSpecificFields(request);
+        gmInstallation.setFieldsForSave(request,files,fileStorageService);
+
         System.out.println(gmInstallation.getTemperature());
         return repository.save(gmInstallation);
     }

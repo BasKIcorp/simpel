@@ -12,6 +12,7 @@ import org.simpel.pumpingUnits.model.enums.subtypes.HozPitSubtypes;
 import org.simpel.pumpingUnits.model.installation.*;
 import org.simpel.pumpingUnits.repository.HozPitRepository;
 import org.simpel.pumpingUnits.repository.MaterialRepo;
+import org.simpel.pumpingUnits.repository.PumpRepo;
 import org.simpel.pumpingUnits.service.FileStorageService;
 import org.simpel.pumpingUnits.service.SearchComponent;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -29,12 +31,14 @@ public class HozPitService implements InstallationServiceInterface<HozPitInstall
     private final MaterialRepo materialRepo;
     private final FileStorageService fileStorageService;
     private final SearchComponent<HozPitInstallation> searchComponent;
+    private final PumpRepo pumpRepo;
 
-    public HozPitService(HozPitRepository repository, MaterialRepo materialRepo, FileStorageService fileStorageService, SearchComponent<HozPitInstallation>  searchComponent) {
+    public HozPitService(HozPitRepository repository, MaterialRepo materialRepo, FileStorageService fileStorageService, SearchComponent<HozPitInstallation>  searchComponent, PumpRepo pumpRepo) {
         this.repository = repository;
         this.materialRepo = materialRepo;
         this.fileStorageService = fileStorageService;
         this.searchComponent = searchComponent;
+        this.pumpRepo = pumpRepo;
     }
 
     @Override
@@ -42,16 +46,21 @@ public class HozPitService implements InstallationServiceInterface<HozPitInstall
         Engine engine = new Engine();
         engine.setFieldsForPumpSave(request);
         Pump pump = new Pump();
+        Optional<Pump> existingPump = pumpRepo.findByName(request.getNamePump());
+        if (existingPump.isPresent()) {
+            throw new NullPointerException("Имя насоса уже существует");
+        }
         pump.setFieldsForPumpSave(request, engine, pointsPressure, pointPower, pointNPSH);
         pump.setMaterial(materialRepo.findById(request.getMaterial()));
         HozPitInstallation hozPit = new HozPitInstallation();
-        hozPit.setCommonFields(request);
-        hozPit.setSpecificFields(request);
-        hozPit.setFieldsForSave(request,files,fileStorageService);
         List<Pump> pumps = new ArrayList<>();
         pumps.add(pump);
         hozPit.setPumps(pumps);
         pump.getInstallations().add(hozPit);
+        hozPit.setCommonFields(request);
+        hozPit.setSpecificFields(request);
+        hozPit.setFieldsForSave(request,files,fileStorageService);
+
         return repository.save(hozPit);
     }
 

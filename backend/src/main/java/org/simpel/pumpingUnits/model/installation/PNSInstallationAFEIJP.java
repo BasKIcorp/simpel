@@ -72,10 +72,6 @@ public class PNSInstallationAFEIJP extends ParentInstallations{
         return temperature;
     }
 
-    @Override
-    public Integer getConcentration() {
-        return null;
-    }
 
 
     public void setTemperature(int temperature) {
@@ -92,6 +88,6 @@ public class PNSInstallationAFEIJP extends ParentInstallations{
                 this.getCountMainPumps() + this.getCountSparePumps(),
                 this.getCountSparePumps(),
                 this.getPumps().get(0).getName(),
-                this.getPumps().get(1).getName());
+                "VIMP");
     }
 }

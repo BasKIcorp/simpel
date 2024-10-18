@@ -20,10 +20,13 @@ public class PNSInstallationERW extends ParentInstallations {
 
     @Override
     public void setSubtype(Enum<?> subtype) {
-        if (subtype != PNSSubtypes.ERW_SYSTEM) {
+        if (subtype == PNSSubtypes.ERW_SYSTEM || subtype ==  PNSSubtypes.AFEIJP2
+        ) {
+            this.subtype = (PNSSubtypes) subtype;
+
+        }else{
             throw new IllegalArgumentException("Invalid subtype");
         }
-        this.subtype = (PNSSubtypes) subtype;
     }
 
     @Override
@@ -61,10 +64,6 @@ public class PNSInstallationERW extends ParentInstallations {
         return temperature;
     }
 
-    @Override
-    public Integer getConcentration() {
-        return null;
-    }
 
 
     public void setTemperature(int temperature) {

@@ -34,6 +34,7 @@ public class InstallationSaveRequest extends InstallationRequest {
 
 
 
+
     //для движков
     private String manufacturerForEngine;
     private String execution;

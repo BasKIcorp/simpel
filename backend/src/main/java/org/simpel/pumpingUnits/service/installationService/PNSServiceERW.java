@@ -13,6 +13,7 @@ import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
 import org.simpel.pumpingUnits.model.installation.*;
 import org.simpel.pumpingUnits.repository.MaterialRepo;
 import org.simpel.pumpingUnits.repository.PnsERWRepository;
+import org.simpel.pumpingUnits.repository.PumpRepo;
 import org.simpel.pumpingUnits.service.FileStorageService;
 import org.simpel.pumpingUnits.service.SearchComponent;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -29,12 +31,14 @@ public class PNSServiceERW implements InstallationServiceInterface<PNSInstallati
     private final MaterialRepo materialRepo;
     private final FileStorageService fileStorageService;
     private final SearchComponent<PNSInstallationERW> searchComponent;
+    private final PumpRepo pumpRepo;
 
-    public PNSServiceERW(PnsERWRepository repository, MaterialRepo materialRepo, FileStorageService fileStorageService, SearchComponent<PNSInstallationERW> searchComponent) {
+    public PNSServiceERW(PnsERWRepository repository, MaterialRepo materialRepo, FileStorageService fileStorageService, SearchComponent<PNSInstallationERW> searchComponent, PumpRepo pumpRepo) {
         this.repository = repository;
         this.materialRepo = materialRepo;
         this.fileStorageService = fileStorageService;
         this.searchComponent = searchComponent;
+        this.pumpRepo = pumpRepo;
     }
 
     @Override
@@ -42,16 +46,20 @@ public class PNSServiceERW implements InstallationServiceInterface<PNSInstallati
         Engine engine = new Engine();
         engine.setFieldsForPumpSave(request);
         Pump pump = new Pump();
+        Optional<Pump> existingPump = pumpRepo.findByName(request.getNamePump());
+        if (existingPump.isPresent()) {
+            throw new NullPointerException("Имя насоса уже существует");
+        }
         pump.setFieldsForPumpSave(request, engine, pointsPressure, pointPower, pointNPSH);
         pump.setMaterial(materialRepo.findById(request.getMaterial()));
         PNSInstallationERW pns = new PNSInstallationERW();
-        pns.setCommonFields(request);
-        pns.setSpecificFields(request);
-        pns.setFieldsForSave(request,files,fileStorageService);
         List<Pump> pumps = new ArrayList<>();
         pumps.add(pump);
         pns.setPumps(pumps);
         pump.getInstallations().add(pns);
+        pns.setCommonFields(request);
+        pns.setSpecificFields(request);
+        pns.setFieldsForSave(request,files,fileStorageService);
         return repository.save(pns);
     }
 
@@ -60,6 +68,7 @@ public class PNSServiceERW implements InstallationServiceInterface<PNSInstallati
         PNSInstallationERW pns = new PNSInstallationERW();
         pns.setCommonFields(installationRequest);
         pns.setSpecificFields(installationRequest);
+
         searchComponent.setFlowRateForSearch(installationRequest.getFlowRate());
         searchComponent.setPressureForSearch(installationRequest.getPressure());
         int maxFlowRate = searchComponent.getMaxFlowRate();

@@ -18,6 +18,7 @@ public class Pump {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+    @Column(unique = true)
     private String name;
     private PumpType type;
     private String manufacturer;

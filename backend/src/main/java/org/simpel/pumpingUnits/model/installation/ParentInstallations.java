@@ -207,5 +207,4 @@ public abstract class ParentInstallations {
         return diameter;
     }
     public abstract int getTemperature();
-    public abstract Integer getConcentration();
 }
