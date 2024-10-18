@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     generalInfo: {
+        installationId: '',
         mainPump: '',
         installationType: '',
         subType: '',
@@ -18,6 +19,7 @@ const initialState = {
         totalCapacityOfJockeyPump: '',
         requiredJockeyPumpPressure: '',
         pumpTypeForSomeInstallation: '',
+        price:0,
     },
     pumpData: {
         manufacturer: '',

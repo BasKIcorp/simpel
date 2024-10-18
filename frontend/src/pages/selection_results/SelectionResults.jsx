@@ -25,7 +25,7 @@ function SelectionResults() {
         e.preventDefault();
         // Dispatch actions to update Redux store with data from the selected installation
         dispatch(setGeneralInfo({
-            mainPump: selectedInstallation.name,
+            installationId: selectedInstallation.id,
             installationType: selectedInstallation.typeInstallations,
             subType: selectedInstallation.subtype,
             liquid: selectedInstallation.coolantType,
@@ -40,7 +40,10 @@ function SelectionResults() {
         }));
 
         const selectedPump = selectedInstallation.pumps[0]; // Assuming you are selecting the first pump
-
+        dispatch(setGeneralInfo({
+            mainPump: selectedPump.name,
+            price: selectedPump.price,
+        }))
         dispatch(setPumpData({
             manufacturer: selectedPump.manufacturer || '',
             speed: selectedPump.speed,

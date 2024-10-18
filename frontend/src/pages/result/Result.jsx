@@ -4,6 +4,7 @@ import {Header} from "../../components/UI/Header";
 import Graph from "../../components/UI/Graph";
 import testData from "../selection_results/test_data.json";
 import {useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
 
 function Result() {
     const [selectedImage, setSelectedImage] = useState("drawing1");
@@ -17,7 +18,8 @@ function Result() {
     const materials = useSelector((state) => state.pump.materials);
     const points = useSelector((state) => state.pump.points)
     const options = useSelector((state) => state.pump.options)
-
+    const token = useSelector((state) => state.user.token)
+    const navigate = useNavigate;
     const remoteControlNames = {
         freeCooling: 'Режим "фрикулинга" /сниженной нагрузки',
         remoteStart: 'Удаленный пуск',
@@ -53,6 +55,10 @@ function Result() {
         1: 'нет',
         2: 'да',
     };
+    const vibroCompensators = {
+        1: 'да',
+        2: 'нет'
+    }
 
     const filterOptions = {
         1: 'нет',
@@ -112,6 +118,127 @@ function Result() {
     const handleImageChange = (e) => {
         setSelectedImage(e.target.value);
     };
+
+    const getPdf = async () =>{ // - тут пдфочку получить когда никита буфера накачает
+        try {
+            const request = JSON.stringify({
+                "installationId": generalInfo.installationId ,
+                "typeInstallations": generalInfo.installationType,
+                "subtype": generalInfo.subType,
+                "flowRate": parseInt(generalInfo.ratedFlow),
+                "pressure": parseInt(generalInfo.ratedPressure),
+                "options":{
+                    "execution": options.execution,
+                    "vibrationMounts": options.vibrationSupports,
+                    "collector": options.collectorMaterial,
+                    "flangesOrGrooveLock": options.connectionType,
+                    "filter": options.filter,
+                    "expansionTank": options.membraneTank,
+                    "bufferTank": options.bufferTank,
+                    "bufferTankSize": options.bufferTankVolume,
+                    "bufferTankType": options.bufferTankMaterial,
+                    "fuse": options.pressureSetting,
+                    "airVent": options.automaticAirVent,
+                    "makeUpMamOrPap": options.fillModule,
+                    "pressureMamOrPap": options.fillPressure,
+                    "volumeMamOrPap": options.fillVolume,
+                    "vibrationLock": options.vibrationCompensators
+                }
+            })
+            const response = await fetch("http://localhost:8080/api/simple/inst/generate", {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: request
+            });
+            console.log(request)
+            if (!response.ok ) {
+                throw new Error(`Error: ${response.status}`);
+            }
+            const blob = await response.blob();
+
+            const contentDisposition = response.headers.get('Content-Disposition');
+            let fileName = 'download.pdf';  // Стандартное имя файла, если не удалось извлечь
+            console.log(contentDisposition)
+            if (contentDisposition) {
+                const fileNameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+                if (fileNameMatch && fileNameMatch[1]) {
+                    fileName = fileNameMatch[1];  // Извлекаем имя файла из заголовка
+                }
+            }
+
+            // Создаем ссылку на файл для скачивания
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;  // Используем либо извлеченное имя, либо стандартное
+            document.body.appendChild(a);
+            a.click();
+            a.remove();  // Удаляем элемент после скачивания
+
+            // Освобождаем объект URL после скачивания
+            window.URL.revokeObjectURL(url);
+
+
+        } catch (error) {
+            console.error("Failed to fetch pump data:", error);
+            // navigate(-1)
+            // setTimeout(() => {
+            //     alert("Не было найдено установок с такими параметрами, попробуйте изменить их");
+            // }, 100);
+        }
+    }
+    const getMailPdf = async () =>{ // - тут пдфочку получить когда никита буфера накачает
+        try {
+            const request = JSON.stringify({
+                "installationId": generalInfo.installationId ,
+                "typeInstallations": generalInfo.installationType,
+                "subtype": generalInfo.subType,
+                "flowRate": parseInt(generalInfo.ratedFlow),
+                "pressure": parseInt(generalInfo.ratedPressure),
+                "options":{
+                    "execution": options.execution,
+                    "vibrationMounts": options.vibrationSupports,
+                    "collector": options.collectorMaterial,
+                    "flangesOrGrooveLock": options.connectionType,
+                    "filter": options.filter,
+                    "expansionTank": options.membraneTank,
+                    "bufferTank": options.bufferTank,
+                    "bufferTankSize": options.bufferTankVolume,
+                    "bufferTankType": options.bufferTankMaterial,
+                    "fuse": options.pressureSetting,
+                    "airVent": options.automaticAirVent,
+                    "makeUpMamOrPap": options.fillModule,
+                    "pressureMamOrPap": options.fillPressure,
+                    "volumeMamOrPap": options.fillVolume,
+                    "vibrationLock": options.vibrationCompensators
+                }
+            })
+            const response = await fetch("http://localhost:8080/api/simple/inst/generate", {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: request
+            });
+            console.log(request)
+            if (!response.ok ) {
+                throw new Error(`Error: ${response.status}`);
+            }
+            console.log(await response)
+
+
+        } catch (error) {
+            console.error("Failed to fetch pump data:", error);
+            // navigate(-1)
+            // setTimeout(() => {
+            //     alert("Не было найдено установок с такими параметрами, попробуйте изменить их");
+            // }, 100);
+        }
+    }
 
 
     useEffect(() => {
@@ -184,16 +311,16 @@ function Result() {
                         <h1>Результат</h1>
                     </div>
                     <div className={styles.buttonContainer}>
-                        <button className={styles.button}>
+                        <button className={styles.button} onClick={getPdf}>
                             Скачать pdf
                         </button>
-                        <button className={styles.button}>
+                        <button className={styles.button} onClick={getMailPdf}>
                             Pdf на e-mail
                         </button>
                         <div className={styles.infoContainer}>
                             <div className={styles.infoBlock}>
                                 <strong>Стоимость установки:</strong>
-                                <span>1.000.000</span>
+                                <span>{generalInfo.price}</span>
                             </div>
                             <div className={styles.infoBlock}>
                                 <strong>Предполагаемый срок поставки:</strong>
@@ -219,7 +346,7 @@ function Result() {
                                 </tr>
                                 <tr>
                                     <td>Жидкость</td>
-                                    <td>{generalInfo.liquid || 'Вода'}</td>
+                                    <td>{generalInfo.liquid === 'WATER' ? 'Вода'  : 'Писечка'}</td>
                                 </tr>
                                 <tr>
                                     <td>Рабочая температура</td>
@@ -391,6 +518,10 @@ function Result() {
                                 <tr>
                                     <td>Виброопоры</td>
                                     <td>{vibrationSupportsOptions[options.vibrationSupports]}</td>
+                                </tr>
+                                <tr>
+                                    <td>Виброкомпенсаторы</td>
+                                    <td>{vibroCompensators[options.vibrationCompensators]}</td>
                                 </tr>
                                 <tr>
                                     <td>Фильтр</td>

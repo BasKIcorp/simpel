@@ -11,5 +11,5 @@ export const RedirectOnRefresh = () => {
         navigate('/installation_choice');
     }, [navigate]);
 
-    return null; // Этот компонент ничего не рендерит
+    return (null); // Этот компонент ничего не рендерит
 };
