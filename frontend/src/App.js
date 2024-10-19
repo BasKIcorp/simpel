@@ -12,7 +12,6 @@ import Result from "./pages/result/Result";
 import {DeviceParamsHVS} from "./pages/deviceParams/DeviceParamsHVS";
 import {DeviceParamsPNSVPV} from "./pages/deviceParams/DeviceParamsPNSVPV";
 import {DeviceParamsPNSAUTP} from "./pages/deviceParams/DeviceParamsPNSAUTP";
-import {RedirectOnRefresh} from "./components/RedirectOnRefresh"
 import {useEffect} from "react";
 function App() {
     const token = useSelector((state) => state.user.token);

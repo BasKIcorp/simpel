@@ -17,7 +17,15 @@ function RegPage() {
     const handleUsernameChange = (e) => {
         const value = e.target.value;
         setUsername(value);
-        setUsernameError(value === "");
+
+        // Регулярное выражение для проверки email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (value === "" || !emailRegex.test(value)) {
+            setUsernameError(true); // Установим ошибку, если поле пустое или email некорректен
+        } else {
+            setUsernameError(false); // Ошибки нет, если введен корректный email
+        }
     };
 
     const handlePasswordChange = (e) => {
@@ -73,9 +81,9 @@ function RegPage() {
                             type="text"
                             onChange={handleUsernameChange}
                             className={`${styles.formInput} ${usernameError ? styles.errorInput : ''}`}
-                            placeholder="Логин"
+                            placeholder="E-mail"
                         />
-                        {usernameError && <div className={styles.errorText}>Введите имя пользователя</div>}
+                        {usernameError && <div className={styles.errorText}>Введите E-mail</div>}
                         <label htmlFor="password" className={styles['visually-hidden']}>Пароль</label>
                         <input
                             id="password"
