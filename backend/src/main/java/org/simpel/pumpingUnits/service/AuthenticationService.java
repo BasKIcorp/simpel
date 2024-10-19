@@ -27,8 +27,7 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
-    }
-
+    };
     public AuthenticationResponse register(RegisterRequest request){
         var user = new UsersBuilder()
                 .email(request.getEmail())
