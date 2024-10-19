@@ -45,7 +45,7 @@ public class InstallationsController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
         catch (NullPointerException e){
-            return ResponseEntity.badRequest().body("Some data is missing, fill out the form completely and submit again");
+            return ResponseEntity.badRequest().body(e.getMessage() != "" ? e.getMessage():"Some data is missing, fill out the form completely and submit again");
         }
     }
     @PostMapping(value = "/get")

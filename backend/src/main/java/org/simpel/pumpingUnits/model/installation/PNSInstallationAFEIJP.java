@@ -45,8 +45,12 @@ public class PNSInstallationAFEIJP extends ParentInstallations{
     @Override
     public void setSpecificFields(InstallationRequest request) {
         this.setSubtype(PNSSubtypes.valueOf(request.getSubtype()));
-        this.setTotalCapacityOfJockeyPump(request.getTotalCapacityOfJockeyPump());
-        this.setRequiredJockeyPumpPressure(request.getRequiredJockeyPumpPressure());
+//        this.setTotalCapacityOfJockeyPump(request.getTotalCapacityOfJockeyPump());
+//        this.setRequiredJockeyPumpPressure(request.getRequiredJockeyPumpPressure());
+        if(!getPumps().isEmpty()){
+            this.setTotalCapacityOfJockeyPump(getPumps().get(1).getMaximumPressure());
+            this.setRequiredJockeyPumpPressure((int) getPumps().get(1).getMaximumHead());
+        }
         this.setTemperature(request.getTemperature());
 
     }
@@ -88,6 +92,6 @@ public class PNSInstallationAFEIJP extends ParentInstallations{
                 this.getCountMainPumps() + this.getCountSparePumps(),
                 this.getCountSparePumps(),
                 this.getPumps().get(0).getName(),
-                "VIMP");
+                this.getPumps().get(1).getName());
     }
 }

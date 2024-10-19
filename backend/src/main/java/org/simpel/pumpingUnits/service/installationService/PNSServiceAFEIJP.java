@@ -30,6 +30,7 @@ public class PNSServiceAFEIJP implements InstallationServiceInterface <PNSInstal
     private final FileStorageService fileStorageService;
     private final SearchComponent<PNSInstallationAFEIJP> searchComponent;
     private final PumpRepo pumpRepo;
+    private final List<Optional<Pump>> list = new ArrayList<>();
 
     public PNSServiceAFEIJP(PnsAFEIJPRepository repository, MaterialRepo materialRepo, FileStorageService fileStorageService, SearchComponent<PNSInstallationAFEIJP> searchComponent, PumpRepo pumpRepo) {
         this.repository = repository;
@@ -42,20 +43,32 @@ public class PNSServiceAFEIJP implements InstallationServiceInterface <PNSInstal
 
     @Override
     public PNSInstallationAFEIJP save(InstallationSaveRequest request, MultipartFile[] files, List<PointPressure> pointsPressure, List<PointPower> pointPower, List<PointNPSH> pointNPSH) throws IOException {
-        Engine engine = new Engine();
-        engine.setFieldsForPumpSave(request);
-        Pump pump = new Pump();
-        Optional<Pump> existingPump = pumpRepo.findByName(request.getNamePump());
-        if (existingPump.isPresent()) {
-            throw new NullPointerException("Имя насоса уже существует");
-        }
-        pump.setFieldsForPumpSave(request, engine, pointsPressure, pointPower, pointNPSH);
-        pump.setMaterial(materialRepo.findById(request.getMaterial()));
-        PNSInstallationAFEIJP pns = new PNSInstallationAFEIJP();
         List<Pump> pumps = new ArrayList<>();
+        PNSInstallationAFEIJP pns = new PNSInstallationAFEIJP();
+        Optional<Pump> existingPump = pumpRepo.findByName(request.getPumps().get(0).getName());
+        Optional<Pump> existingPumpJok = pumpRepo.findByName(request.getPumps().get(1).getName());
+        list.add(existingPump);
+        list.add(existingPumpJok);
+        for(Optional<Pump> pumpik : list  ) {
+            if (pumpik.isPresent()) {
+                throw new NullPointerException("Имя насоса уже существует");
+            }
+        }
+        Engine engine = request.getEngines().get(0);
+        Pump pump = new Pump();
+        pump.setFieldsForPumpSave(request.getPumps().get(0), engine, pointsPressure, pointPower, pointNPSH);
+        pump.setMaterial(materialRepo.findById(request.getMaterial().get(0)));
         pumps.add(pump);
+
+        Engine engineJok = request.getEngines().get(1);
+        Pump pumpJok = new Pump();
+        pumpJok.setFieldsForPumpSave(request.getPumps().get(1), engineJok, pointsPressure, pointPower, pointNPSH);
+        pumpJok.setMaterial(materialRepo.findById(request.getMaterial().get(1)));
+        pumps.add(pumpJok);
+
         pns.setPumps(pumps);
         pump.getInstallations().add(pns);
+        pumpJok.getInstallations().add(pns);
         pns.setCommonFields(request);
         pns.setSpecificFields(request);
         pns.setFieldsForSave(request,files,fileStorageService);

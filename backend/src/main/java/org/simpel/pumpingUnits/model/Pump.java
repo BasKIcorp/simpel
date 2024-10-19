@@ -1,6 +1,7 @@
 package org.simpel.pumpingUnits.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
@@ -43,27 +44,33 @@ public class Pump {
 
     @ManyToOne
     @JoinColumn(name = "material_name", referencedColumnName = "name")
+    @JsonIgnore
     private Material material;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "engine_id")
     @JsonManagedReference
+    @JsonIgnore
     private Engine engine;
 
     @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
+    @JsonIgnore
     private List<PointPressure> pointsPressure ;
 
     @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
+    @JsonIgnore
     private List<PointPower> pointsPower;
 
     @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
+    @JsonIgnore
     private List<PointNPSH> pointsNPSH;
 
     @ManyToMany(mappedBy = "pumps", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonBackReference
+    @JsonIgnore
     private List<ParentInstallations> installations = new ArrayList<>();
 
     public List<ParentInstallations> getInstallations() {
@@ -95,23 +102,40 @@ public class Pump {
         this.pointsNPSH = pointsNPSH;
     }
 
-    public void setFieldsForPumpSave(InstallationSaveRequest request,Engine engine, List<PointPressure> pointsPressure, List<PointPower> pointPower, List<PointNPSH> pointNPSH) {
-        this.setName(request.getNamePump());
-        this.setSpeed(request.getSpeed());
-        this.setNumberOfSteps(request.getNumberOfSteps());
-        this.setManufacturer(request.getManufacturerForPump());
+    public void setFieldsForPumpSave(Pump pump,Engine engine, List<PointPressure> pointsPressure, List<PointPower> pointPower, List<PointNPSH> pointNPSH) {
+        this.setName(pump.getName());
+        this.setSpeed(pump.getSpeed());
+        this.setNumberOfSteps(pump.getNumberOfSteps());
+        this.setManufacturer(pump.getManufacturer());
         //наверное нужно отдельно прописать поле для насосов, но пока хз
-        this.setMaximumPressure(request.getMaximumPressure());
-        this.setMaximumHead(request.getMaximumHead());
+        this.setMaximumPressure(pump.getMaximumPressure());
+        this.setMaximumHead(pump.getMaximumHead());
 
-        this.setArticle(request.getArticle());
-        this.setPrice(request.getPrice());
-        this.setEfficiency(request.getEfficiency());
-        this.setNpsh(request.getNpsh());
-        this.setDM_in(request.getDmIn());
-        this.setDM_out(request.getDmOut());
-        this.setInstallationLength(request.getInstallationLength());
-        this.setDescription(request.getDescription());
+        this.setArticle(pump.getArticle());
+        this.setPrice(pump.getPrice());
+        this.setEfficiency(pump.getEfficiency());
+        this.setNpsh(pump.getNpsh());
+        this.setDM_in(pump.getDM_in());
+        this.setDM_out(pump.getDM_out());
+        this.setInstallationLength(pump.getInstallationLength());
+        this.setDescription(pump.getDescription());
+
+        //        this.setName(request.getNamePump());
+//        this.setSpeed(request.getSpeed());
+//        this.setNumberOfSteps(request.getNumberOfSteps());
+//        this.setManufacturer(request.getManufacturerForPump());
+//        //наверное нужно отдельно прописать поле для насосов, но пока хз
+//        this.setMaximumPressure(request.getMaximumPressure());
+//        this.setMaximumHead(request.getMaximumHead());
+//
+//        this.setArticle(request.getArticle());
+//        this.setPrice(request.getPrice());
+//        this.setEfficiency(request.getEfficiency());
+//        this.setNpsh(request.getNpsh());
+//        this.setDM_in(request.getDmIn());
+//        this.setDM_out(request.getDmOut());
+//        this.setInstallationLength(request.getInstallationLength());
+//        this.setDescription(request.getDescription());
         //добавить добавление точек
         Stream<Point> combinedStream = Stream.concat(
                 Stream.concat(pointsPressure.stream(), pointPower.stream()),

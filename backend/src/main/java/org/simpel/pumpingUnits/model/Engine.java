@@ -24,10 +24,10 @@ public class Engine {
     private String insulationClass;
     private String color;
     public Engine() {}
-    public void setFieldsForPumpSave(InstallationSaveRequest request){
-        this.manufacturer = request.getManufacturerForEngine();
+    public void setFieldsForPumpSave(Engine request){
+        this.manufacturer = request.getManufacturer();
         this.execution = request.getExecution();
-        this.pumpType = PumpType.valueOf(request.getPumpType());
+        this.pumpType = PumpType.valueOf(request.getPumpType().toString());
         this.power = request.getPower();
         this.amperage = request.getAmperage();
         this.turnovers = request.getTurnovers();
@@ -55,8 +55,8 @@ public class Engine {
         return pumpType;
     }
 
-    public void setPumpType(PumpType pumpType) {
-        this.pumpType = pumpType;
+    public void setPumpType(String pumpType) {
+        this.pumpType = PumpType.valueOf(pumpType);
     }
 
     public float getPower() {

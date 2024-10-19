@@ -42,21 +42,19 @@ public class GMService implements InstallationServiceInterface<GMInstallation> {
 
     @Override
     public GMInstallation save(InstallationSaveRequest request, MultipartFile[] files, List<PointPressure> pointsPressure, List<PointPower> pointPower, List<PointNPSH> pointNPSH) throws IOException {
-        Engine engine = new Engine();
-        engine.setFieldsForPumpSave(request);
+
         Pump pump = new Pump();
-        Optional<Pump> existingPump = pumpRepo.findByName(request.getNamePump());
+        Optional<Pump> existingPump = pumpRepo.findByName(request.getPumps().get(0).getName());
         if (existingPump.isPresent()) {
             throw new NullPointerException("Имя насоса уже существует");
         }
-        pump.setFieldsForPumpSave(request, engine, pointsPressure, pointPower, pointNPSH);
-        pump.setMaterial(materialRepo.findById(request.getMaterial()));
+        pump.setFieldsForPumpSave(request.getPumps().get(0), request.getEngines().get(0), pointsPressure, pointPower, pointNPSH);
+        pump.setMaterial(materialRepo.findById(request.getMaterial().get(0)));
         GMInstallation gmInstallation = new GMInstallation();
         List<Pump> pumps = new ArrayList<>();
         pumps.add(pump);
         gmInstallation.setPumps(pumps);
         pump.getInstallations().add(gmInstallation);
-        System.out.println("qweeqeqweqeqweqweqweqwweqweqweqweqweqweqwe");
         gmInstallation.setCommonFields(request);
         gmInstallation.setSpecificFields(request);
         gmInstallation.setFieldsForSave(request,files,fileStorageService);

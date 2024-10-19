@@ -193,14 +193,23 @@ public class PdfComponent<T extends ParentInstallations> {
         table.addCell(new Cell().add(new Paragraph("Количество резервных насосов")));
         table.addCell(new Cell().add(new Paragraph(String.valueOf(installations.getCountSparePumps()))));
 
-        table.addCell("Тип жидкости");
-        table.addCell(String.valueOf(installations.getCoolantType().getTranslation()));
-        table.addCell("Концентрация");
-        if(installations.getConcentration() != null){
-            table.addCell(String.valueOf(installations.getConcentration()));
+        if(installations.getClass().getSimpleName()=="GMInstallation"){
+            GMInstallation installation = (GMInstallation) installations;
+            table.addCell("Тип жидкости");
+            table.addCell(String.valueOf(installations.getCoolantType().getTranslation()));
+            table.addCell("Концентрация");
+            if(installation.getConcentration() != null){
+                table.addCell(String.valueOf(installation.getConcentration()));
+            }else {
+                table.addCell("Концентрация отсутствует");
+            }
         }else {
+            table.addCell("Тип жидкости");
+            table.addCell(String.valueOf(installations.getCoolantType().getTranslation()));
+            table.addCell("Концентрация");
             table.addCell("Концентрация отсутствует");
         }
+
 
         table.addCell(new Cell(1,2).add(new Paragraph("Температура")));
         table.addCell(new Cell(1,2).add(new Paragraph(String.valueOf(installations.getTemperature()))));
