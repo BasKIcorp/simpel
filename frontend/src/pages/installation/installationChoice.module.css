@@ -1,0 +1,144 @@
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 78px - 79px); /* Высота экрана за вычетом хэдера и нижнего отступа */
+    padding: 0 100px;
+    margin-top: 58px;
+}
+
+.rectangle {
+    display: flex;
+    width: 90%;
+    max-width: calc(100vw - 201px); /* Вычет отступов 100px слева и 101px справа */
+    height: 650px;
+    background-color: white;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.leftSide, .rightSide {
+    flex: 1;
+}
+
+.leftSide {
+    position: relative; /* Добавляем позиционирование для родителя */
+    background-color: white;
+    padding: 20px; /* Настройте отступы по вашему усмотрению */
+}
+
+.rightSide {
+    padding: 20px; /* Настройте отступы по вашему усмотрению */
+    display: flex;
+    flex-direction: column; /* Вертикальное выравнивание */
+    justify-content: flex-start; /* Выравнивание по началу */
+
+    background-color: #061D52; /* Синий цвет правой половины */
+}
+
+.formTitle {
+    text-align: center;
+    color: #000000;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.formGroup {
+    margin-top: 22px;
+    margin-left: 20px;
+}
+
+.formSubtitle {
+    font-size: 24px;
+    font-weight: 500;
+    color: #000000;
+    margin-bottom: 10px;
+}
+
+.selectWrapper {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+}
+
+.select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: white;
+    padding: 8px 40px 8px 12px; /* Отступ справа для стрелки */
+    width: 100%;
+    font-size: 16px;
+    border: 1px solid #000;
+    border-radius: 6px;
+    background-image: url('../../assets/select-icon.svg'); /* Укажите путь к вашей SVG */
+    background-repeat: no-repeat;
+    background-position: right 12px center; /* Позиция SVG */
+    background-size: 16px; /* Размер SVG */
+}
+
+.radioGroup {
+    margin-top: 10px;
+}
+
+.radioGroup h4 {
+    margin-bottom: 8px;
+}
+
+.radioGroup label {
+    margin-right: 15px;
+    font-size: 16px;
+}
+
+.arrow {
+    float: right;
+    transition: transform 0.3s ease; /* Плавный переход для трансформации */
+    position: absolute;
+    bottom: 10%;
+    right: 2%;
+}
+
+/* Анимация трансформации применяется только если стрелка не disabled */
+.arrow:disabled{
+    cursor: not-allowed;
+    transform: none;
+}
+.arrow:not(.disabledArrow):hover {
+    transform: scale(1.1); /* Увеличение при наведении */
+}
+
+.disabledArrow {
+    cursor: not-allowed; /* Показать, что клик невозможен */
+    transform: none; /* Отменяем трансформацию */
+}
+
+/*.arrow:hover {*/
+/*    transform: scale(1.1);*/
+/*    cursor: pointer;*/
+/*}*/
+
+.titlesWrapper{
+    margin-top: 70px;
+    margin-left: 40px;
+}
+.locationArrow{
+    margin-left: 18px;
+}
+.currentLocation{
+    color: rgba(255, 255, 255, 1);
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+}
+.titleWithArrow {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+}
+
+.additionalOptions {
+    margin-top: 20px;
+}
+
+

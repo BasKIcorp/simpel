@@ -1,0 +1,112 @@
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 78px - 79px); /* Высота экрана за вычетом хэдера и нижнего отступа */
+    padding: 0 100px;
+    margin-top: 58px;
+}
+
+.rectangle {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    max-width: calc(100vw - 201px); /* Вычет отступов 100px слева и 101px справа */
+    height: 650px;
+    background-color: white;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.header {
+    background-color: #061D52; /* Цвет фона заголовка */
+    color: white;
+    font-size: 32px;
+    padding: 5px 20px;
+    text-align: center;
+}
+
+.content {
+
+    display: flex;
+    flex: 1;
+    padding: 20px;
+    margin-left: 30px;
+}
+
+.chartContainer {
+
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-right: 20px;
+}
+
+.selectWrapper {
+    margin-bottom: 10px;
+    margin-left: 60px;
+}
+
+.select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: white;
+    padding: 8px 40px 8px 12px; /* Отступ справа для стрелки */
+    width: 65%;
+    font-size: 16px;
+    border: 1px solid #000;
+    border-radius: 6px;
+    background-image: url('../../assets/select-icon.svg'); /* Укажите путь к вашей SVG */
+    background-repeat: no-repeat;
+    background-position: right 12px center; /* Позиция SVG */
+    background-size: 16px; /* Размер SVG */
+}
+
+.chart {
+    /*border: solid 2px;*/
+    flex: 1;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    margin-bottom: 10px;
+}
+
+.graphSelector {
+    display: flex;
+    justify-content: center;
+
+}
+
+.graphSelector label {
+    margin: 0 10px;
+}
+
+.data {
+    flex: 1;
+    padding: 20px;
+    padding-top: 80px;
+    border-radius: 6px;
+    font-size: 18px;
+}
+
+.arrow {
+    float: right;
+    transition: transform 0.3s ease; /* Плавный переход для трансформации */
+    position: absolute;
+    bottom: 10%;
+    right: 2%;
+}
+
+.arrow:disabled {
+    cursor: not-allowed;
+    transform: none;
+}
+
+.arrow:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+

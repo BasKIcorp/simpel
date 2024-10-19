@@ -1,0 +1,30 @@
+{
+  "SF-9050": {
+    "pressureFlow": [
+      { "name": "1", "pressure": 100, "flow": 50 },
+      { "name": "2", "pressure": 110, "flow": 60 }
+    ],
+    "powerFlow": [
+      { "name": "1", "power": 200, "flow": 50 },
+      { "name": "2", "power": 220, "flow": 60 }
+    ],
+    "suctionReserveFlow": [
+      { "name": "1", "suctionReserve": 300, "flow": 50 },
+      { "name": "2", "suctionReserve": 320, "flow": 60 }
+    ]
+  },
+  "SF-5090": {
+    "pressureFlow": [
+      { "name": "1", "pressure": 70, "flow": 50 },
+      { "name": "2", "pressure": 91, "flow": 78 }
+    ],
+    "powerFlow": [
+      { "name": "1", "power": 142, "flow": 77 },
+      { "name": "2", "power": 250, "flow": 42 }
+    ],
+    "suctionReserveFlow": [
+      { "name": "1", "suctionReserve": 251, "flow": 88 },
+      { "name": "2", "suctionReserve": 350, "flow": 52 }
+    ]
+  }
+}
