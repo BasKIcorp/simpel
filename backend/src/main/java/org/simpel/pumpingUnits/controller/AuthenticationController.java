@@ -10,10 +10,12 @@ import org.simpel.pumpingUnits.controller.AuthRegisterModel.RegisterRequest;
 import org.simpel.pumpingUnits.controller.AuthRegisterModel.errorMessage;
 import org.simpel.pumpingUnits.service.AuthenticationService;
 import org.simpel.pumpingUnits.service.UserService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 
 @RestController
 @RequestMapping("/api/simple/auth/")
+@CrossOrigin(origins = {"http://localhost:3000", "http://51.250.25.148:3000"})
 public class AuthenticationController {
     private final UserService userService;
     private final AuthenticationService authenticationService;
