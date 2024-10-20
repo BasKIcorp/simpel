@@ -6,6 +6,7 @@ import {useNavigate} from "react-router-dom";
 import Graph from "../../components/UI/Graph";
 import {useDispatch, useSelector} from "react-redux";
 import {setGeneralInfo, setMaterials, setMotorData, setPumpData, setPoints} from "../../store/pumpSlice";
+import {server_url} from "../../config";
 
 
 function SelectionResults() {
@@ -107,7 +108,7 @@ function SelectionResults() {
                 "pressure": parseInt(generalInfo.ratedPressure),
                 "pumpTypeForSomeInstallation": generalInfo.pumpTypeForSomeInstallation
             })
-            const response = await fetch("http://localhost:8080/api/simple/inst/get", {
+            const response = await fetch(server_url + "/api/simple/inst/get", {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${token}`,

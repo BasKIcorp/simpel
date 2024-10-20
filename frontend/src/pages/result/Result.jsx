@@ -5,6 +5,7 @@ import Graph from "../../components/UI/Graph";
 import testData from "../selection_results/test_data.json";
 import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
+import {server_url} from "../../config";
 
 function Result() {
     const [selectedImage, setSelectedImage] = useState("drawing1");
@@ -19,6 +20,7 @@ function Result() {
     const points = useSelector((state) => state.pump.points)
     const options = useSelector((state) => state.pump.options)
     const token = useSelector((state) => state.user.token)
+    // const userName = useSelector((state) => state.user)
     const navigate = useNavigate;
     const remoteControlNames = {
         freeCooling: 'Режим "фрикулинга" /сниженной нагрузки',
@@ -145,7 +147,7 @@ function Result() {
                     "vibrationLock": options.vibrationCompensators
                 }
             })
-            const response = await fetch("http://localhost:8080/api/simple/inst/generate", {
+            const response = await fetch(server_url + "/api/simple/inst/generate", {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -193,6 +195,7 @@ function Result() {
     const getMailPdf = async () =>{ // - тут пдфочку получить когда никита буфера накачает
         try {
             const request = JSON.stringify({
+                // "userEmail":
                 "installationId": generalInfo.installationId ,
                 "typeInstallations": generalInfo.installationType,
                 "subtype": generalInfo.subType,
@@ -216,7 +219,7 @@ function Result() {
                     "vibrationLock": options.vibrationCompensators
                 }
             })
-            const response = await fetch("http://localhost:8080/api/simple/inst/generate", {
+            const response = await fetch(server_url + "/api/simple/inst/generate", {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${token}`,
