@@ -42,12 +42,12 @@ public class SearchComponent<T extends ParentInstallations> {
 
     private boolean suitableInstallation(T installation) {
         // Проверяем каждый насос в установке
-        for (Pump pump : installation.getPumps()) {
+        Pump pump = installation.getPumps().get(0);
             Point closePoint = findClosePoint(pump.getPointsPressure(), flowRateForSearch);
             if (closePoint != null && pressureForSearch <= closePoint.getY()) {
                 return true; // Если хотя бы один насос подходит, установка считается подходящей
             }
-        }
+
         return false;
     }
 
