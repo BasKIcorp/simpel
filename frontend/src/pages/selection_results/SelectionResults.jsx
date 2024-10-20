@@ -157,7 +157,7 @@ function SelectionResults() {
                     name: point.id.toString(),
                     pressure: point.y,
                     flow: point.x,
-                }));)
+                })))
 
                 const pressureFlowData = selectedPump.pointsPressure.map(point => ({
                     name: point.id.toString(),
