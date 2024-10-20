@@ -6,4 +6,4 @@ COPY public /simpel/frontend/public
 COPY package.json /simpel/frontend
 COPY src /simpel/frontend/src
 RUN npm install
-CMD ["npm", "--experimental-modules", "start"]
+CMD ["npm", "start"]
