@@ -1,9 +1,9 @@
 FROM ubuntu:latest
 LABEL authors="tox1n71"
-FROM node
+FROM node:18
 WORKDIR /simpel/frontend
-COPY ../frontend/public /simpel/frontend/public
-COPY ../frontend/package.json /simpel/frontend
-COPY ../frontend/src /simpel/frontend/src
+COPY public /simpel/frontend/public
+COPY package.json /simpel/frontend
+COPY src /simpel/frontend/src
 RUN npm install
-CMD ["npm", "start"]
+CMD ["npm", "--experimental-modules", "start"]

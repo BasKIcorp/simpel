@@ -4,10 +4,10 @@ FROM maven:3.8.4-openjdk-17 AS build
 
 WORKDIR /backend
 
-COPY backend/pom.xml .
+COPY pom.xml .
 RUN mvn dependency:go-offline
 
-COPY backend/src ./src
+COPY src ./src
 
 RUN mvn package -DskipTests
 
@@ -17,8 +17,8 @@ RUN apk add --no-cache fontconfig freetype ttf-dejavu
 
 COPY --from=build /backend/target/pumpingUnits-0.0.1-SNAPSHOT.jar /backend/backend.jar
 
-COPY backend/firstTrySqliteBase.bd /firstTrySqliteBase.bd
-COPY backend/uploads /uploads
+COPY firstTrySqliteBase.bd /firstTrySqliteBase.bd
+COPY uploads /uploads
 
 EXPOSE 8080
 
