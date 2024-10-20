@@ -1,6 +1,8 @@
 package org.simpel.pumpingUnits.model.installation;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.subtypes.HozPitSubtypes;
@@ -8,7 +10,9 @@ import org.simpel.pumpingUnits.model.enums.subtypes.PNSSubtypes;
 
 @Entity
 public class PNSInstallationAFEIJP extends ParentInstallations{
+    @Enumerated(EnumType.STRING)
     private CoolantType coolantType;
+    @Enumerated(EnumType.STRING)
     private PNSSubtypes subtype;
     private int totalCapacityOfJockeyPump;
     private int requiredJockeyPumpPressure;

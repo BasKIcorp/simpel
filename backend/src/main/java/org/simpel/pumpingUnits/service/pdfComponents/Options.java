@@ -9,6 +9,71 @@ public class Options {
     private String vibrationMounts;
     private String collector;
     private String flangesOrGrooveLock;
+
+    public void setExecution(String execution) {
+        this.execution = execution;
+    }
+
+    public void setVibrationMounts(String vibrationMounts) {
+        this.vibrationMounts = vibrationMounts;
+    }
+
+    public void setCollector(String collector) {
+        this.collector = collector;
+    }
+
+    public void setFlangesOrGrooveLock(String flangesOrGrooveLock) {
+        this.flangesOrGrooveLock = flangesOrGrooveLock;
+    }
+
+    public String getVibrationLock() {
+        return vibrationLock;
+    }
+
+    public void setVibrationLock(String vibrationLock) {
+        this.vibrationLock = vibrationLock;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
+
+    public void setExpansionTank(String expansionTank) {
+        this.expansionTank = expansionTank;
+    }
+
+    public void setBufferTank(String bufferTank) {
+        this.bufferTank = bufferTank;
+    }
+
+    public void setBufferTankSize(String bufferTankSize) {
+        this.bufferTankSize = bufferTankSize;
+    }
+
+    public void setBufferTankType(String bufferTankType) {
+        this.bufferTankType = bufferTankType;
+    }
+
+    public void setFuse(String fuse) {
+        this.fuse = fuse;
+    }
+
+    public void setAirVent(String airVent) {
+        this.airVent = airVent;
+    }
+
+    public void setMakeUpMamOrPap(String makeUpMamOrPap) {
+        this.makeUpMamOrPap = makeUpMamOrPap;
+    }
+
+    public void setPressureMamOrPap(String pressureMamOrPap) {
+        this.pressureMamOrPap = pressureMamOrPap;
+    }
+
+    public void setVolumeMamOrPap(String volumeMamOrPap) {
+        this.volumeMamOrPap = volumeMamOrPap;
+    }
+
     private String vibrationLock;
     private String filter;
     private String expansionTank;

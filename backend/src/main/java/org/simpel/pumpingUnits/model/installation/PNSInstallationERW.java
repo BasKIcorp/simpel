@@ -1,6 +1,8 @@
 package org.simpel.pumpingUnits.model.installation;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
 import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.PumpTypeForSomeInstallation;
@@ -8,8 +10,11 @@ import org.simpel.pumpingUnits.model.enums.subtypes.PNSSubtypes;
 
 @Entity
 public class PNSInstallationERW extends ParentInstallations {
+    @Enumerated(EnumType.STRING)
     private CoolantType coolantType;
+    @Enumerated(EnumType.STRING)
     private PNSSubtypes subtype;
+    @Enumerated(EnumType.STRING)
     private PumpTypeForSomeInstallation pumpTypeForSomeInstallation;
     private int temperature;
 
