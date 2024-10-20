@@ -55,22 +55,22 @@ public class Pump {
 
     @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    @JsonIgnore
+
     private List<PointPressure> pointsPressure ;
 
     @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    @JsonIgnore
+
     private List<PointPower> pointsPower;
 
     @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    @JsonIgnore
+
     private List<PointNPSH> pointsNPSH;
 
     @ManyToMany(mappedBy = "pumps", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonBackReference
-    @JsonIgnore
+
     private List<ParentInstallations> installations = new ArrayList<>();
 
     public List<ParentInstallations> getInstallations() {
