@@ -11,11 +11,12 @@ import org.simpel.pumpingUnits.controller.AuthRegisterModel.errorMessage;
 import org.simpel.pumpingUnits.service.AuthenticationService;
 import org.simpel.pumpingUnits.service.UserService;
 import org.springframework.web.bind.annotation.CrossOrigin;
-
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @RestController
 @RequestMapping("/api/simple/auth/")
-@CrossOrigin(origins = {"http://localhost:3000", "http://51.250.25.148:3000"})
+@CrossOrigin(origins = {"http://localhost:3000", "http://51.250.25.148:3000"}, 
+             methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 public class AuthenticationController {
     private final UserService userService;
     private final AuthenticationService authenticationService;
