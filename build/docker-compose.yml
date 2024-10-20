@@ -19,6 +19,18 @@ services:
     networks:
       - app-network
 
+  nginx:  # Обратите внимание на правильное выравнивание
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - app-network  # Добавьте сеть для Nginx
+
 networks:
   app-network:
     driver: bridge
