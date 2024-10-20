@@ -44,33 +44,27 @@ public class Pump {
 
     @ManyToOne
     @JoinColumn(name = "material_name", referencedColumnName = "name")
-    @JsonIgnore
     private Material material;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "engine_id")
     @JsonManagedReference
-    @JsonIgnore
     private Engine engine;
 
     @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-
     private List<PointPressure> pointsPressure ;
 
     @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-
     private List<PointPower> pointsPower;
 
     @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-
     private List<PointNPSH> pointsNPSH;
 
     @ManyToMany(mappedBy = "pumps", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonBackReference
-
     private List<ParentInstallations> installations = new ArrayList<>();
 
     public List<ParentInstallations> getInstallations() {
