@@ -16,13 +16,14 @@ import org.springframework.messaging.MessagingException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.CrossOrigin;
-
+import org.springframework.web.bind.annotation.RequestMethod;
 import java.io.IOException;
 
 
 @RestController
 @RequestMapping("/api/simple/inst")
-@CrossOrigin(origins = {"http://localhost:3000", "http://51.250.25.148:3000"})
+@CrossOrigin(origins = {"http://localhost:3000", "http://51.250.25.148:3000"}, 
+             methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 public class InstallationsController {
 
     private final InstallationService installationService;
