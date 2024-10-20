@@ -120,16 +120,18 @@ function SelectionResults() {
             if (!response.ok ) {
                 throw new Error(`Error: ${response.status}`);
             }
+        
+
 
             const data = await response.json();
             if (!data || data.length === 0) {
                 throw new Error("No installations found");
             }
-
+            console.log("data: "  + data)
             setInstallations(data); // Store all installations
             setSelectedInstallation(data[0]); // Default to the first installation
             setSelectedPump(data[0]?.pumps[0]); // Default to the first pump of the first installation
-
+            console.log("data[0]?.pumps[0]: "  + data[0]?.pumps[0])
         } catch (error) {
             console.error("Failed to fetch pump data:", error);
             navigate(-1)
@@ -150,6 +152,13 @@ function SelectionResults() {
 
         switch (selectedGraphType) {
             case "1": // Pressure/Flow graph
+                console.log("selectedPump.pointsPressure: " + selectedPump.pointsPressure)
+                console.log("MAP: " + selectedPump.pointsPressure.map(point => ({
+                    name: point.id.toString(),
+                    pressure: point.y,
+                    flow: point.x,
+                }));)
+
                 const pressureFlowData = selectedPump.pointsPressure.map(point => ({
                     name: point.id.toString(),
                     pressure: point.y,
