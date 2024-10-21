@@ -62,12 +62,12 @@
 .button:hover {
     background-color: #0A307D; /* Изменение цвета при наведении */
     transform: scale(1.05); /* Небольшое увеличение кнопки */
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Добавляем тень */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Добавляем тень */
 }
 .button:active {
     background-color: #05193E; /* Темнее при нажатии */
     transform: scale(0.98); /* Уменьшение кнопки */
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); /* Тень уменьшена */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Тень уменьшена */
 }
 
 .button:disabled {
