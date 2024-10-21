@@ -6,4 +6,6 @@ COPY public /simpel/frontend/public
 COPY package.json /simpel/frontend
 COPY src /simpel/frontend/src
 RUN npm install
-CMD ["npm", "start"]
+RUN npm install -g serve
+RUN npm run build
+CMD ["serve", "-s", "build"]
