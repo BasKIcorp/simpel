@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @RestController
 @RequestMapping("/api/simple/auth/")
-@CrossOrigin(origins = {"http://localhost:3000", "http://51.250.25.148:3000"}, 
+@CrossOrigin(origins = {"http://localhost:3000", "http://51.250.25.148:3000","https://web.telegram.org","https://t.me","https://telegram.me","https://telegram.org"},
              methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 public class AuthenticationController {
     private final UserService userService;

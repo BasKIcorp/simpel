@@ -22,7 +22,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/simple/inst")
-@CrossOrigin(origins = {"http://localhost:3000", "http://51.250.25.148:3000"}, 
+@CrossOrigin(origins = {"http://localhost:3000", "http://51.250.25.148:3000","https://web.telegram.org","https://t.me","https://telegram.me","https://telegram.org"},
              methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 public class InstallationsController {
 
