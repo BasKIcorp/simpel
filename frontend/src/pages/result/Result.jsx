@@ -226,7 +226,7 @@ function Result() {
                     "vibrationLock": options.vibrationCompensators
                 }
             })
-            const response = await fetch(server_url + "/api/simple/inst/generate", {
+            const response = await fetch(server_url + "/api/simple/inst/generateAndSend", {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${token}`,
