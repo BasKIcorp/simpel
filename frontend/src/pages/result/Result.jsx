@@ -8,6 +8,8 @@ import {useNavigate} from "react-router-dom";
 import {server_url} from "../../config";
 
 function Result() {
+    const [isLoadingPdfButton, setIsLoadingPdfButton] = useState(false);
+    const [isLoadingEmailButton, setIsLoadingEmailButton] = useState(false);
     const [selectedImage, setSelectedImage] = useState("drawing1");
     const [selectedPump, setSelectedPump] = useState("SF-9050");
     const [selectedGraphType, setSelectedGraphType] = useState("1"); // 1 - расход/напор, 2 - расход/мощность, 3 - расход/квитанционный запас
@@ -122,6 +124,7 @@ function Result() {
     };
 
     const getPdf = async () =>{ // - тут пдфочку получить когда никита буфера накачает
+        setIsLoadingPdfButton(true);
         try {
             const request = JSON.stringify({
                 "installationId": generalInfo.installationId ,
@@ -191,8 +194,12 @@ function Result() {
             //     alert("Не было найдено установок с такими параметрами, попробуйте изменить их");
             // }, 100);
         }
+        finally {
+            setIsLoadingPdfButton(false);
+        }
     }
     const getMailPdf = async () =>{ // - тут пдфочку получить когда никита буфера накачает
+        setIsLoadingEmailButton(true)
         try {
             const request = JSON.stringify({
                 // "userEmail":
@@ -240,6 +247,8 @@ function Result() {
             // setTimeout(() => {
             //     alert("Не было найдено установок с такими параметрами, попробуйте изменить их");
             // }, 100);
+        }finally {
+            setIsLoadingEmailButton(false);
         }
     }
 
@@ -314,10 +323,18 @@ function Result() {
                         <h1>Результат</h1>
                     </div>
                     <div className={styles.buttonContainer}>
-                        <button className={styles.button} onClick={getPdf}>
+                        <button
+                            className={styles.button}
+                            onClick={getPdf}
+                            disabled={isLoadingPdfButton}
+                        >
                             Скачать pdf
                         </button>
-                        <button className={styles.button} onClick={getMailPdf}>
+                        <button
+                            className={styles.button}
+                            onClick={getMailPdf}
+                            disabled={isLoadingEmailButton}
+                        >
                             Pdf на e-mail
                         </button>
                         <div className={styles.infoContainer}>

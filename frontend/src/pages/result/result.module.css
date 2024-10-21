@@ -31,11 +31,11 @@
 .buttonContainer {
     margin-left: 30px;
     font-size: 20px;
-
     display: flex; /* Включаем flexbox для контейнера */
     gap: 10px; /* Расстояние между кнопками */
     margin-top: 20px; /* Отступ сверху (если нужно) */
 }
+
 .infoContainer {
     margin-left: 50px;
     display: flex; /* Выравниваем блоки с информацией */
@@ -47,6 +47,8 @@
     flex-direction: column; /* Располагаем текст в столбик */
     align-items: center; /* Центруем содержимое */
 }
+
+
 .button{
     margin-left: 50px;
     background-color: #061D52;
@@ -54,17 +56,32 @@
     color: white;
     font-size: 20px;
     width: 12%;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.content {
+.button:hover {
+    background-color: #0A307D; /* Изменение цвета при наведении */
+    transform: scale(1.05); /* Небольшое увеличение кнопки */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Добавляем тень */
+}
+.button:active {
+    background-color: #05193E; /* Темнее при нажатии */
+    transform: scale(0.98); /* Уменьшение кнопки */
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); /* Тень уменьшена */
+}
 
+.button:disabled {
+    background-color: #ccc; /* Цвет фона для отключенной кнопки */
+    cursor: not-allowed; /* Курсор для отключенной кнопки */
+}
+
+
+.content {
     display: flex;
     flex: 1;
     padding: 20px;
     margin-left: 30px;
 }
-
-
 
 .selectWrapper {
     margin-bottom: 10px;
@@ -87,22 +104,23 @@
     background-size: 16px; /* Размер SVG */
 }
 
-.charMargin{
+.charMargin {
     margin-left: 50px;
 }
 
-.drawingSelector{
+.drawingSelector {
     display: flex;
     justify-content: center;
 }
+
 .drawingSelector label {
     margin: 0 10px;
 }
+
 .graphSelector {
     margin-left: 50px;
     display: flex;
     justify-content: center;
-
 }
 
 .graphSelector label {
@@ -135,7 +153,6 @@
     cursor: pointer;
 }
 
-
 .tableContainer {
     margin-top: 30px;
     margin-left: 30px;
@@ -157,11 +174,13 @@
     padding: 10px;
     font-weight: bold;
 }
-.tableTitle{
+
+.tableTitle {
     background-color: #061D52; /* Цвет заголовков таблицы */
     color: white;
     font-weight: bold;
 }
+
 .resultTable tbody tr:nth-child(odd) {
     background-color: #f2f2f2; /* Цвет для нечетных строк */
 }
@@ -170,10 +189,12 @@
     background-color: #ffffff; /* Цвет для четных строк */
 }
 
-.resultTable td, .resultTable th {
+.resultTable td,
+.resultTable th {
     padding: 10px 15px;
     border: 1px solid #ddd; /* Граница между ячейками */
 }
+
 .contentContainer {
     display: flex;
     margin-top: 30px;
@@ -183,28 +204,32 @@
     display: flex;
     flex-direction: column;
     margin-top: 30px;
-
     font-size: 20px;
 }
 
-.imageContainer, .chartContainer {
+.imageContainer,
+.chartContainer {
     margin-bottom: 30px;
     text-align: center;
 }
-.imageContainer{
+
+.imageContainer {
     margin-left: 50px;
 }
-.chartContainer{
+
+.chartContainer {
     margin-left: 16px;
 }
+
 .image {
-    width: 470px;
-    height: 300px;
-    object-fit: fill;
+    width: 470px; /* Адаптивная ширина */
+    height: 300px; /* Фиксированная высота для всех изображений */
+    object-fit: cover; /* Сохранение пропорций, при этом изображение будет обрезано, чтобы заполнить область */
     border: 2px solid #333;
     border-radius: 6px;
     margin-bottom: 10px;
 }
+
 
 .chart {
     margin-bottom: 10px;
@@ -219,4 +244,91 @@
 
 .radioButtons label {
     font-size: 16px;
+}
+
+/* Адаптивные стили для экранов */
+@media (max-width: 1180px) {
+    .wrapper {
+        padding: 0 50px; /* Уменьшаем отступы */
+    }
+
+    .rectangle {
+        max-width: calc(100vw - 151px); /* Корректируем максимальную ширину */
+    }
+
+    .button {
+        width: 15%; /* Увеличиваем ширину кнопок */
+    }
+
+    .infoContainer {
+        gap: 30px; /* Уменьшаем расстояние между информационными блоками */
+    }
+
+    .charMargin,
+    .selectWrapper {
+        margin-left: 30px; /* Уменьшаем отступы */
+    }
+
+    .data {
+        padding: 10px; /* Уменьшаем отступы */
+    }
+
+    .tableContainer {
+        width: 70%; /* Увеличиваем ширину контейнера таблицы */
+    }
+
+    .contentContainer {
+        flex-direction: column; /* Упрощаем расположение контейнеров */
+    }
+}
+
+@media (max-width: 800px) {
+    .wrapper {
+        padding: 0 30px; /* Уменьшаем отступы */
+    }
+
+    .button {
+        width: 25%; /* Увеличиваем ширину кнопок */
+    }
+
+    .infoContainer {
+        flex-direction: column; /* Переносим блоки информации в столбик */
+        align-items: flex-start; /* Выравниваем по левому краю */
+    }
+
+    .tableContainer {
+        width: 90%; /* Увеличиваем ширину контейнера таблицы */
+    }
+
+    .content {
+        padding: 10px; /* Уменьшаем отступы */
+    }
+}
+
+@media (max-width: 600px) {
+    .wrapper {
+        padding: 0 10px; /* Уменьшаем отступы */
+        margin-top: 20px; /* Уменьшаем отступ сверху */
+    }
+
+    .header {
+        font-size: 24px; /* Уменьшаем размер шрифта заголовка */
+    }
+
+    .button {
+        width: 100%; /* Делаем кнопки на всю ширину */
+        margin: 5px 0; /* Уменьшаем отступы */
+    }
+
+    .infoContainer {
+        margin-left: 0; /* Убираем отступы слева */
+    }
+
+    .select {
+        width: 100%; /* Делаем селекты на всю ширину */
+    }
+
+    .tableContainer {
+        width: 100%; /* Делаем таблицы на всю ширину */
+    }
 }

@@ -36,7 +36,7 @@ function SelectionResults() {
             reservePumps: selectedInstallation.countSparePumps,
             controlType: selectedInstallation.controlType,
             ratedFlow: selectedInstallation.flowRate,
-            ratedPressure: selectedInstallation.pressure,
+            // ratedPressure: selectedInstallation.pressure,
             // Add more fields as necessary...
         }));
 
@@ -97,6 +97,7 @@ function SelectionResults() {
         console.log(generalInfo.ratedFlow)
         console.log(generalInfo.installationType.type)
         try {
+            console.log(generalInfo)
             const request = JSON.stringify({
                 "typeInstallations": generalInfo.installationType,
                 "subtype": generalInfo.subType,

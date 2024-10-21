@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 78px - 79px); /* Высота экрана за вычетом хэдера и нижнего отступа */
+    min-height: calc(100vh - 78px - 79px);
     padding: 0 100px;
     margin-top: 58px;
 }
@@ -10,7 +10,7 @@
 .rectangle {
     display: flex;
     width: 90%;
-    max-width: calc(100vw - 201px); /* Вычет отступов 100px слева и 101px справа */
+    max-width: calc(100vw - 201px);
     height: 650px;
     background-color: white;
     border-radius: 6px;
@@ -22,24 +22,23 @@
 }
 
 .leftSide {
-    position: relative; /* Добавляем позиционирование для родителя */
+    position: relative;
     background-color: white;
-    padding: 20px; /* Настройте отступы по вашему усмотрению */
+    padding: 20px;
 }
 
 .rightSide {
-    padding: 20px; /* Настройте отступы по вашему усмотрению */
+    padding: 20px;
     display: flex;
-    flex-direction: column; /* Вертикальное выравнивание */
-    justify-content: flex-start; /* Выравнивание по началу */
-
-    background-color: #061D52; /* Синий цвет правой половины */
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: #061D52;
 }
 
 .formTitle {
     text-align: center;
     color: #000000;
-    font-size: 32px;
+    font-size: 2rem; /* Используем rem для адаптивности */
     font-weight: 700;
 }
 
@@ -49,7 +48,7 @@
 }
 
 .formSubtitle {
-    font-size: 24px;
+    font-size: 1.5rem; /* Используем rem для адаптивности */
     font-weight: 500;
     color: #000000;
     margin-bottom: 10px;
@@ -66,15 +65,15 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     background-color: white;
-    padding: 8px 40px 8px 12px; /* Отступ справа для стрелки */
+    padding: 8px 40px 8px 12px;
     width: 100%;
-    font-size: 16px;
+    font-size: 1rem; /* Используем rem для адаптивности */
     border: 1px solid #000;
     border-radius: 6px;
-    background-image: url('../../assets/select-icon.svg'); /* Укажите путь к вашей SVG */
+    background-image: url('../../assets/select-icon.svg');
     background-repeat: no-repeat;
-    background-position: right 12px center; /* Позиция SVG */
-    background-size: 16px; /* Размер SVG */
+    background-position: right 12px center;
+    background-size: 16px;
 }
 
 .radioGroup {
@@ -87,52 +86,50 @@
 
 .radioGroup label {
     margin-right: 15px;
-    font-size: 16px;
+    font-size: 1rem; /* Используем rem для адаптивности */
 }
 
 .arrow {
     float: right;
-    transition: transform 0.3s ease; /* Плавный переход для трансформации */
+    transition: transform 0.3s ease;
     position: absolute;
     bottom: 10%;
     right: 2%;
 }
 
-/* Анимация трансформации применяется только если стрелка не disabled */
-.arrow:disabled{
+.arrow:disabled {
     cursor: not-allowed;
     transform: none;
 }
+
 .arrow:not(.disabledArrow):hover {
-    transform: scale(1.1); /* Увеличение при наведении */
+    transform: scale(1.1);
 }
 
 .disabledArrow {
-    cursor: not-allowed; /* Показать, что клик невозможен */
-    transform: none; /* Отменяем трансформацию */
+    cursor: not-allowed;
+    transform: none;
 }
 
-/*.arrow:hover {*/
-/*    transform: scale(1.1);*/
-/*    cursor: pointer;*/
-/*}*/
-
-.titlesWrapper{
+.titlesWrapper {
     margin-top: 70px;
     margin-left: 40px;
 }
-.locationArrow{
+
+.locationArrow {
     margin-left: 18px;
 }
-.currentLocation{
+
+.currentLocation {
     color: rgba(255, 255, 255, 1);
-    font-size: 28px;
+    font-size: 1.2rem; /* Используем rem для адаптивности */
     display: flex;
     align-items: center;
 }
+
 .titleWithArrow {
     color: rgba(255, 255, 255, 0.6);
-    font-size: 28px;
+    font-size: 1.2rem; /* Используем rem для адаптивности */
     display: flex;
     align-items: center;
 }
@@ -141,4 +138,34 @@
     margin-top: 20px;
 }
 
+/* Медиа запросы для адаптивности */
+@media (max-width: 1200px) {
+    .wrapper {
+        padding: 0 50px; /* Уменьшаем отступы */
+    }
+    .formTitle, .formSubtitle, .currentLocation, .titleWithArrow {
+        font-size: 1.5rem; /* Уменьшаем размер шрифта */
+    }
+}
 
+@media (max-width: 800px) {
+    .wrapper {
+        padding: 0 20px; /* Уменьшаем отступы */
+    }
+    .formTitle, .formSubtitle, .currentLocation, .titleWithArrow {
+        font-size: 0.75rem; /* Уменьшаем размер шрифта */
+    }
+    .select {
+        font-size: 0.4rem; /* Уменьшаем размер шрифта для селекта */
+    }
+}
+
+@media (max-width: 600px) {
+    .wrapper {
+        flex-direction: column; /* Меняем направление на вертикальное */
+        margin-top: 20px; /* Уменьшаем отступ сверху */
+    }
+    .rectangle {
+        height: auto; /* Автоматическая высота */
+    }
+}

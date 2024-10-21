@@ -4,11 +4,21 @@ import {useState} from "react";
 import arrow from '../../assets/next-page.svg';
 import locationArrow from '../../assets/location-arrow.svg';
 import {useNavigate} from "react-router-dom";
-import {useDispatch} from "react-redux";
+import {useDispatch,useSelector} from "react-redux";
 import {setGeneralInfo} from "../../store/pumpSlice";
+import {server_url} from "../../config"
 
 export const DeviceParamsHVS = () => {
     const navigate = useNavigate();
+    const generalInfo = useSelector((state) => state.pump.generalInfo);
+
+    const [selectedInstallation, setSelectedInstallation] = useState(null); // Храним всю установку
+    const [selectedPump, setSelectedPump] = useState(null); // Храним выбранный насос
+    const [selectedGraphType, setSelectedGraphType] = useState("1"); // 1 - pressure/flow, 2 - power/flow, 3 - NPSH/flow
+    const [graphData, setGraphData] = useState([]);
+    const [legendNames, setLegendNames] = useState([]);
+    const [installations, setInstallations] = useState([]); // Храним все установки
+    const token = useSelector((state) => state.user.token);
 
     const [liquidType, setLiquidType] = useState('WATER');
     const [temperature, setTemperature] = useState('');
@@ -29,6 +39,46 @@ export const DeviceParamsHVS = () => {
     };
     {        console.log(performance)
     }
+    const fetchPumpData = async () => {
+        try {
+            const request = JSON.stringify({
+                typeInstallations: generalInfo.installationType,
+                subtype: generalInfo.subType,
+                coolantType: "WATER",
+                temperature: temperature,
+                countMainPumps: generalInfo.workingPumps,
+                countSparePumps: generalInfo.reservePumps,
+                flowRate: parseInt(performance),
+                pressure: parseInt(pressure),
+                pumpTypeForSomeInstallation: pumpType
+            });
+            console.log(request);
+
+            const response = await fetch(`${server_url}/api/simple/inst/get`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: request,
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            if (!data || data.length === 0) {
+                throw new Error("No installations found");
+            }
+
+            // Возвращаем данные, чтобы их можно было использовать в обработчике
+            return data;
+        } catch (error) {
+            console.error("Failed to fetch pump data:", error);
+            return null; // Возвращаем null в случае ошибки
+        }
+    };
     const handleArrowClick = async (e) => {
         e.preventDefault();
         dispatch(setGeneralInfo({ liquid: liquidType }));
@@ -36,8 +86,19 @@ export const DeviceParamsHVS = () => {
         dispatch(setGeneralInfo({ ratedPressure: pressure }));
         dispatch(setGeneralInfo({ ratedFlow: performance }));
         dispatch(setGeneralInfo({ pumpTypeForSomeInstallation: pumpType}))
-        if (isFormComplete()) {
-            navigate("/selection/selection_results");
+
+        if (isFormComplete) {
+            // Вызов функции отправки запроса и ждем его выполнения
+            const pumpData = await fetchPumpData();
+
+            // Проверяем, получили ли мы данные
+            if (!pumpData.isEmpty()) {
+                // Переход на следующую страницу только после успешного получения данных
+                navigate("/selection/selection_results");
+            } else {
+                // Здесь можно обработать случай, когда данные не получены
+                alert("Не было найдено установок с такими параметрами, попробуйте изменить их");
+            }
         }
     };
 

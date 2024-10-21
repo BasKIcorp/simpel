@@ -1,33 +1,45 @@
 import { Header } from "../../components/UI/Header";
 import styles from "./deviceParams.module.css";
-import { useState, useMemo } from "react";
+import { useState, useMemo,useEffect} from "react";
 import arrow from '../../assets/next-page.svg';
 import locationArrow from '../../assets/location-arrow.svg';
 import { useNavigate } from "react-router-dom";
-import {setGeneralInfo} from "../../store/pumpSlice";
-import {useDispatch} from "react-redux";
+import { setGeneralInfo } from "../../store/pumpSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {server_url} from "../../config"
 
-//TODO: fix margins
 export const DeviceParamsHydra = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    // Получаем generalInfo из Redux
+    const generalInfo = useSelector((state) => state.pump.generalInfo);
 
     // Состояния для полей формы
+    const [selectedInstallation, setSelectedInstallation] = useState(null); // Храним всю установку
+    const [selectedPump, setSelectedPump] = useState(null); // Храним выбранный насос
+    const [selectedGraphType, setSelectedGraphType] = useState("1"); // 1 - pressure/flow, 2 - power/flow, 3 - NPSH/flow
+    const [graphData, setGraphData] = useState([]);
+    const [legendNames, setLegendNames] = useState([]);
+    const [installations, setInstallations] = useState([]); // Храним все установки
+    const token = useSelector((state) => state.user.token);
+
     const [fluidType, setFluidType] = useState('');
     const [temperature, setTemperature] = useState('');
     const [performance, setPerformance] = useState(0);
     const [pressure, setPressure] = useState(0);
     const [pumpType, setPumpType] = useState('');
     const [temperatureError, setTemperatureError] = useState('');
-    const dispatch = useDispatch();
+
     // Валидация температуры
     const validateTemperature = (temp, fluid) => {
         let tempValue = parseFloat(temp);
-        if (fluid === 'WATER') { // Вода
+        if (fluid === 'WATER') {
             if (tempValue < 4 || tempValue > 70) {
                 setTemperatureError('Для воды допустимый диапазон температуры: +4 … +70°C');
                 return false;
             }
-        } else if (fluid === 'PROPYLENE_GLYCOL' || fluid === 'ETHYLENE_GLYCOL') { // Растворы
+        } else if (fluid === 'PROPYLENE_GLYCOL' || fluid === 'ETHYLENE_GLYCOL') {
             if (tempValue < -10 || tempValue > 70) {
                 setTemperatureError('Для растворов допустимый диапазон температуры: -10 … +70°C');
                 return false;
@@ -39,13 +51,13 @@ export const DeviceParamsHydra = () => {
         setTemperatureError('');
         return true;
     };
+
     const handleFluidTypeChange = (e) => {
         const selectedFluidType = e.target.value;
         setFluidType(selectedFluidType);
-        // После изменения типа теплоносителя запускаем валидацию
         validateTemperature(temperature, selectedFluidType);
     };
-    // Проверка, все ли поля заполнены и прошли валидацию
+
     const isFormComplete = useMemo(() => {
         return (
             fluidType &&
@@ -55,18 +67,84 @@ export const DeviceParamsHydra = () => {
             pumpType &&
             validateTemperature(temperature, fluidType)
         );
-    }, [fluidType, temperature, performance, pressure, pumpType]); // Dependencies for memoization
+    }, [fluidType, temperature, performance, pressure, pumpType]);
+
+    // Функция для отправки запроса
+
 
     const handleArrowClick = async (e) => {
         e.preventDefault();
 
+        // Сохраняем введенные значения в Redux
         dispatch(setGeneralInfo({ liquid: fluidType }));
         dispatch(setGeneralInfo({ operatingTemperature: temperature }));
         dispatch(setGeneralInfo({ ratedPressure: pressure }));
         dispatch(setGeneralInfo({ ratedFlow: performance }));
-        dispatch(setGeneralInfo({ pumpType: pumpType }));
+
+        console.log("Параметры для запроса:", generalInfo);
+        console.log({
+            typeInstallations: generalInfo.installationType,
+            subtype: generalInfo.subType,
+            coolantType: generalInfo.liquid,
+            temperature: generalInfo.operatingTemperature,
+            countMainPumps: generalInfo.workingPumps,
+            countSparePumps: generalInfo.reservePumps,
+            flowRate: parseInt(generalInfo.ratedFlow),
+            pressure: parseInt(generalInfo.ratedPressure),
+
+        });
+
         if (isFormComplete) {
-            navigate("/selection/selection_results");
+            const pumpData = await fetchPumpData();
+            if (pumpData) {
+                // Переход на следующую страницу только после успешного получения данных
+                navigate("/selection/selection_results");
+            } else {
+                // Здесь можно обработать случай, когда данные не получены
+                alert("Не было найдено установок с такими параметрами, попробуйте изменить их");
+            }
+        }
+
+
+    };
+    const fetchPumpData = async () => {
+        try {
+            const request = JSON.stringify({
+                typeInstallations: generalInfo.installationType,
+                subtype: generalInfo.subType,
+                coolantType: fluidType,
+                temperature: temperature,
+                countMainPumps: generalInfo.workingPumps,
+                countSparePumps: generalInfo.reservePumps,
+                flowRate: parseInt(performance),
+                pressure: parseInt(pressure),
+                pumpTypeForSomeInstallation: ""
+            });
+            console.log(request);
+
+            const response = await fetch(`${server_url}/api/simple/inst/get`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: request,
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            if (!data || data.length === 0) {
+                throw new Error("No installations found");
+            }
+            // Возвращаем данные, чтобы их можно было использовать в обработчике
+            return data;
+
+        } catch (error) {
+            console.error("Failed to fetch pump data:", error);
+            return null; // Возвращаем null в случае ошибки
         }
     };
 

@@ -25,7 +25,8 @@
     position: relative;
     background-color: white;
     padding: 20px; /* Настройте отступы по вашему усмотрению */
-
+    max-height: 80vh; /* Ограничиваем высоту панели */
+    overflow-y: scroll; /* Включаем вертикальную прокрутку */
 }
 
 .rightSide {
@@ -33,14 +34,13 @@
     display: flex;
     flex-direction: column; /* Вертикальное выравнивание */
     justify-content: flex-start; /* Выравнивание по началу */
-
     background-color: #061D52; /* Синий цвет правой половины */
 }
 
 .formTitle {
     text-align: center;
     color: #000000;
-    font-size: 32px;
+    font-size: 2em; /* Адаптивный размер шрифта */
     font-weight: 700;
 }
 
@@ -50,7 +50,7 @@
 }
 
 .formSubtitle {
-    font-size: 24px;
+    font-size: 1.5em; /* Адаптивный размер шрифта */
     font-weight: 500;
     color: #000000;
     margin-bottom: 10px;
@@ -68,8 +68,8 @@
     -moz-appearance: none;
     background-color: white;
     padding: 8px 40px 8px 12px; /* Отступ справа для стрелки */
-    width: 43%;
-    font-size: 16px;
+    width: 30%; /* Ширина селекта 100% */
+    font-size: 1em; /* Адаптивный размер шрифта */
     border: 1px solid #000;
     border-radius: 6px;
     background-image: url('../../assets/select-icon.svg'); /* Укажите путь к вашей SVG */
@@ -88,17 +88,17 @@
 
 .radioGroup label {
     margin-right: 15px;
-    font-size: 16px;
+    font-size: 1em; /* Адаптивный размер шрифта */
 }
-.radioGroup input{
+
+.radioGroup input {
     margin-bottom: 10px;
 }
-/*TODO: сделать везде абсолютную позицию для стрелки*/
+
 .arrow {
     float: right;
     transition: transform 0.3s ease; /* Плавный переход для трансформации */
-    position: absolute;
-    bottom: 10%;
+    bottom: 80%;
     right: 2%;
 }
 
@@ -112,22 +112,25 @@
     cursor: pointer;
 }
 
-.titlesWrapper{
+.titlesWrapper {
     margin-top: 70px;
     margin-left: 40px;
 }
-.locationArrow{
+
+.locationArrow {
     margin-left: 18px;
 }
-.currentLocation{
+
+.currentLocation {
     color: rgba(255, 255, 255, 1);
-    font-size: 28px;
+    font-size: 1.2em; /* Адаптивный размер шрифта */
     display: flex;
     align-items: center;
 }
+
 .titleWithArrow {
     color: rgba(255, 255, 255, 0.6);
-    font-size: 28px;
+    font-size: 1.2em; /* Адаптивный размер шрифта */
     display: flex;
     align-items: center;
 }
@@ -136,46 +139,83 @@
     margin-top: 20px;
 }
 
-
 .arrowWrapper {
-
     position: relative; /* Задаем родителю относительное позиционирование */
 }
 
-/* additional.module.css */
-.leftSide {
-    max-height: 80vh; /* Ограничиваем высоту панели */
-    overflow-y: scroll; /* Включаем вертикальную прокрутку */
-    padding-right: 10px; /* Добавляем немного пространства справа */
-}
-
-.temperatureInput {
+/* Поля ввода */
+.temperatureInput, .anotherInput {
     padding: 5px;
-    font-size: 16px;
+    font-size: 1em; /* Адаптивный размер шрифта */
     border: 1px solid #000; /* Стандартная граница */
     border-radius: 6px;
     height: 30px;
-    width: 43%; /* Ширина инпута */
+    width: 100%; /* Ширина инпута 100% */
     transition: border-color 0.3s ease; /* Плавный переход для рамки */
 }
 
-.anotherInput {
-    padding: 5px;
-    font-size: 16px;
-    border: 1px solid #000; /* Стандартная граница */
-    border-radius: 6px;
-    height: 30px;
-    width: 43%; /* Ширина инпута */
-    transition: border-color 0.3s ease; /* Плавный переход для рамки */
-}
-h3{
+/* Заголовки */
+h3 {
     font-weight: 600;
     margin-bottom: 5px;
 }
-label{
+
+label {
     margin-bottom: 5px;
 }
-h4{
+
+h4 {
     margin-top: 10px;
     font-weight: 550;
+}
+
+/* Медиа запросы для адаптивности */
+@media (max-width: 1180px) {
+    .wrapper {
+        padding: 0 50px; /* Уменьшаем отступы */
+    }
+
+    .formTitle, .formSubtitle, .currentLocation, .titleWithArrow {
+        font-size: 1em; /* Уменьшаем размер шрифта */
+    }
+
+    .select {
+        width: 30%;
+        font-size: 0.7em; /* Уменьшаем размер шрифта селекта */
+    }
+}
+
+@media (max-width: 800px) {
+    .wrapper {
+        padding: 0 20px; /* Уменьшаем отступы */
+    }
+
+    .formTitle, .formSubtitle, .currentLocation, .titleWithArrow {
+        font-size: 0.8em; /* Уменьшаем размер шрифта */
+    }
+
+    .select {
+        width: 25%;
+        font-size: 0.6em; /* Уменьшаем размер шрифта селекта */
+    }
+}
+
+@media (max-width: 600px) {
+    .wrapper {
+        flex-direction: column; /* Меняем направление на вертикальное */
+        margin-top: 20px; /* Уменьшаем отступ сверху */
+    }
+
+    .rectangle {
+        height: auto; /* Автоматическая высота */
+    }
+
+    .formTitle, .formSubtitle, .currentLocation, .titleWithArrow {
+        font-size: 0.7em; /* Уменьшаем размер шрифта для очень маленьких экранов */
+    }
+
+    .select {
+        width: 15%;
+        font-size: 0.5em; /* Уменьшаем размер шрифта селекта */
+    }
 }
