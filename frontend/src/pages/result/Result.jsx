@@ -22,6 +22,7 @@ function Result() {
     const points = useSelector((state) => state.pump.points)
     const options = useSelector((state) => state.pump.options)
     const token = useSelector((state) => state.user.token)
+    const mail = useSelector((state) => state.user.username)
     // const userName = useSelector((state) => state.user)
     const navigate = useNavigate;
     const remoteControlNames = {
@@ -239,7 +240,7 @@ function Result() {
                 throw new Error(`Error: ${response.status}`);
             }
             console.log(await response)
-
+            alert("Письмо отправлено на почту " + mail)
 
         } catch (error) {
             console.error("Failed to fetch pump data:", error);
