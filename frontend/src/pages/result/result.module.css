@@ -24,7 +24,8 @@
     background-color: #061D52; /* Цвет фона заголовка */
     color: white;
     font-size: 32px;
-    padding: 5px 20px;
+    padding: 15px 20px;
+    font-weight: 500;
     text-align: center;
 }
 
@@ -331,4 +332,28 @@
     .tableContainer {
         width: 100%; /* Делаем таблицы на всю ширину */
     }
+}
+@media (max-width: 600px) {
+    .buttonContainer {
+        margin-left: 30px;
+        font-size: 20px;
+        display: table-column; /* Включаем flexbox для контейнера */
+        gap: 10px; /* Расстояние между кнопками */
+        margin-top: 20px; /* Отступ сверху (если нужно) */
+    }
+    .wrapper {
+        margin-top: 20px; /* Уменьшаем отступ сверху */
+        padding: 0 0;
+    }
+    .header{
+        width: 150%;
+    }
+    .rectangle{
+        min-width: 100%;
+        overflow: auto;
+    }
+    .leftSide{
+        min-width: 100%;
+    }
+
 }

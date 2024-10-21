@@ -55,8 +55,8 @@ function RegPage() {
                 console.log(data.message);
                 navigate("/selection/installation_choice", { replace: true });
             } else {
-                const error = await response.text();
-                console.error('Ошибка:', error);
+                const error = await response.json();
+                alert(error.message)
             }
         } catch (error) {
             console.error('Произошла ошибка при отправке запроса:', error);

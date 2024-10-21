@@ -176,12 +176,10 @@ h4 {
     }
 
     .formTitle, .formSubtitle, .currentLocation, .titleWithArrow {
-        font-size: 1em; /* Уменьшаем размер шрифта */
     }
 
     .select {
         width: 30%;
-        font-size: 0.7em; /* Уменьшаем размер шрифта селекта */
     }
 }
 
@@ -191,12 +189,10 @@ h4 {
     }
 
     .formTitle, .formSubtitle, .currentLocation, .titleWithArrow {
-        font-size: 0.8em; /* Уменьшаем размер шрифта */
     }
 
     .select {
         width: 25%;
-        font-size: 0.6em; /* Уменьшаем размер шрифта селекта */
     }
 }
 
@@ -211,11 +207,28 @@ h4 {
     }
 
     .formTitle, .formSubtitle, .currentLocation, .titleWithArrow {
-        font-size: 0.7em; /* Уменьшаем размер шрифта для очень маленьких экранов */
     }
 
     .select {
         width: 15%;
-        font-size: 0.5em; /* Уменьшаем размер шрифта селекта */
+    }
+}
+@media (max-width: 600px) {
+    .wrapper {
+        margin-top: 20px; /* Уменьшаем отступ сверху */
+        padding: 0 0;
+    }
+    .header{
+        width: 150%;
+    }
+    .rectangle{
+        min-width: 80%;
+        overflow: auto;
+    }
+    .leftSide{
+        min-width: 100%;
+    }
+    .select{
+        width: 50%;
     }
 }

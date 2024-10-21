@@ -190,3 +190,20 @@
         right: 1%;
     }
 }
+@media (max-width: 600px) {
+    .wrapper {
+        margin-top: 20px; /* Уменьшаем отступ сверху */
+        padding: 0 0;
+    }
+    .header{
+        width: 150%;
+    }
+    .rectangle{
+        min-width: 80%;
+        overflow: auto;
+    }
+    .leftSide{
+        min-width: 100%;
+    }
+
+}

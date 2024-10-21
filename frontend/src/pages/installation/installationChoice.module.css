@@ -14,8 +14,9 @@
     height: 650px;
     background-color: white;
     border-radius: 6px;
-    overflow: hidden;
+    overflow: auto;
 }
+
 
 .leftSide, .rightSide {
     flex: 1;
@@ -112,7 +113,6 @@
 }
 
 .titlesWrapper {
-    margin-top: 70px;
     margin-left: 40px;
 }
 
@@ -139,33 +139,39 @@
 }
 
 /* Медиа запросы для адаптивности */
-@media (max-width: 1200px) {
-    .wrapper {
-        padding: 0 50px; /* Уменьшаем отступы */
-    }
-    .formTitle, .formSubtitle, .currentLocation, .titleWithArrow {
-        font-size: 1.5rem; /* Уменьшаем размер шрифта */
-    }
-}
+/*@media (max-width: 1200px) {*/
+/*    .wrapper {*/
+/*        padding: 0 50px; !* Уменьшаем отступы *!*/
+/*    }*/
+/*    .formTitle, .formSubtitle, .currentLocation, .titleWithArrow {*/
+/*        font-size: 1.5rem; !* Уменьшаем размер шрифта *!*/
+/*    }*/
+/*}*/
 
-@media (max-width: 800px) {
-    .wrapper {
-        padding: 0 20px; /* Уменьшаем отступы */
-    }
-    .formTitle, .formSubtitle, .currentLocation, .titleWithArrow {
-        font-size: 0.75rem; /* Уменьшаем размер шрифта */
-    }
-    .select {
-        font-size: 0.4rem; /* Уменьшаем размер шрифта для селекта */
-    }
-}
+/*@media (max-width: 800px) {*/
+/*    .wrapper {*/
+/*        padding: 0 20px; !* Уменьшаем отступы *!*/
+/*    }*/
+/*    .formTitle, .formSubtitle, .currentLocation, .titleWithArrow {*/
+/*        font-size: 0.75rem; !* Уменьшаем размер шрифта *!*/
+/*    }*/
+/*    .select {*/
+/*        font-size: 0.4rem; !* Уменьшаем размер шрифта для селекта *!*/
+/*    }*/
+/*}*/
 
 @media (max-width: 600px) {
     .wrapper {
-        flex-direction: column; /* Меняем направление на вертикальное */
         margin-top: 20px; /* Уменьшаем отступ сверху */
+        padding: 0 0;
     }
-    .rectangle {
-        height: auto; /* Автоматическая высота */
+    .rectangle{
+        min-width: 80%;
     }
+    .leftSide{
+        min-width: 100%;
+    }
+
 }
+
+

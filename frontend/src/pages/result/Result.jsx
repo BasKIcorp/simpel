@@ -320,7 +320,7 @@ function Result() {
             <div className={styles.wrapper}>
                 <div className={styles.rectangle}>
                     <div className={styles.header}>
-                        <h1>Результат</h1>
+                        Результат
                     </div>
                     <div className={styles.buttonContainer}>
                         <button

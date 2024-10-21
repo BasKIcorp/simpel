@@ -118,10 +118,18 @@ function SelectionResults() {
                 body: request
             });
             console.log(request)
-            if (!response.ok ) {
-                throw new Error(`Error: ${response.status}`);
+
+            if (response.status === 403) {
+                console.log("Redirecting to /auth due to 403");
+                dispatch({ type: 'remove_user', payload: {username: "", token: ""}});
+                localStorage.removeItem("token");
+                navigate('/auth'); // Используем navigate вместо window.location.href
+                return;
             }
-        
+            // if (!response.ok ) {
+            //     throw new Error(`Error: ${response.status}`);
+            // }
+            //
 
 
             const data = await response.json();
