@@ -14,7 +14,16 @@ export const InstallationChoice = () => {
     const [reservePumps, setReservePumps] = useState(1);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
+    window.onerror = function (message, source, lineno, colno, error) {
+        console.error('Ошибка:', message);
+        console.error('Источник:', source);
+        console.error('Строка:', lineno);
+        console.error('Столбец:', colno);
+        if (error) {
+            console.error('Ошибка объекта:', error);
+        }
+        return true;
+    };
     const handleArrowClick = async (e) => {
         e.preventDefault();
 

@@ -13,7 +13,16 @@ function AuthPage() {
     const isFormValid = username !== "" && password !== "";
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
+    window.onerror = function (message, source, lineno, colno, error) {
+        console.error('Ошибка:', message);
+        console.error('Источник:', source);
+        console.error('Строка:', lineno);
+        console.error('Столбец:', colno);
+        if (error) {
+            console.error('Ошибка объекта:', error);
+        }
+        return true;
+    };
     const handleUsernameChange = (e) => {
         const value = e.target.value;
         setUsername(value);
