@@ -68,7 +68,7 @@ public class PostService {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(userService.getEmailForCurrentUser());
-        helper.setFrom("TheWorldDestroyer@yandex.ru");
+        helper.setFrom("noreply@spartaspb.ru");
 //        helper.setTo("post8888@list.ru");
         helper.setSubject("Подбор насосной установки Стрела по Вашему проекту ");
         helper.setText("Технический лист подбора во вложении.   \n\n\n\n\n\n\n\n\n\n\n\n\n\n\nДанное письмо созданно автоматически отвечать на него не нужно" );
@@ -76,7 +76,6 @@ public class PostService {
         // Создаем вложение из PDF-файла
         ByteArrayResource pdfResource = new ByteArrayResource(pdfBytes);
         helper.addAttachment("generated_report.pdf", pdfResource, MediaType.APPLICATION_PDF_VALUE);
-
         mailSender.send(message);
     }
 }
