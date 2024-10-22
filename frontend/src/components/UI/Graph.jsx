@@ -1,33 +1,8 @@
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceDot } from 'recharts';
 
-const Graph = ({ data = [], legendNames = []}) => {
-    const combinedData = {};
+const Graph = ({ data = [], legendNames = [], cords}) => {
 
-    // Проходим по каждому элементу в данных
-    data.forEach(item => {
-        const flowValue = item.flow;
-
-        // Если значение flow уже существует, то обновляем его
-        if (combinedData[flowValue]) {
-            legendNames.forEach((legend) => {
-                if (item[legend.key]) {
-                    combinedData[flowValue][legend.key] = item[legend.key];
-                }
-            });
-        } else {
-            // Если значение flow еще не добавлено, добавляем его
-            combinedData[flowValue] = { flow: flowValue };
-            legendNames.forEach((legend) => {
-                if (item[legend.key]) {
-                    combinedData[flowValue][legend.key] = item[legend.key];
-                }
-            });
-        }
-    });
-
-    // Преобразуем объект в массив
-    const finalData = Object.values(combinedData);
     return (
         <div>
             {data.length === 0 ? (
@@ -58,6 +33,15 @@ const Graph = ({ data = [], legendNames = []}) => {
                             dot={false}
                         />
                     ))}
+                    {cords.render && <ReferenceDot
+                        x={cords.x} // Значение X
+                        y={cords.y} // Значение Y
+                        // x={"4"}
+                        // y={"4"}
+                        r={4} // Радиус точки
+                        fill="black" // Цвет точки
+                        stroke="none"
+                    />}
                 </LineChart>
             )}
         </div>

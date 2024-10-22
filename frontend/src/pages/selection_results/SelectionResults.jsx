@@ -16,6 +16,12 @@ function SelectionResults() {
     const [selectedPump, setSelectedPump] = useState(null); // Храним выбранный насос
     const [selectedGraphType, setSelectedGraphType] = useState("1"); // 1 - pressure/flow, 2 - power/flow, 3 - NPSH/flow
     const [graphData, setGraphData] = useState([]);
+
+    const [cords, setCords] = useState({
+        render: false
+    })
+
+
     const [linesData, setLinesData] = useState([]);
     const [legendNames, setLegendNames] = useState([]);
     const [installations, setInstallations] = useState([]); // Храним все установки
@@ -166,7 +172,11 @@ function SelectionResults() {
         switch (selectedGraphType) {
             case "1": // Pressure/Flow graph
 
-
+                setCords({
+                    render: true,
+                    x: parseInt(generalInfo.ratedFlow, 10),
+                    y: parseInt(generalInfo.ratedPressure, 10)
+                });
 // Генерация данных для каждой точки с разными линиями в одном массиве
                 for (let i = 0; i < selectedInstallation.countMainPumps; i++) {
                     selectedPump.pointsPressure.forEach((point) => {
@@ -220,6 +230,8 @@ function SelectionResults() {
                 setGraphData(finalData.sort((a, b) => a.flow - b.flow));
                 setLegendNames(legendNames);
                 console.log(finalData)
+
+                console.log(cords)
                 break
             case "2": // Power/Flow graph
 
@@ -276,6 +288,7 @@ function SelectionResults() {
                 setGraphData(finalData.sort((a, b) => a.flow - b.flow));
                 setLegendNames(legendNames);
                 console.log(finalData)
+                setCords({ render: false });
                 break;
             case "3": // NPSH/Flow graph
 
@@ -333,6 +346,7 @@ function SelectionResults() {
                 setGraphData(finalData.sort((a, b) => a.flow - b.flow));
                 setLegendNames(legendNames);
                 console.log(finalData)
+                setCords({ render: false });
                 break;
             default:
                 setGraphData([]);
@@ -369,7 +383,7 @@ function SelectionResults() {
                                 </select>
                             </div>
                             <div className={styles.chart}>
-                                <Graph data={graphData} legendNames={legendNames}/>
+                                <Graph data={graphData} legendNames={legendNames} cords={cords}/>
                             </div>
                             <div className={styles.graphSelector}>
                                 <label>
