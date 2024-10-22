@@ -183,15 +183,15 @@ function SelectionResults() {
                         // Создаём объект для каждой линии
                         const dataPoint = {
                             flow: point.x * Math.pow(2, i), // Увеличиваем flow в 2^i раз
-                            [`line${i}`]: point.y, // Добавляем значение давления для линии
+                            [`pump${i}`]: point.y, // Добавляем значение давления для линии
                         };
                         graphData.push(dataPoint);
                     });
 
                     // Добавляем легенду для каждой линии
                     legendNames.push({
-                        key: `line${i}`,
-                        label: `Line ${i + 1}`,
+                        key: `pump${i}`,
+                        label: `pump ${i + 1}`,
                         color: `hsl(${i * 60}, 70%, 50%)`,
                     });
                 }
@@ -241,15 +241,15 @@ function SelectionResults() {
                         // Создаём объект для каждой линии
                         const dataPoint = {
                             flow: point.x * Math.pow(2, i), // Увеличиваем flow в 2^i раз
-                            [`line${i}`]: point.y, // Добавляем значение давления для линии
+                            [`pump${i}`]: point.y, // Добавляем значение давления для линии
                         };
                         graphData.push(dataPoint);
                     });
 
                     // Добавляем легенду для каждой линии
                     legendNames.push({
-                        key: `line${i}`,
-                        label: `Line ${i + 1}`,
+                        key: `pump${i}`,
+                        label: `pump ${i + 1}`,
                         color: `hsl(${i * 60}, 70%, 50%)`,
                     });
                 }
@@ -299,15 +299,15 @@ function SelectionResults() {
                         // Создаём объект для каждой линии
                         const dataPoint = {
                             flow: point.x * Math.pow(2, i), // Увеличиваем flow в 2^i раз
-                            [`line${i}`]: point.y, // Добавляем значение давления для линии
+                            [`pump${i}`]: point.y, // Добавляем значение давления для линии
                         };
                         graphData.push(dataPoint);
                     });
 
                     // Добавляем легенду для каждой линии
                     legendNames.push({
-                        key: `line${i}`,
-                        label: `Line ${i + 1}`,
+                        key: `pump${i}`,
+                        label: `pump ${i + 1}`,
                         color: `hsl(${i * 60}, 70%, 50%)`,
                     });
                 }

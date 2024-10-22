@@ -16,7 +16,7 @@ const Graph = ({ data = [], legendNames = [], cords}) => {
                     <Legend
                         payload={legendNames.map((item) => ({
                             value: item.label,
-                            type: 'line',
+                            type: 'pump',
                             id: item.key,
                             color: item.color
                         }))}

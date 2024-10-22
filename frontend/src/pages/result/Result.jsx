@@ -14,6 +14,11 @@ function Result() {
     const [selectedPump, setSelectedPump] = useState("SF-9050");
     const [selectedGraphType, setSelectedGraphType] = useState("1"); // 1 - расход/напор, 2 - расход/мощность, 3 - расход/квитанционный запас
     const [graphData, setGraphData] = useState([]);
+
+    const [cords, setCords] = useState({
+        render: false
+    })
+
     const [legendNames, setLegendNames] = useState([]);
     const generalInfo = useSelector((state) => state.pump.generalInfo);
     const pumpData = useSelector((state) => state.pump.pumpData);
@@ -257,57 +262,188 @@ function Result() {
     useEffect(() => {
         if (!selectedPump) return;
 
+        const graphData = [];
+        const legendNames = [];
+        const combinedData = {};
+        let finalData = {};
         switch (selectedGraphType) {
             case "1": // Pressure/Flow graph
-                if (Array.isArray(points.pointsPressure)) {
-                    const pressureFlowData = points.pointsPressure.map(point => ({
-                        name: point.id.toString(),
-                        pressure: point.y,
-                        flow: point.x,
-                    }));
-                    setGraphData(pressureFlowData);
-                    setLegendNames([
-                        {key: "flow", label: "Flow", color: "#82ca9d"},
-                        {key: "pressure", label: "Pressure", color: "#8884d8"},
-                    ]);
-                } else {
-                    setGraphData([]);
-                    console.error('points.pointsPressure is not an array');
+
+                setCords({
+                    render: true,
+                    x: parseInt(generalInfo.ratedFlow, 10),
+                    y: parseInt(generalInfo.ratedPressure, 10)
+                });
+// Генерация данных для каждой точки с разными линиями в одном массиве
+                for (let i = 0; i < generalInfo.workingPumps; i++) {
+                    points.pointsPressure.forEach((point) => {
+                        // Создаём объект для каждой линии
+                        const dataPoint = {
+                            flow: point.x * Math.pow(2, i), // Увеличиваем flow в 2^i раз
+                            [`pump${i}`]: point.y, // Добавляем значение давления для линии
+                        };
+                        graphData.push(dataPoint);
+                    });
+
+                    // Добавляем легенду для каждой линии
+                    legendNames.push({
+                        key: `pump${i}`,
+                        label: `pump ${i + 1}`,
+                        color: `hsl(${i * 60}, 70%, 50%)`,
+                    });
                 }
-                break;
+
+// Сортировка по значению flow, чтобы одинаковые значения стояли рядом
+                graphData.sort((a, b) => a.flow - b.flow);
+
+
+
+// Проходим по каждому элементу в данных
+                graphData.forEach(item => {
+                    const flowValue = item.flow;
+
+                    // Если значение flow уже существует, то обновляем его
+                    if (combinedData[flowValue]) {
+                        legendNames.forEach((legend) => {
+                            if (item[legend.key]) {
+                                combinedData[flowValue][legend.key] = item[legend.key];
+                            }
+                        });
+                    } else {
+                        // Если значение flow еще не добавлено, добавляем его
+                        combinedData[flowValue] = { flow: flowValue };
+                        legendNames.forEach((legend) => {
+                            if (item[legend.key]) {
+                                combinedData[flowValue][legend.key] = item[legend.key];
+                            }
+                        });
+                    }
+                });
+
+// Преобразуем объект в массив
+                finalData = Object.values(combinedData);
+
+// Устанавливаем данные графика и легенды
+                setGraphData(finalData.sort((a, b) => a.flow - b.flow));
+                setLegendNames(legendNames);
+                console.log(finalData)
+
+                console.log(cords)
+                break
             case "2": // Power/Flow graph
-                if (Array.isArray(points.pointsPower)) {
-                    const powerFlowData = points.pointsPower.map(point => ({
-                        name: point.id.toString(),
-                        power: point.y,
-                        flow: point.x,
-                    }));
-                    setGraphData(powerFlowData);
-                    setLegendNames([
-                        {key: "flow", label: "Flow", color: "#82ca9d"},
-                        {key: "power", label: "Power", color: "#ff7300"},
-                    ]);
-                } else {
-                    setGraphData([]);
-                    console.error('points.pointsPower is not an array');
+
+// Генерация данных для каждой точки с разными линиями в одном массиве
+                for (let i = 0; i < generalInfo.workingPumps; i++) {
+                    points.pointsPower.forEach((point) => {
+                        // Создаём объект для каждой линии
+                        const dataPoint = {
+                            flow: point.x * Math.pow(2, i), // Увеличиваем flow в 2^i раз
+                            [`pump${i}`]: point.y, // Добавляем значение давления для линии
+                        };
+                        graphData.push(dataPoint);
+                    });
+
+                    // Добавляем легенду для каждой линии
+                    legendNames.push({
+                        key: `pump${i}`,
+                        label: `pump ${i + 1}`,
+                        color: `hsl(${i * 60}, 70%, 50%)`,
+                    });
                 }
+
+// Сортировка по значению flow, чтобы одинаковые значения стояли рядом
+                graphData.sort((a, b) => a.flow - b.flow);
+
+
+
+// Проходим по каждому элементу в данных
+                graphData.forEach(item => {
+                    const flowValue = item.flow;
+
+                    // Если значение flow уже существует, то обновляем его
+                    if (combinedData[flowValue]) {
+                        legendNames.forEach((legend) => {
+                            if (item[legend.key]) {
+                                combinedData[flowValue][legend.key] = item[legend.key];
+                            }
+                        });
+                    } else {
+                        // Если значение flow еще не добавлено, добавляем его
+                        combinedData[flowValue] = { flow: flowValue };
+                        legendNames.forEach((legend) => {
+                            if (item[legend.key]) {
+                                combinedData[flowValue][legend.key] = item[legend.key];
+                            }
+                        });
+                    }
+                });
+
+// Преобразуем объект в массив
+                finalData = Object.values(combinedData);
+
+// Устанавливаем данные графика и легенды
+                setGraphData(finalData.sort((a, b) => a.flow - b.flow));
+                setLegendNames(legendNames);
+                console.log(finalData)
+                setCords({ render: false });
                 break;
             case "3": // NPSH/Flow graph
-                if (Array.isArray(points.pointsNPSH)) {
-                    const npshFlowData = points.pointsNPSH.map(point => ({
-                        name: point.id.toString(),
-                        suctionReserve: point.y,
-                        flow: point.x,
-                    }));
-                    setGraphData(npshFlowData);
-                    setLegendNames([
-                        {key: "flow", label: "Flow", color: "#82ca9d"},
-                        {key: "suctionReserve", label: "NPSH", color: "#8884d8"},
-                    ]);
-                } else {
-                    setGraphData([]);
-                    console.error('points.pointsNPSH is not an array');
+
+
+// Генерация данных для каждой точки с разными линиями в одном массиве
+                for (let i = 0; i < generalInfo.workingPumps; i++) {
+                    points.pointsNPSH.forEach((point) => {
+                        // Создаём объект для каждой линии
+                        const dataPoint = {
+                            flow: point.x * Math.pow(2, i), // Увеличиваем flow в 2^i раз
+                            [`pump${i}`]: point.y, // Добавляем значение давления для линии
+                        };
+                        graphData.push(dataPoint);
+                    });
+
+                    // Добавляем легенду для каждой линии
+                    legendNames.push({
+                        key: `pump${i}`,
+                        label: `pump ${i + 1}`,
+                        color: `hsl(${i * 60}, 70%, 50%)`,
+                    });
                 }
+
+// Сортировка по значению flow, чтобы одинаковые значения стояли рядом
+                graphData.sort((a, b) => a.flow - b.flow);
+
+
+
+// Проходим по каждому элементу в данных
+                graphData.forEach(item => {
+                    const flowValue = item.flow;
+
+                    // Если значение flow уже существует, то обновляем его
+                    if (combinedData[flowValue]) {
+                        legendNames.forEach((legend) => {
+                            if (item[legend.key]) {
+                                combinedData[flowValue][legend.key] = item[legend.key];
+                            }
+                        });
+                    } else {
+                        // Если значение flow еще не добавлено, добавляем его
+                        combinedData[flowValue] = { flow: flowValue };
+                        legendNames.forEach((legend) => {
+                            if (item[legend.key]) {
+                                combinedData[flowValue][legend.key] = item[legend.key];
+                            }
+                        });
+                    }
+                });
+
+// Преобразуем объект в массив
+                finalData = Object.values(combinedData);
+
+// Устанавливаем данные графика и легенды
+                setGraphData(finalData.sort((a, b) => a.flow - b.flow));
+                setLegendNames(legendNames);
+                console.log(finalData)
+                setCords({ render: false });
                 break;
             default:
                 setGraphData([]);
@@ -656,7 +792,7 @@ function Result() {
                             <div className={styles.chartContainer}>
                                 <p className={styles.charMargin}>Графики</p>
                                 <div className={styles.chart}>
-                                    <Graph data={graphData} legendNames={legendNames}/>
+                                    <Graph data={graphData} legendNames={legendNames} cords={cords}/>
                                 </div>
                                 <div className={styles.graphSelector}>
                                     <label>
