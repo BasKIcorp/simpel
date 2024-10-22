@@ -1,7 +1,8 @@
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceDot} from 'recharts';
 
-const Graph = ({ data = [], legendNames = [] }) => {
+const Graph = ({ data = [], legendNames = [], cords= {} }) => {
+
     return (
         <div>
             {data.length === 0 ? (
@@ -24,6 +25,15 @@ const Graph = ({ data = [], legendNames = [] }) => {
                     {legendNames.map((name, index) => (
                         <Line key={index} type="monotone" dataKey={name.key} stroke={name.color} strokeWidth={2} dot={false}/>
                     ))}
+                    {cords.render && <ReferenceDot
+                        x={cords.x} // Значение X
+                        y={cords.y} // Значение Y
+                        // x={"4"}
+                        // y={"4"}
+                        r={4} // Радиус точки
+                        fill="red" // Цвет точки
+                        stroke="none"
+                    />}
                 </LineChart>
             )}
         </div>

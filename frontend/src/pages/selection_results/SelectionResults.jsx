@@ -20,6 +20,10 @@ function SelectionResults() {
     const [installations, setInstallations] = useState([]); // Храним все установки
     const token = useSelector((state) => state.user.token);
     const generalInfo = useSelector((state) => state.pump.generalInfo);
+    const [cords, setCords] = useState({
+        render: false
+    })
+
 
     const dispatch = useDispatch();
     const handleArrowClick = (e, selectedInstallation) => {
@@ -173,6 +177,11 @@ function SelectionResults() {
                     pressure: point.y,
                     flow: point.x,
                 }));
+                setCords({
+                    render: true,
+                    x: generalInfo.ratedFlow,
+                    y: generalInfo.ratedPressure
+                })
                 setGraphData(pressureFlowData);
                 setLegendNames([
                     {key: "flow", label: "Flow", color: "#82ca9d"},
@@ -185,6 +194,7 @@ function SelectionResults() {
                     power: point.y,
                     flow: point.x,
                 }));
+                setCords({render: false})
                 setGraphData(powerFlowData);
                 setLegendNames([
                     {key: "flow", label: "Flow", color: "#82ca9d"},
@@ -197,6 +207,7 @@ function SelectionResults() {
                     suctionReserve: point.y,
                     flow: point.x,
                 }));
+                setCords({render: false})
                 setGraphData(npshFlowData);
                 setLegendNames([
                     {key: "flow", label: "Flow", color: "#82ca9d"},
@@ -238,7 +249,7 @@ function SelectionResults() {
                                 </select>
                             </div>
                             <div className={styles.chart}>
-                                <Graph data={graphData} legendNames={legendNames}/>
+                                <Graph data={graphData} legendNames={legendNames} cords={cords}/>
                             </div>
                             <div className={styles.graphSelector}>
                                 <label>
