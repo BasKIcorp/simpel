@@ -27,6 +27,41 @@ export const DeviceParamsHVS = () => {
     const [pumpType, setPumpType] = useState('');
     const [temperatureError, setTemperatureError] = useState('');
     const dispatch = useDispatch();
+
+    //первые правки
+    const [isVerticalSelected, setIsVerticalSelected] = useState(false);
+    const [isHorizontalSelected, setIsHorizontalSelected] = useState(false);
+
+    const updatePumpType = (vertical, horizontal) => {
+        if (vertical && horizontal) {
+            setPumpType("BOTH");
+        } else if (vertical) {
+            setPumpType("VERTICAL");
+        } else if (horizontal) {
+            setPumpType("HORIZONTAL");
+        } else {
+            setPumpType("");
+        }
+    };
+
+    const handleVerticalChange = (e) => {
+        setIsVerticalSelected((prev) => {
+            const newIsVerticalSelected = !prev;
+            updatePumpType(newIsVerticalSelected, isHorizontalSelected);
+            return newIsVerticalSelected;
+        });
+    };
+
+    const handleHorizontalChange = (e) => {
+        setIsHorizontalSelected((prev) => {
+            const newIsHorizontalSelected = !prev;
+            updatePumpType(isVerticalSelected, newIsHorizontalSelected);
+            return newIsHorizontalSelected;
+        });
+    };
+
+
+
     // Отключить кнопку, если форма не заполнена полностью
     const isFormComplete = () => {
         return (
@@ -80,6 +115,7 @@ export const DeviceParamsHVS = () => {
         }
     };
     const handleArrowClick = async (e) => {
+
         e.preventDefault();
         dispatch(setGeneralInfo({ liquid: liquidType }));
         dispatch(setGeneralInfo({ operatingTemperature: temperature }));
@@ -195,15 +231,15 @@ export const DeviceParamsHVS = () => {
                             <h3 className={styles.formSubtitle}>Тип насосов</h3>
                             <div className={styles.radioGroup}>
                                 <label>
-                                    <input type="radio" name="workingPumps" value="VERTICAL"
-                                           onChange={(e) => setPumpType(e.target.value)}
-                                    /> Вертикальные
+                                    <input type="checkbox"
+                                           onChange={handleVerticalChange}/>
+                                    Вертикальные
                                 </label>
                                 <br/>
                                 <label>
-                                    <input type="radio" name="workingPumps" value="HORIZONTAL"
-                                           onChange={(e) => setPumpType(e.target.value)}
-                                    /> Горизонтальные
+                                    <input type="checkbox"
+                                           onChange={handleHorizontalChange}/>
+                                    Горизонтальные
                                 </label>
                             </div>
                         </div>
