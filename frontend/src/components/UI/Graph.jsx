@@ -10,7 +10,11 @@ const Graph = ({ data = [], legendNames = [], cords}) => {
             ) : (
                 <LineChart width={500} height={400} data={data}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="flow" strokeWidth={2}/>
+                    <XAxis dataKey="flow" strokeWidth={2}
+                           type="number"
+                           domain={['auto', 'auto']}
+                           allowDecimals={true}
+                           tickCount={10} />
                     <YAxis strokeWidth={2}/>
                     <Tooltip />
                     <Legend

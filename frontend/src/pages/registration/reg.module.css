@@ -1,9 +1,8 @@
 .authPage {
     background-color: rgba(19, 52, 127, 1);
     display: flex;
+    padding-bottom: 79px;
     flex-direction: column;
-    align-items: center;
-    padding-bottom: 50px; /* Уменьшено для лучшего использования пространства */
     overflow: hidden;
 }
 
@@ -11,23 +10,24 @@
     border-radius: 6px;
     background-color: #fff;
     box-shadow: 10px 19px 23.3px 0 rgba(6, 29, 82, 1);
-    margin-top: 40px; /* Уменьшено расстояние от верхнего края */
+    align-self: center;
+    display: flex;
+    margin-top: 78px;
     width: 100%;
-    max-width: 600px; /* Уменьшена ширина контейнера для большей компактности */
+    max-width: 1290px;
+    flex-direction: column;
     font-family: Open Sans, sans-serif;
     color: #000;
     font-weight: 400;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 40px; /* Уменьшены отступы */
-    box-sizing: border-box; /* Включает padding в ширину контейнера */
+    justify-content: center;
+    padding: 91px 0;
 }
 
 @media (max-width: 991px) {
     .authContainer {
-        margin-top: 20px; /* Уменьшено расстояние на мобильных устройствах */
-        padding: 20px; /* Уменьшены отступы на мобильных устройствах */
+        max-width: 100%;
+        padding-bottom: 80px;
+        margin-top: 40px;
     }
 }
 
@@ -37,78 +37,82 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px; /* Уменьшены отступы */
-    width: 100%;
+    padding: 80px;
 }
 
 @media (max-width: 991px) {
     .formWrapper {
-        padding: 10px; /* Уменьшены отступы на мобильных устройствах */
+        max-width: 100%;
+        margin-bottom: 10px;
+        padding: 0 16px;
     }
 }
 
 .formContent {
-    width: 100%;
-    max-width: 500px; /* Уменьшена ширина формы */
     display: flex;
+    width: 305px;
+    max-width: 100%;
     flex-direction: column;
     align-items: center;
+    background-color: transparent;
 }
 
 .formTitle {
     color: #fff;
-    font-size: 28px; /* Уменьшен размер шрифта заголовка */
+    font-size: 32px;
     font-weight: 700;
     background-color: transparent;
-    margin-bottom: 20px; /* Добавлено отступ снизу для лучшего расстояния между заголовком и формой */
 }
 
 .formInput {
     border-radius: 6px;
     background-color: #fff;
-    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.1); /* Уменьшен размер тени */
-    margin-top: 10px; /* Уменьшен отступ между полями */
-    font-size: 14px; /* Уменьшен размер шрифта */
-    padding: 12px 14px; /* Уменьшены отступы внутри поля */
-    border: 1px solid #ddd; /* Изменен цвет границы на более светлый */
+    box-shadow: 4px 6px 10px rgba(255, 255, 255, 0.4);
+    align-self: stretch;
+    margin-top: 14px;
+    font-size: 16px;
+    padding: 14px 16px;
+    border: 1px solid #fff;
 }
-
 .errorInput {
     border-color: red;
     border-width: 2px;
 }
 
 .errorText {
+    background-color: transparent;
     color: red;
-    font-size: 12px; /* Уменьшен размер шрифта ошибки */
+    font-size: 14px;
     margin-top: 4px;
 }
 
 .registerLink {
     color: #fff;
-    font-size: 12px; /* Уменьшен размер шрифта ссылки */
-    margin-top: 10px; /* Уменьшен отступ между формой и ссылкой */
+    font-size: 14px;
+    margin-top: 20px;
+    background-color: transparent;
 }
 
 .submitButton {
     border-radius: 6px;
     background-color: #fff;
-    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.1); /* Уменьшен размер тени */
+    box-shadow: 4px 6px 10px rgba(255, 255, 255, 0.4);
     margin-top: 20px;
-    width: 120px; /* Уменьшена ширина кнопки */
-    font-size: 18px; /* Уменьшен размер шрифта */
+    width: 8em;
+    max-width: 100%;
+    font-size: 1.4em;
     font-weight: 600;
-    padding: 8px 16px; /* Уменьшены отступы внутри кнопки */
-    transition: transform 0.2s ease; /* Уменьшено время анимации */
+    padding: 2% 2% 2% 0%;
+    transition: transform 0.3s ease;
 }
 
 .disabledButton {
-    box-shadow: none; /* Убрана тень у неактивной кнопки */
+    box-shadow: 4px 6px 10px rgba(255, 255, 255, 0);
     cursor: not-allowed;
 }
 
 .submitButton:hover {
-    transform: scale(1.03); /* Уменьшено масштабирование при наведении */
+    transform: scale(1.05);
 }
 
 .visually-hidden {
@@ -123,6 +127,7 @@
     border: 0;
 }
 
-.registerLink strong {
+.registerLink strong{
     cursor: pointer;
 }
+

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styles from '../auth/AuthPage.module.css';
+import styles from './reg.module.css';
 import { Header } from "../../components/UI/Header";
 import { useNavigate } from "react-router-dom";
 import { server_url } from "../../config";
@@ -110,7 +110,7 @@ function RegPage() {
                             className={`${styles.submitButton} ${!isFormValid ? styles.disabledButton : ''}`}
                             disabled={!isFormValid}
                         >
-                            Войти
+                            Регистрация
                         </button>
                     </form>
                 </div>

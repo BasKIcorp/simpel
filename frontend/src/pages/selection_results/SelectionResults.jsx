@@ -174,8 +174,8 @@ function SelectionResults() {
 
                 setCords({
                     render: true,
-                    x: parseInt(generalInfo.ratedFlow, 10),
-                    y: parseInt(generalInfo.ratedPressure, 10)
+                    x: parseFloat(generalInfo.ratedFlow),
+                    y: parseFloat(generalInfo.ratedPressure)
                 });
 // Генерация данных для каждой точки с разными линиями в одном массиве
                 for (let i = 0; i < selectedInstallation.countMainPumps; i++) {
