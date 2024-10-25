@@ -67,12 +67,12 @@ public class PNSServiceERW implements InstallationServiceInterface<PNSInstallati
         PNSInstallationERW pns = new PNSInstallationERW();
         pns.setCommonFields(installationRequest);
         pns.setSpecificFields(installationRequest);
-
         searchComponent.setFlowRateForSearch(installationRequest.getFlowRate());
         searchComponent.setPressureForSearch(installationRequest.getPressure());
         int maxFlowRate = searchComponent.getMaxFlowRate();
         int minFlowRate = searchComponent.getMinFlowRate();
-        List<PNSInstallationERW> suitableInstallations = repository.findByTypeInstallationsAndSubtypeAndCoolantTypeAndTemperatureAndCountMainPumpsAndCountSparePumpsAndPumpTypeForSomeInstallationAndFlowRateBetween(
+        List<PNSInstallationERW> suitableInstallations = !installationRequest.getPumpTypeForSomeInstallation().equals("BOTH")?
+                repository.findByTypeInstallationsAndSubtypeAndCoolantTypeAndTemperatureAndCountMainPumpsAndCountSparePumpsAndPumpTypeForSomeInstallationAndFlowRateBetween(
                 TypeInstallations.valueOf(installationRequest.getTypeInstallations()),
                 PNSSubtypes.valueOf(installationRequest.getSubtype()),
                 CoolantType.valueOf(installationRequest.getCoolantType()),
@@ -81,7 +81,16 @@ public class PNSServiceERW implements InstallationServiceInterface<PNSInstallati
                 installationRequest.getCountSparePumps(),
                 PumpTypeForSomeInstallation.valueOf(installationRequest.getPumpTypeForSomeInstallation()),
                 minFlowRate,
-                maxFlowRate);
+                maxFlowRate) : repository.findByTypeInstallationsAndSubtypeAndCoolantTypeAndTemperatureAndCountMainPumpsAndCountSparePumpsAndFlowRateBetween(
+                TypeInstallations.valueOf(installationRequest.getTypeInstallations()),
+                PNSSubtypes.valueOf(installationRequest.getSubtype()),
+                CoolantType.valueOf(installationRequest.getCoolantType()),
+                installationRequest.getTemperature(),
+                installationRequest.getCountMainPumps(),
+                installationRequest.getCountSparePumps(),
+                minFlowRate,
+                maxFlowRate
+        );
         return searchComponent.get(suitableInstallations);
     }
 }

@@ -88,11 +88,8 @@ export const DeviceParamsHVS = () => {
         dispatch(setGeneralInfo({ pumpTypeForSomeInstallation: pumpType}))
 
         if (isFormComplete) {
-            // Вызов функции отправки запроса и ждем его выполнения
             const pumpData = await fetchPumpData();
-
-            // Проверяем, получили ли мы данные
-            if (!pumpData.isEmpty()) {
+            if (pumpData) {
                 // Переход на следующую страницу только после успешного получения данных
                 navigate("/selection/selection_results");
             } else {
@@ -100,6 +97,7 @@ export const DeviceParamsHVS = () => {
                 alert("Не было найдено установок с такими параметрами, попробуйте изменить их");
             }
         }
+
     };
 
     const handleLiquidChange = (e) => {

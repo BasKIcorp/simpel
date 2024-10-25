@@ -26,5 +26,15 @@ public interface PnsERWRepository extends JpaRepository<PNSInstallationERW, Long
             Integer minFlowRate,
             Integer maxFlowRate
     );
+    List<PNSInstallationERW> findByTypeInstallationsAndSubtypeAndCoolantTypeAndTemperatureAndCountMainPumpsAndCountSparePumpsAndFlowRateBetween(
+            TypeInstallations typeInstallations,
+            PNSSubtypes subtype,
+            CoolantType coolantType,
+            Integer temperature,
+            Integer countMainPumps,
+            Integer countSparePumps,
+            Integer minFlowRate,
+            Integer maxFlowRate
+    );
 }
 

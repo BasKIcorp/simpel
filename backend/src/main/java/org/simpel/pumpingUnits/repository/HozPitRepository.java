@@ -26,5 +26,15 @@ public interface HozPitRepository extends JpaRepository<HozPitInstallation, Long
             Integer minFlowRate,
             Integer maxFlowRate
     );
+    List<HozPitInstallation> findByTypeInstallationsAndSubtypeAndCoolantTypeAndTemperatureAndCountMainPumpsAndCountSparePumpsAndFlowRateBetween(
+            TypeInstallations typeInstallations,
+            HozPitSubtypes subtype,
+            CoolantType coolantType,
+            Integer temperature,
+            Integer countMainPumps,
+            Integer countSparePumps,
+            Integer minFlowRate,
+            Integer maxFlowRate
+    );
 }
 
