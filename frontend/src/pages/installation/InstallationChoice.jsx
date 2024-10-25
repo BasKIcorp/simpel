@@ -11,7 +11,7 @@ export const InstallationChoice = () => {
     const [installationType, setInstallationType] = useState("");
     const [hydromoduleType, setHydromoduleType] = useState("");
     const [workingPumps, setWorkingPumps] = useState(1);
-    const [reservePumps, setReservePumps] = useState(1);
+    const [reservePumps, setReservePumps] = useState(0);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     window.onerror = function (message, source, lineno, colno, error) {
@@ -66,7 +66,7 @@ export const InstallationChoice = () => {
         if (installationType === "PNS" && !hydromoduleType) {
             return false;
         }
-        return installationType && workingPumps && reservePumps;
+        return installationType && workingPumps;
     };
 
     return (
@@ -81,9 +81,9 @@ export const InstallationChoice = () => {
                             <div className={styles.selectWrapper}>
                                 <select className={styles.select} onChange={handleInstallationTypeChange}>
                                     <option value="">Выберите тип установки</option>
-                                    <option value="GM">Гидромодуль</option>
-                                    <option value="HOZPIT">Хоз-пит</option>
-                                    <option value="PNS">ПНС</option>
+                                    <option title="Установка для циркуляционных систем" value="GM">Выносной гидромодуль</option>
+                                    <option value="HOZPIT">Установка повышения давления</option>
+                                    <option value="PNS">Установка системы пожаротушения</option>
                                 </select>
                             </div>
                         </div>
@@ -215,7 +215,11 @@ export const InstallationChoice = () => {
                             <div className={styles.radioGroup}>
                                 <h4>Резервных</h4>
                                 <label>
-                                    <input type="radio" name="reservePumps" value="1" defaultChecked={true}
+                                    <input type="radio" name="reservePumps" value="0" defaultChecked={true}
+                                           onChange={() => setReservePumps(0)}/> 0
+                                </label>
+                                <label>
+                                    <input type="radio" name="reservePumps" value="1"
                                            onChange={() => setReservePumps(1)}/> 1
                                 </label>
                                 <label>

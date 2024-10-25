@@ -71,9 +71,11 @@
     align-self: stretch;
     margin-top: 14px;
     font-size: 16px;
-    padding: 14px 16px;
+    padding: 14px 16px; /* Отступы внутри input */
+    padding-right: 6.6em; /* Увеличьте отступ справа для иконки */
     border: 1px solid #fff;
 }
+
 .errorInput {
     border-color: red;
     border-width: 2px;
@@ -98,11 +100,11 @@
     background-color: #fff;
     box-shadow: 4px 6px 10px rgba(255, 255, 255, 0.4);
     margin-top: 20px;
-    width: 8em;
+    width: 14em;
     max-width: 100%;
-    font-size: 1.4em;
+    font-size: 24px;
     font-weight: 600;
-    padding: 2% 2% 2% 0%;
+    padding: 5px 32px;
     transition: transform 0.3s ease;
 }
 
@@ -127,7 +129,26 @@
     border: 0;
 }
 
-.registerLink strong{
+.registerLink strong {
     cursor: pointer;
 }
 
+.passwordWrapper {
+    position: relative;
+    width: 100%; /* Позволяет input занимать всю ширину */
+}
+
+.passwordIcon {
+    position: absolute;
+    right: 1em; /* Отступ справа от поля ввода */
+    top: 63%;
+    transform: translateY(-50%);
+    cursor: pointer; /* Добавьте курсор указателя */
+    z-index: 1; /* Обеспечьте, чтобы иконка была поверх инпута */
+}
+
+.passwordIcon img {
+    width: 24px; /* Размер иконки */
+    height: 24px;
+    object-fit: contain; /* Убедитесь, что изображение не выходит за пределы */
+}

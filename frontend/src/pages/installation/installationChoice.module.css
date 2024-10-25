@@ -68,7 +68,7 @@
     background-color: white;
     padding: 8px 40px 8px 12px;
     width: 100%;
-    font-size: 1rem; /* Используем rem для адаптивности */
+    font-size:1em; /* Используем rem для адаптивности */
     border: 1px solid #000;
     border-radius: 6px;
     background-image: url('../../assets/select-icon.svg');
@@ -122,14 +122,14 @@
 
 .currentLocation {
     color: rgba(255, 255, 255, 1);
-    font-size: 1.2rem; /* Используем rem для адаптивности */
+    font-size: 1.1rem; /* Используем rem для адаптивности */
     display: flex;
     align-items: center;
 }
 
 .titleWithArrow {
     color: rgba(255, 255, 255, 0.6);
-    font-size: 1.2rem; /* Используем rem для адаптивности */
+    font-size: 1.1rem; /* Используем rem для адаптивности */
     display: flex;
     align-items: center;
 }
@@ -138,6 +138,13 @@
     margin-top: 20px;
 }
 
+.infoIcon {
+    width: 1em; /* Адаптируемая ширина */
+    height: 1em; /* Адаптируемая высота */
+    margin-left: 0.5em;
+    cursor: pointer;
+    vertical-align: middle;
+}
 /* Медиа запросы для адаптивности */
 /*@media (max-width: 1200px) {*/
 /*    .wrapper {*/

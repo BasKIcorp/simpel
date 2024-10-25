@@ -11,7 +11,7 @@
     display: flex;
     width: 90%;
     max-width: calc(100vw - 201px); /* Вычет отступов 100px слева и 101px справа */
-    height: 650px;
+    height: 100%;
     background-color: white;
     border-radius: 6px;
     overflow: auto;
@@ -140,14 +140,14 @@
 
 .currentLocation {
     color: rgba(255, 255, 255, 1);
-    font-size: 1.2em; /* Используем em для адаптивности */
+    font-size: 1.1em; /* Используем em для адаптивности */
     display: flex;
     align-items: center;
 }
 
 .titleWithArrow {
     color: rgba(255, 255, 255, 0.6);
-    font-size: 1.2em; /* Используем em для адаптивности */
+    font-size: 1.1em; /* Используем em для адаптивности */
     display: flex;
     align-items: center;
 }

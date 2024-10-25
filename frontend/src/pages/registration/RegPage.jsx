@@ -4,12 +4,15 @@ import { Header } from "../../components/UI/Header";
 import { useNavigate } from "react-router-dom";
 import { server_url } from "../../config";
 import { useDispatch } from "react-redux";
+import eye from "../../assets/eye.svg"
+import closeEye from "../../assets/close_eye.svg"
 
 function RegPage() {
     const [username, setUsername] = useState('');
     const [usernameError, setUsernameError] = useState(false);
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const isFormValid = username !== "" && password !== "";
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -76,7 +79,9 @@ function RegPage() {
         e.preventDefault();
         navigate("/auth");
     };
-
+    const togglePasswordVisibility = () => {
+        setShowPassword(prevState => !prevState);
+    };
     return (
         <main className={styles.authPage}>
             <Header />
@@ -94,13 +99,19 @@ function RegPage() {
                         />
                         {usernameError && <div className={styles.errorText}>Введите E-mail</div>}
                         <label htmlFor="password" className={styles['visually-hidden']}>Пароль</label>
-                        <input
-                            id="password"
-                            type="password"
-                            className={`${styles.formInput} ${passwordError ? styles.errorInput : ''}`}
-                            placeholder="Пароль"
-                            onChange={handlePasswordChange}
-                        />
+                        <div className={styles.passwordWrapper}>
+                            <input
+                                id="password"
+                                type={showPassword ? "text" : "password"}
+                                className={`${styles.formInput} ${passwordError ? styles.errorInput : ''}`}
+                                placeholder="Пароль"
+                                onChange={handlePasswordChange}
+                            />
+                            <div className={styles.passwordIcon} onClick={togglePasswordVisibility}>
+                                <img src={showPassword ? eye : closeEye}
+                                     alt="Toggle Password Visibility"/>
+                            </div>
+                        </div>
                         {passwordError && <div className={styles.errorText}>Введите пароль</div>}
                         <p className={styles.registerLink}>
                             Есть аккаунт? <strong onClick={handleLoginClick}>Войти</strong>
@@ -110,7 +121,7 @@ function RegPage() {
                             className={`${styles.submitButton} ${!isFormValid ? styles.disabledButton : ''}`}
                             disabled={!isFormValid}
                         >
-                            Регистрация
+                            Зарегистрироваться
                         </button>
                     </form>
                 </div>

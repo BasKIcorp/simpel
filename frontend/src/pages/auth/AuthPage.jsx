@@ -5,11 +5,14 @@ import {isDisabled} from "@testing-library/user-event/dist/utils";
 import {useNavigate} from 'react-router-dom';
 import {useDispatch} from "react-redux";
 import {server_url} from "../../config";
+import eye from "../../assets/eye.svg"
+import closeEye from "../../assets/close_eye.svg"
 function AuthPage() {
     const [username, setUsername] = useState('');
     const [usernameError, setUsernameError] = useState(false);
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const isFormValid = username !== "" && password !== "";
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -79,7 +82,9 @@ function AuthPage() {
         e.preventDefault();
         navigate("/registration");
     }
-
+    const togglePasswordVisibility = () => {
+        setShowPassword(prevState => !prevState);
+    };
     return (
         // TODO: тут нужно сделать динамическую форму, чтобы все было чики брики
         <main className={styles.authPage}>
@@ -99,24 +104,33 @@ function AuthPage() {
                             placeholder="E-mail"
                         />
                         {usernameError && <div className={styles.errorText}>Введите E-mail</div>}
-                        <label htmlFor="password" className={styles['visually-hidden']}>Пароль</label>
-                        <input
-                            id="password"
-                            type="password"
-                            className={`${styles.formInput} ${passwordError ? styles.errorInput : ''}`}
-                            placeholder="Пароль"
-                            onChange={handlePasswordChange}
-                        />
+                        <label htmlFor="password" className={styles['visually-hidden']}>Пароль
+
+                        </label>
+                        <div className={styles.passwordWrapper}>
+                            <input
+                                id="password"
+                                type={showPassword ? "text" : "password"}
+                                className={`${styles.formInput} ${passwordError ? styles.errorInput : ''}`}
+                                placeholder="Пароль"
+                                onChange={handlePasswordChange}
+                            />
+                            <div className={styles.passwordIcon} onClick={togglePasswordVisibility}>
+                                <img src={showPassword ? eye : closeEye}
+                                     alt="Toggle Password Visibility"/>
+                            </div>
+                        </div>
                         {passwordError && <div className={styles.errorText}>Введите пароль</div>}
                         <p className={styles.registerLink}>
-                            Нет аккаунта? <strong  onClick={handleRegistrationClick}>Зарегистрироваться</strong>
+                            Нет аккаунта? <strong onClick={handleRegistrationClick}>Зарегистрироваться</strong>
                         </p>
                         {/*TODO: Сделать ссылку из слов зарегестрироваться, также сделать аналогичную страницу для реги*/}
                         <button
                             type="submit"
                             className={`${styles.submitButton} ${!isFormValid ? styles.disabledButton : ''} `}
                             disabled={!isFormValid}
-                        >Войти</button>
+                        >Войти
+                        </button>
                     </form>
                 </div>
             </section>
