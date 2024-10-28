@@ -1,5 +1,6 @@
 package org.simpel.pumpingUnits.service.pdfComponents;
 
+import com.itextpdf.layout.element.Table;
 import org.simpel.pumpingUnits.model.installation.ParentInstallations;
 
 import java.util.HashMap;
@@ -86,48 +87,48 @@ public class Options {
     private String pressureMamOrPap;
     private String volumeMamOrPap;
 
-    private static final HashMap<String, String> executionMap = new HashMap<>();
-    private static final HashMap<String, String> collectorMap = new HashMap<>();
-    private static final HashMap<String, String> flangesOrGrooveLockMap = new HashMap<>();
-    private static final HashMap<String, String> filterMap = new HashMap<>();
-    private static final HashMap<String, String> bufferTankMap = new HashMap<>();
-    private static final HashMap<String, String> bufferTankTypeMap = new HashMap<>();
-    private static final HashMap<String, String> makeUpMamOrPapMap = new HashMap<>();
+    private static final HashMap<String, String[]> executionMap = new HashMap<>();
+    private static final HashMap<String, String[]> collectorMap = new HashMap<>();
+    private static final HashMap<String, String[]> flangesOrGrooveLockMap = new HashMap<>();
+    private static final HashMap<String, String[]> filterMap = new HashMap<>();
+    private static final HashMap<String, String[]> bufferTankMap = new HashMap<>();
+    private static final HashMap<String, String[]> bufferTankTypeMap = new HashMap<>();
+    private static final HashMap<String, String[]> makeUpMamOrPapMap = new HashMap<>();
 
     //Ваниные гавняшки
 
     private static final HashMap<String, String> expansionTankMap = new HashMap<>();
     private static final HashMap<String, String> bufferTankSizeMap = new HashMap<>();
-    private static final HashMap<String, String> fuseMap = new HashMap<>();
+    private static final HashMap<String, String[]> fuseMap = new HashMap<>();
 
 
     static {
-        executionMap.put("1", "S0");
-        executionMap.put("2", "S1");
-        executionMap.put("3", "S2");
-        executionMap.put("4", "S3");
+        executionMap.put("1", new String[] {"S0", "Стандартное"});
+        executionMap.put("2", new String[] {"S1", "В уличном кожухе"});
+        executionMap.put("3", new String[] {"S2", "В уличном кожухе с обогревом"});
+        executionMap.put("4", new String[] {"S3", "Ариктическое"});
 
-        collectorMap.put("1", "-A4");
-        collectorMap.put("2", "-A6");
-        collectorMap.put("3", "-C2");
+        collectorMap.put("1", new String[] {"-A4", "AISI304"});
+        collectorMap.put("2", new String[] {"-A6", "AISI316"});
+        collectorMap.put("3", new String[]{ "-C2", "Углеродистая сталь"});
+    // new String[]{"", ""}
+        flangesOrGrooveLockMap.put("1", new String[]{"-V", ""});
+        flangesOrGrooveLockMap.put("2", new String[]{"-F", ""});
+        flangesOrGrooveLockMap.put("фланец с вибровставкой", new String[]{"-Fv", ""});
 
-        flangesOrGrooveLockMap.put("1", "-V");
-        flangesOrGrooveLockMap.put("2", "-F");
-        flangesOrGrooveLockMap.put("фланец с вибровставкой", "-Fv");
+        filterMap.put("2", new String[]{"-MS", ""});
+        filterMap.put("3", new String[]{"-PS", ""});
 
-        filterMap.put("2", "-MS");
-        filterMap.put("3", "-PS");
+        bufferTankMap.put("1",  new String[]{"/SST", ""});
+        bufferTankMap.put("2",  new String[]{"/CST", ""});
 
-        bufferTankMap.put("1", "/SST");
-        bufferTankMap.put("2", "/CST");
+        bufferTankTypeMap.put("2",  new String[]{"H", ""});
+        bufferTankTypeMap.put("1",  new String[]{"V", ""});
 
-        bufferTankTypeMap.put("2", "H");
-        bufferTankTypeMap.put("1", "V");
+        makeUpMamOrPapMap.put("1",  new String[]{"MuP", ""});
+        makeUpMamOrPapMap.put("2",  new String[]{"MuM", ""});
 
-        makeUpMamOrPapMap.put("1", "MuP");
-        makeUpMamOrPapMap.put("2", "MuM");
-
-        //ваннины сыны
+        //ванины сыны
 
         expansionTankMap.put("1", "8");
         expansionTankMap.put("2", "12");
@@ -240,8 +241,8 @@ public class Options {
         st.append("(");
 
         if (executionMap.containsKey(execution)) {
-            st.append(executionMap.get(execution));
-            if (executionMap.get(execution).equals("S1")){
+            st.append(executionMap.get(execution)[0]);
+            if (executionMap.get(execution)[0].equals("S1")){
                 throw new NullPointerException("Неверный тип исполнения для этого типа установки" );
             }
         } else {
@@ -255,10 +256,10 @@ public class Options {
         }
 
         if (collectorMap.containsKey(collector)) {
-            if(collectorMap.get(collector).equals("-C2") || collectorMap.get(collector).equals("-A6")) {
+            if(collectorMap.get(collector)[0].equals("-C2") || collectorMap.get(collector)[0].equals("-A6")) {
                 throw new NullPointerException("Неправильный коллектор для этого вида установок");
             }
-            st.append(collectorMap.get(collector));
+            st.append(collectorMap.get(collector)[0]);
         } else {
             throw new NullPointerException("Неправильный коллектор");
         }
@@ -275,7 +276,7 @@ public class Options {
         }
 
         if (filterMap.containsKey(filter)) {
-            st.append(filterMap.get(filter));
+            st.append(filterMap.get(filter)[0]);
         } else {
             st.append("-0");
         }
@@ -298,7 +299,7 @@ public class Options {
         st.append("(");
 
         if (executionMap.containsKey(execution)) {
-            st.append(executionMap.get(execution));
+            st.append(executionMap.get(execution)[0]);
         } else {
             throw new NullPointerException("Неправильные исполнение");
         }
@@ -310,10 +311,10 @@ public class Options {
         }
 
         if (collectorMap.containsKey(collector)) {
-            if(collectorMap.get(collector).equals("C2")) {
+            if(collectorMap.get(collector)[0].equals("C2")) {
                 throw new NullPointerException("Неправильный для этого вида установок");
             }
-            st.append(collectorMap.get(collector));
+            st.append(collectorMap.get(collector)[0]);
         } else {
             throw new NullPointerException("Неправильный коллектор");
         }
@@ -325,7 +326,7 @@ public class Options {
         }
 
         if (filterMap.containsKey(filter)) {
-            st.append(filterMap.get(filter));
+            st.append(filterMap.get(filter)[0]);
         } else {
             st.append("-0");
         }
@@ -348,7 +349,7 @@ public class Options {
         st.append("(");
 
         if (executionMap.containsKey(execution)) {
-            st.append(executionMap.get(execution));
+            st.append(executionMap.get(execution)[0]);
         } else {
             throw new NullPointerException("Неправильные исполнение");
         }
@@ -360,19 +361,19 @@ public class Options {
         }
 
         if (collectorMap.containsKey(collector)) {
-            st.append(collectorMap.get(collector));
+            st.append(collectorMap.get(collector)[0]);
         } else {
             throw new NullPointerException("Неправильный коллектор");
         }
         if (flangesOrGrooveLockMap.containsKey(flangesOrGrooveLock)){
-            st.append(flangesOrGrooveLockMap.get(flangesOrGrooveLock));
+            st.append(flangesOrGrooveLockMap.get(flangesOrGrooveLock)[0]);
         }
         else {
             throw new NullPointerException("Нет flangesOrGrooveLock");
         }
 
         if (filterMap.containsKey(filter)) {
-            st.append(filterMap.get(filter));
+            st.append(filterMap.get(filter)[0]);
         } else {
             st.append("-0");
         }
@@ -388,14 +389,14 @@ public class Options {
         }
 
         if (bufferTankMap.containsKey(bufferTank)) {
-            st.append(bufferTankMap.get(bufferTank));
+            st.append(bufferTankMap.get(bufferTank)[0]);
             if (bufferTankSizeMap.containsKey(bufferTankSize)) {
                 st.append(bufferTankSizeMap.get(bufferTankSize));
             } else {
                 throw new NullPointerException("Нет данных о объеме");
             }
             if (bufferTankTypeMap.containsKey(bufferTankType)) {
-                st.append(bufferTankTypeMap.get(bufferTankType));
+                st.append(bufferTankTypeMap.get(bufferTankType)[0]);
             } else {
                 throw new NullPointerException("Ошибка в типе буферного бака");
             }
@@ -425,19 +426,20 @@ public class Options {
         st.append("(");
 
         if (makeUpMamOrPapMap.containsKey(makeUpMamOrPap)) {
-            st.append(makeUpMamOrPapMap.get(makeUpMamOrPap));
+            st.append(makeUpMamOrPapMap.get(makeUpMamOrPap)[0]);
             if (!pressureMamOrPap.equals("")) {
                 st.append(pressureMamOrPap);
             }
             else {
                 throw new NullPointerException("Нехватает давления мам пап");
             }
-            if (!volumeMamOrPap.equals("")) {
-                st.append("-");
-                st.append(volumeMamOrPap);
-            }
-            else {
-                throw new NullPointerException("Нехватает объема мам пап");
+            if (makeUpMamOrPap.equals("1")) {
+                if (!volumeMamOrPap.equals("")) {
+                    st.append("-");
+                    st.append(volumeMamOrPap);
+                } else {
+                    throw new NullPointerException("Нехватает объема мам пап");
+                }
             }
         }
         else {
@@ -447,6 +449,11 @@ public class Options {
         st.append(")");
         return st.toString();
     }
+    public Table createTable() {
+
+        return new Table(3);
+    }
+
 
 
 }

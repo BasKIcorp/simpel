@@ -212,8 +212,8 @@ function Result() {
                 "installationId": generalInfo.installationId ,
                 "typeInstallations": generalInfo.installationType,
                 "subtype": generalInfo.subType,
-                "flowRate": parseInt(generalInfo.ratedFlow),
-                "pressure": parseInt(generalInfo.ratedPressure),
+                "x": parseInt(generalInfo.ratedFlow),
+                "y": parseInt(generalInfo.ratedPressure),
                 "options":{
                     "execution": options.execution,
                     "vibrationMounts": options.vibrationSupports,

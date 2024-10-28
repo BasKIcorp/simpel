@@ -105,7 +105,7 @@ public class PdfComponent<T extends ParentInstallations> {
 
 
 
-            Table infoTable = createInfoTable(font);
+            Table infoTable = createInfoTable(font, x, y);
             infoTable.setFixedPosition(1,275,457,250);
             document.add(infoTable);
 
@@ -143,7 +143,7 @@ public class PdfComponent<T extends ParentInstallations> {
         }
         return outputStream.toByteArray();
     }
-    private Table createInfoTable(PdfFont font) {
+    private Table createInfoTable(PdfFont font, float x, float y) {
         Table table = new Table(4);
         Cell headerCell = new Cell(1, 4)
                 .add(new Paragraph("Информация о установке"))
@@ -218,9 +218,9 @@ public class PdfComponent<T extends ParentInstallations> {
         table.addCell(new Cell(1,2).add(new Paragraph(String.valueOf(installations.getControlType().toString()))));
 
         table.addCell("Подача");
-        table.addCell(String.valueOf(installations.getFlowRate()));
+        table.addCell(String.valueOf(x));
         table.addCell("Напор");
-        table.addCell(String.valueOf(installations.getPressure()));
+        table.addCell(String.valueOf(y));
 
         switch (installations.getClass().getSimpleName()){
             case "HozPitInstallation"  :
