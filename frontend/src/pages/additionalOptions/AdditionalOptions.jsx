@@ -1,16 +1,16 @@
-import { Header } from "../../components/UI/Header";
+import {Header} from "../../components/UI/Header";
 import styles from "./additional.module.css";
-import React, { useState } from "react";
+import React, {useState} from "react";
 import arrow from '../../assets/next-page.svg';
 import locationArrow from '../../assets/location-arrow.svg';
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {setAdditionalOptions} from "../../store/pumpSlice";
 
 export const AdditionalOptions = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [options, setOptions] =  useState({
+    const [options, setOptions] = useState({
         execution: "1", // Стандартное
         collectorMaterial: "1", // AISI304
         connectionType: "1", // грувлок (victaulic)
@@ -39,6 +39,8 @@ export const AdditionalOptions = () => {
             softStart: false,
         }
     });
+    const [error, setError] = useState("");
+    const [fillError, setFillError] = useState("")
     const instType = useSelector((state) => state.pump.generalInfo.installationType)
     const handleArrowClick = (e) => {
         e.preventDefault();
@@ -47,22 +49,47 @@ export const AdditionalOptions = () => {
         dispatch(setAdditionalOptions(options))
         navigate("/selection/result");
     };
+    const handlePressureChange = (e) => {
+        const value = e.target.value;
 
+        // Обновляем значение в стейте
+        setOptions((prev) => ({ ...prev, pressureSetting: value }));
+
+        // Проверка диапазона
+        if (value < 4 || value > 16) {
+            setError("Значение давления должно быть от 4 до 16 бар.");
+        } else {
+            setError("");
+        }
+    };
+    const handleFillPressureChange = (e) => {
+        const value = e.target.value;
+
+        // Обновляем значение в стейте
+        setOptions((prev) => ({ ...prev, fillPressure: value }));
+
+        // Проверка диапазона
+        if (value < 4 || value > 16) {
+            setFillError("Значение давления должно быть от 4 до 16 бар.");
+        } else {
+            setFillError("");
+        }
+    };
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        console.log({ name, value })
-        setOptions((prev) => ({ ...prev, [name]: value }));
+        const {name, value} = e.target;
+        console.log({name, value})
+        setOptions((prev) => ({...prev, [name]: value}));
     };
 
     const handleCheckboxChange = (e) => {
-        const { name, checked } = e.target;
+        const {name, checked} = e.target;
         console.log({name, checked})
-        setOptions((prev) => ({ ...prev, remoteControl: { ...prev.remoteControl, [name]: checked } }));
+        setOptions((prev) => ({...prev, remoteControl: {...prev.remoteControl, [name]: checked}}));
     };
 
     return (
         <div>
-            <Header />
+            <Header/>
             <div className={styles.wrapper}>
                 <div className={styles.rectangle}>
                     {instType === "GM" && (<div className={styles.leftSide}>
@@ -204,7 +231,7 @@ export const AdditionalOptions = () => {
                                     <h4>Объем буферного бака:</h4>
                                     <select name="bufferTankVolume" value={options.bufferTankVolume}
                                             onChange={handleChange} className={styles.select}>
-                                        {["200 л", "300 л", "500 л", "750 л", "1000 л", "1500 л", "2000 л", "2500 л", "3000 л", "3500 л", "4000 л", "50000 л"].map((volume, index) => (
+                                        {["200 л", "300 л", "500 л", "750 л", "1000 л", "1500 л"].map((volume, index) => (
                                             <option key={index} value={(index).toString()}>{volume}</option>
                                         ))}
                                     </select>
@@ -229,13 +256,22 @@ export const AdditionalOptions = () => {
                                 </>
                             ))}
                             {options.safetyValve === "2" && (
-                                <input
-                                    type="number"
-                                    placeholder="Давление настройки (бар)"
-                                    value={options.pressureSetting}
-                                    onChange={(e) => setOptions((prev) => ({...prev, pressureSetting: e.target.value}))}
-                                    className={styles.temperatureInput}
-                                />
+                                <><h5>Давление настройки (бар)</h5>
+                                    <input
+                                        type="number"
+                                        placeholder="Давление настройки (бар)"
+                                        value={options.pressureSetting}
+                                        // onChange={(e) => setOptions((prev) => ({
+                                        //     ...prev,
+                                        //     pressureSetting: e.target.value
+                                        // }))}
+                                        onChange={handlePressureChange}
+                                        className={styles.temperatureInput}
+                                        style={error ? {borderColor: "red"} : {}}
+                                    />
+                                    {error && <p style={{color: "red", fontSize: 14} }>{error}</p>}
+
+                                </>
                             )}
 
                             {/* Автоматический воздухоотводчик */}
@@ -276,24 +312,38 @@ export const AdditionalOptions = () => {
                             <br/>
                             {options.fillModule === "2" && (
                                 <>
+                                    <h5>Давление (бар)</h5>
                                     <input
                                         type="number"
                                         placeholder="Давление (бар)"
                                         value={options.fillPressure}
-                                        onChange={(e) => setOptions((prev) => ({
-                                            ...prev,
-                                            fillPressure: e.target.value
-                                        }))}
+                                        // onChange={(e) => setOptions((prev) => ({
+                                        //     ...prev,
+                                        //     fillPressure: e.target.value
+                                        // }))}
+                                        onChange={handleFillPressureChange}
                                         className={styles.anotherInput}
+                                        style={fillError ? {borderColor: "red"} : {}}
                                     />
-                                    <input
-                                        type="number"
-                                        placeholder="Объем (л)"
+                                    {fillError && <p style={{color: "red", fontSize: 14} }>{fillError}</p>}
+                                    <h5>Объем (л)</h5>
+                                    <select
                                         value={options.fillVolume}
                                         onChange={(e) => setOptions((prev) => ({...prev, fillVolume: e.target.value}))}
                                         className={styles.anotherInput}
-                                        style={{marginLeft: 20}}
-                                    />
+                                    >
+                                        <option value="">Выберите объем (л)</option>
+                                        <option value="50">50 л</option>
+                                        <option value="100">100 л</option>
+                                        <option value="150">150 л</option>
+                                        <option value="200">200 л</option>
+                                        <option value="250">250 л</option>
+                                        <option value="300">300 л</option>
+                                        <option value="500">500 л</option>
+                                        <option value="750">750 л</option>
+                                        <option value="1000">1000 л</option>
+                                        <option value="1500">1500 л</option>
+                                    </select>
 
                                 </>
                             )}
@@ -649,8 +699,8 @@ export const AdditionalOptions = () => {
                             {/* Материал коллекторов */}
                             <h3>Материал коллекторов:</h3>
                             {[
-                                { name: "AISI304", value: "1" }, // Значение для AISI304
-                                { name: "Сталь 20", value: "4" } // Значение для Сталь 20
+                                {name: "AISI304", value: "1"}, // Значение для AISI304
+                                {name: "Сталь 20", value: "4"} // Значение для Сталь 20
                             ].map((material, index) => (
                                 <label key={index} className={styles.radioLabel}>
                                     <input
