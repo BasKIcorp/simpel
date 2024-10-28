@@ -13,7 +13,8 @@
     flex-direction: column;
     width: 90%;
     max-width: calc(100vw - 201px); /* Вычет отступов 100px слева и 101px справа */
-    height: 2900px;
+    height: 100%;
+    padding-bottom: 50px;
     margin-bottom: 70px;
     background-color: white;
     border-radius: 6px;

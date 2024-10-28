@@ -231,7 +231,7 @@ export const AdditionalOptions = () => {
                                     <h4>Объем буферного бака:</h4>
                                     <select name="bufferTankVolume" value={options.bufferTankVolume}
                                             onChange={handleChange} className={styles.select}>
-                                        {["200 л", "300 л", "500 л", "750 л", "1000 л", "1500 л", "2000 л", "2500 л", "3000 л", "3500 л", "4000 л", "50000 л"].map((volume, index) => (
+                                        {["200 л", "300 л", "500 л", "750 л", "1000 л", "1500 л"].map((volume, index) => (
                                             <option key={index} value={(index).toString()}>{volume}</option>
                                         ))}
                                     </select>
@@ -327,13 +327,23 @@ export const AdditionalOptions = () => {
                                     />
                                     {fillError && <p style={{color: "red", fontSize: 14} }>{fillError}</p>}
                                     <h5>Объем (л)</h5>
-                                    <input
-                                        type="number"
-                                        placeholder="Объем (л)"
+                                    <select
                                         value={options.fillVolume}
                                         onChange={(e) => setOptions((prev) => ({...prev, fillVolume: e.target.value}))}
                                         className={styles.anotherInput}
-                                    />
+                                    >
+                                        <option value="">Выберите объем (л)</option>
+                                        <option value="50">50 л</option>
+                                        <option value="100">100 л</option>
+                                        <option value="150">150 л</option>
+                                        <option value="200">200 л</option>
+                                        <option value="250">250 л</option>
+                                        <option value="300">300 л</option>
+                                        <option value="500">500 л</option>
+                                        <option value="750">750 л</option>
+                                        <option value="1000">1000 л</option>
+                                        <option value="1500">1500 л</option>
+                                    </select>
 
                                 </>
                             )}
