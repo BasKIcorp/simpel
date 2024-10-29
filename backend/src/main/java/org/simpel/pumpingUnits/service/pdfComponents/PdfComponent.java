@@ -107,6 +107,9 @@ public class PdfComponent<T extends ParentInstallations> {
 
             Table infoTable = createInfoTable(font, x, y);
             infoTable.setFixedPosition(1,275,457,250);
+            Table addOptionTable = options.createTable(installations, font);
+            addOptionTable.setFixedPosition(1,275,357,250);
+            document.add(addOptionTable);
             document.add(infoTable);
 
             /*Table pumpTable = createPumpInfoTable(font);
@@ -379,6 +382,7 @@ public class PdfComponent<T extends ParentInstallations> {
 
         return table;
     }
+    
     /*private Table createMaterialTable(PdfFont font) {
         Table table = new Table(2);
         Cell headerCell = new Cell(1, 2) // Объединяем две ячейки в одну для заголовка

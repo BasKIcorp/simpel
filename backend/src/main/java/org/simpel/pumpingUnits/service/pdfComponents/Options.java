@@ -1,5 +1,8 @@
 package org.simpel.pumpingUnits.service.pdfComponents;
 
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import org.simpel.pumpingUnits.model.installation.ParentInstallations;
 
@@ -112,21 +115,21 @@ public class Options {
         collectorMap.put("2", new String[] {"-A6", "AISI316"});
         collectorMap.put("3", new String[]{ "-C2", "Углеродистая сталь"});
     // new String[]{"", ""}
-        flangesOrGrooveLockMap.put("1", new String[]{"-V", ""});
-        flangesOrGrooveLockMap.put("2", new String[]{"-F", ""});
-        flangesOrGrooveLockMap.put("фланец с вибровставкой", new String[]{"-Fv", ""});
+        flangesOrGrooveLockMap.put("1", new String[]{"-V", "Грувлок"});
+        flangesOrGrooveLockMap.put("2", new String[]{"-F", "Фланец"});
+        flangesOrGrooveLockMap.put("фланец с вибровставкой", new String[]{"-Fv", "Фланец с вибровставкой"});
 
-        filterMap.put("2", new String[]{"-MS", ""});
-        filterMap.put("3", new String[]{"-PS", ""});
+        filterMap.put("2", new String[]{"-MS", "один на коллектор"});
+        filterMap.put("3", new String[]{"-PS", "на каждом насосе"});
 
-        bufferTankMap.put("1",  new String[]{"/SST", ""});
-        bufferTankMap.put("2",  new String[]{"/CST", ""});
+        bufferTankMap.put("1",  new String[]{"/SST", "Буферный бак из нержавеющей стали"});
+        bufferTankMap.put("2",  new String[]{"/CST", "Буферный бак из углеродистой стали"});
 
-        bufferTankTypeMap.put("2",  new String[]{"H", ""});
-        bufferTankTypeMap.put("1",  new String[]{"V", ""});
+        bufferTankTypeMap.put("2",  new String[]{"H", "Горизонтальный"});
+        bufferTankTypeMap.put("1",  new String[]{"V", "Вертикальный"});
 
-        makeUpMamOrPapMap.put("1",  new String[]{"MuP", ""});
-        makeUpMamOrPapMap.put("2",  new String[]{"MuM", ""});
+        makeUpMamOrPapMap.put("1",  new String[]{"MuP", "Подпиточный насос"});
+        makeUpMamOrPapMap.put("2",  new String[]{"MuM", "Подпиточный модуль"});
 
         //ванины сыны
 
@@ -454,6 +457,58 @@ public class Options {
         return new Table(3);
     }
 
+    public <T extends ParentInstallations> Table createTable(T installations, PdfFont font) {
+        switch (installations.getClass().getSimpleName()) {
+            case "GMInstallation":
+                return createTableForGm(font);
+            case "HozPitInstallation":
+                return createTableForHozPit(font);
+            case "PNSInstallationERW":
+            case "PNSInstallationAFEIJP":
+                return createTableForPns(font);
+            default:
+                throw new NullPointerException("Что то не так с типами установки");
+        }
+    }
+
+    private Table createTableForPns(PdfFont font) {
+        Table table = new Table(3);
+        Cell headerCell = new Cell(1, 3)
+                .add(new Paragraph("Дополнительные опции"))
+                .setBold()
+                .setFont(font)
+                .setFontSize(16)
+                .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER);
+        table.addCell(headerCell);
+        return table;
+    }
+
+    private Table createTableForHozPit(PdfFont font) {
+        return new Table(3);
+    }
+
+    private Table createTableForGm(PdfFont font) {
+        Table table = new Table(3);
+        Cell headerCell = new Cell(1, 3)
+                .add(new Paragraph("Дополнительные опции"))
+                .setBold()
+                .setFont(font)
+                .setFontSize(16)
+                .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER);
+        table.addCell(headerCell);
+        table.setFont(font);
+        table.addCell(new Cell(1,2).add(new Paragraph("Исполнение")));
+        if (executionMap.containsKey(execution)){
+           table.addCell(
+                   new Cell(1,2)
+                           .add(
+                                   new Paragraph(executionMap.get(execution)[1])
+                           )
+           );
+        }
+        else { throw new NullPointerException("нет исполнения в опциях");}
+        return  table;
+    }
 
 
 }
