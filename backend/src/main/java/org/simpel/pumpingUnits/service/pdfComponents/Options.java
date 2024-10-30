@@ -114,21 +114,22 @@ public class Options {
         collectorMap.put("1", new String[] {"-A4", "AISI304"});
         collectorMap.put("2", new String[] {"-A6", "AISI316"});
         collectorMap.put("3", new String[]{ "-C2", "Углеродистая сталь"});
+        collectorMap.put("4", new String[]{ "-CS", "Сталь 20"});
     // new String[]{"", ""}
         flangesOrGrooveLockMap.put("1", new String[]{"-V", "Грувлок"});
         flangesOrGrooveLockMap.put("2", new String[]{"-F", "Фланец"});
         flangesOrGrooveLockMap.put("фланец с вибровставкой", new String[]{"-Fv", "Фланец с вибровставкой"});
 
-        filterMap.put("2", new String[]{"-MS", "один на коллектор"});
-        filterMap.put("3", new String[]{"-PS", "на каждом насосе"});
+        filterMap.put("2", new String[]{"-MS", "Один на коллектор"});
+        filterMap.put("3", new String[]{"-PS", "На каждом насосе"});
 
-        bufferTankMap.put("1",  new String[]{"/SST", "Буферный бак из нержавеющей стали"});
-        bufferTankMap.put("2",  new String[]{"/CST", "Буферный бак из углеродистой стали"});
+        bufferTankMap.put("1",  new String[]{"/SST", "Нержавеющая сталь"});
+        bufferTankMap.put("2",  new String[]{"/CST", "Углеродистая сталь"});
 
         bufferTankTypeMap.put("2",  new String[]{"H", "Горизонтальный"});
         bufferTankTypeMap.put("1",  new String[]{"V", "Вертикальный"});
 
-        makeUpMamOrPapMap.put("1",  new String[]{"MuP", "Подпиточный насос"});
+        makeUpMamOrPapMap.put("1",  new String[]{"MuP", "Подпиточный клапан"});
         makeUpMamOrPapMap.put("2",  new String[]{"MuM", "Подпиточный модуль"});
 
         //ванины сыны
@@ -263,14 +264,7 @@ public class Options {
                 throw new NullPointerException("Неправильный коллектор для этого вида установок");
             }
             st.append(collectorMap.get(collector)[0]);
-        } else {
-            throw new NullPointerException("Неправильный коллектор");
         }
-
-        if(collector.equals("4")){
-            st.append("-CS");
-        }
-
         if(vibrationLock.equals("1")){
             st.append("-V");
         }
@@ -364,6 +358,9 @@ public class Options {
         }
 
         if (collectorMap.containsKey(collector)) {
+            if(collectorMap.get(collector)[0].equals("CS")) {
+                throw new NullPointerException("Неправильный для этого вида установок");
+            }
             st.append(collectorMap.get(collector)[0]);
         } else {
             throw new NullPointerException("Неправильный коллектор");
@@ -472,24 +469,59 @@ public class Options {
     }
 
     private Table createTableForPns(PdfFont font) {
-        Table table = new Table(3);
-        Cell headerCell = new Cell(1, 3)
+        // Определение ширины колонок: 10% для левой и по 18% для остальных 5 колонок
+        float[] columnWidths = {1, 11, 11, 11, 11, 11};
+        Table table = new Table(columnWidths);
+
+        Cell headerCell = new Cell(1, 6)
                 .add(new Paragraph("Дополнительные опции"))
                 .setBold()
                 .setFont(font)
                 .setFontSize(16)
                 .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER);
         table.addCell(headerCell);
+        table.setFont(font).setFontSize(14);
+        table.setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER);
+
+        // Добавляем строки в таблицу
+        table.addCell(new Cell(1, 1).add(new Paragraph("Исполнение")));
+        if (executionMap.containsKey(execution)) {
+            if (executionMap.get(execution)[0].equals("S1")) {
+                throw new NullPointerException("Неверный тип исполнения для этого типа установки");
+            }
+            table.addCell(new Cell(1, 5).add(new Paragraph(executionMap.get(execution)[1])));
+        } else {
+            throw new NullPointerException("нет исполнения в опциях");
+        }
+
+        table.addCell(new Cell(1, 1).add(new Paragraph("Виброопора")));
+        table.addCell(new Cell(1, 5).add(new Paragraph(vibrationMounts.equals("2") ? "Есть" : "Нет")));
+
+        table.addCell(new Cell(1, 1).add(new Paragraph("Материал коллектора")));
+        if (collectorMap.containsKey(collector)) {
+            if (collectorMap.get(collector)[0].equals("-C2") || collectorMap.get(collector)[0].equals("-A6")) {
+                throw new NullPointerException("Неправильный коллектор для этого вида установок");
+            }
+            table.addCell(new Cell(1, 5).add(new Paragraph(collectorMap.get(collector)[1])));
+        }
+
+        table.addCell(new Cell(1, 1).add(new Paragraph("Виброкомпенсатор")));
+        table.addCell(new Cell(1, 5).add(new Paragraph(vibrationLock.equals("1") ? "Есть" : "Нет")));
+
+        table.addCell(new Cell(1, 1).add(new Paragraph("Расширительный бак")));
+        if (expansionTankMap.containsKey(expansionTank)) {
+            table.addCell(new Cell(1, 5).add(new Paragraph(expansionTankMap.get(expansionTank) + "л")));
+        } else {
+            table.addCell(new Cell(1, 5).add(new Paragraph("Нет")));
+        }
+
         return table;
     }
 
     private Table createTableForHozPit(PdfFont font) {
-        return new Table(3);
-    }
-
-    private Table createTableForGm(PdfFont font) {
-        Table table = new Table(3);
-        Cell headerCell = new Cell(1, 3)
+        float[] columnWidths = {1000,1,1,1,1,1};
+        Table table = new Table(columnWidths);
+        Cell headerCell = new Cell(1, 6)
                 .add(new Paragraph("Дополнительные опции"))
                 .setBold()
                 .setFont(font)
@@ -497,16 +529,181 @@ public class Options {
                 .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER);
         table.addCell(headerCell);
         table.setFont(font);
-        table.addCell(new Cell(1,2).add(new Paragraph("Исполнение")));
+        table.setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER);
+        table.setFont(font).setFontSize(14);
+        table.addCell(new Cell(1,5).add(new Paragraph("Исполнение")));
+        if (executionMap.containsKey(execution)){
+            table.addCell(
+                    new Cell(1,5)
+                            .add(
+                                    new Paragraph(executionMap.get(execution)[1])
+                            )
+            );
+        }
+        else { throw new NullPointerException("нет исполнения в опциях");
+        }
+
+        table.addCell(new Cell(1,5).add(new Paragraph("Виброопора")));
+        if(vibrationMounts.equals("2")){
+            table.addCell(new Cell(1,5).add(new Paragraph("Есть")));
+        }
+        else {
+            table.addCell(new Cell(1,5).add(new Paragraph("Нет")));
+        }
+
+        table.addCell(new Cell(1,5).add(new Paragraph("Материал коллектора")));
+        if (collectorMap.containsKey(collector)) {
+            if(collectorMap.get(collector)[0].equals("C2") || collectorMap.get(collector)[0].equals("CS")) {
+                throw new NullPointerException("Неправильный для этого вида установок");
+            }
+            table.addCell(new Cell(1,5).add(new Paragraph(collectorMap.get(collector)[1])));
+        }
+
+        table.addCell(new Cell(1,5).add(new Paragraph("Виброкомпенсатор")));
+        if(vibrationLock.equals("1")){
+            table.addCell(new Cell(1,5).add(new Paragraph("Есть")));
+        }
+        else {
+            table.addCell(new Cell(1,5).add(new Paragraph("Нет")));
+        }
+
+        table.addCell(new Cell(1,5).add(new Paragraph("Фильтр")));
+        if(filterMap.containsKey(filter)){
+            table.addCell(new Cell(1,5).add(new Paragraph(filterMap.get(filter)[1])));
+        }
+        else {
+            table.addCell(new Cell(1,5).add(new Paragraph("Без фильтра")));
+        }
+
+        table.addCell(new Cell(1,5).add(new Paragraph("Расширительный бак")));
+        if (expansionTankMap.containsKey(expansionTank)) {
+            StringBuilder st = new StringBuilder();
+            st.append(expansionTankMap.get(expansionTank));
+            st.append("л");
+            table.addCell(new Cell(1,5).add(new Paragraph(st.toString())));
+        }
+        else {
+            table.addCell(new Cell(1,5).add(new Paragraph("Нет")));
+        }
+
+        return table;
+    }
+
+    private Table createTableForGm(PdfFont font) {
+        float[] columnWidths = {1, 11, 11, 11, 11, 11};
+        Table table = new Table(columnWidths);
+        Cell headerCell = new Cell(1, 6)
+                .add(new Paragraph("Дополнительные опции"))
+                .setBold()
+                .setFont(font)
+                .setFontSize(12)
+                .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER);
+        table.addCell(headerCell);
+        table.setFont(font);
+        table.setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER);
+        table.setFont(font).setFontSize(10);
+        table.addCell(new Cell(1,5).add(new Paragraph("Исполнение")));
         if (executionMap.containsKey(execution)){
            table.addCell(
-                   new Cell(1,2)
+                   new Cell(1,5)
                            .add(
                                    new Paragraph(executionMap.get(execution)[1])
                            )
            );
         }
         else { throw new NullPointerException("нет исполнения в опциях");}
+        table.addCell(new Cell(1,5).add(new Paragraph("Виброопора")));
+        if(vibrationMounts.equals("2")){
+            table.addCell(
+                    new Cell(1,5)
+                            .add(
+                                    new Paragraph("Есть")
+                            )
+            );
+        }
+        else {
+            table.addCell(
+                    new Cell(1,5)
+                            .add(
+                                    new Paragraph("Нет")
+                            )
+            );
+        }
+        table.addCell(new Cell(1,5).add(new Paragraph("Материал коллектора")));
+        table.addCell(new Cell(1,5).add(new Paragraph(collectorMap.get(collector)[1])));
+
+        table.addCell(new Cell(1,5).add(new Paragraph("Не знаю про что речь 1")));
+        table.addCell(new Cell(1,5).add(new Paragraph(flangesOrGrooveLockMap.get(flangesOrGrooveLock)[1])));
+
+        table.addCell(new Cell(1,5).add(new Paragraph("Фильтр")));
+        if(filterMap.containsKey(filter)){
+            table.addCell(new Cell(1,5).add(new Paragraph(filterMap.get(filter)[1])));
+        }
+        else {
+            table.addCell(new Cell(1,5).add(new Paragraph("Без фильтра")));
+        }
+        table.addCell(new Cell(1,5).add(new Paragraph("Расширительный бак")));
+        if (expansionTankMap.containsKey(expansionTank)) {
+            StringBuilder st = new StringBuilder();
+            st.append(expansionTankMap.get(expansionTank));
+            st.append("л");
+            table.addCell(new Cell(1,5).add(new Paragraph(st.toString())));
+        }
+        else {
+            table.addCell(new Cell(1,5).add(new Paragraph("Нет")));
+        }
+
+        table.addCell(new Paragraph("Буферный бак"));
+        if(bufferTankMap.containsKey(bufferTank)){
+            table.addCell(new Paragraph(bufferTankMap.get(bufferTank)[1]));
+        }
+        else {table.addCell(new Paragraph("Нет"));
+            table.addCell(new Paragraph("Объем"));
+            table.addCell(new Paragraph("Нет"));
+            table.addCell(new Paragraph("Тип"));
+            table.addCell(new Paragraph("Нет"));
+        }
+        table.addCell(new Paragraph("Объем"));
+        table.addCell(new Paragraph(bufferTankSizeMap.get(bufferTankSize)));
+        table.addCell(new Paragraph("Тип"));
+        table.addCell(new Paragraph(bufferTankTypeMap.get(bufferTankType)[1]));
+
+        table.addCell(new Cell(1,5).add(new Paragraph("Предохранитель")));
+        if(!fuse.equals("")){
+            table.addCell(new Cell(1,5).add(new Paragraph(fuse)));
+        }
+        else {
+            table.addCell(new Cell(1,5).add(new Paragraph("Нет")));
+        }
+
+        table.addCell(new Cell(1,5).add(new Paragraph("Воздухоотводчик")));
+        if(airVent.equals("2")){
+            table.addCell(new Cell(1,5).add(new Paragraph("Есть")));
+        }
+        else {
+            table.addCell(new Cell(1,5).add(new Paragraph("Нет")));
+        }
+
+        table.addCell(new Paragraph("Подпитка"));
+        if(makeUpMamOrPapMap.containsKey(makeUpMamOrPap)){
+            table.addCell(new Paragraph(makeUpMamOrPapMap.get(makeUpMamOrPap)[1]));
+            table.addCell(new Paragraph("Давление"));
+            table.addCell(new Paragraph(pressureMamOrPap));
+        }
+        else {
+            table.addCell(new Paragraph("Давление"));
+            table.addCell(new Paragraph("Нет"));
+            table.addCell(new Paragraph("Объем емкости"));
+            table.addCell(new Paragraph("Нет"));
+        }
+        if(makeUpMamOrPap.equals("1")){
+            table.addCell(new Paragraph("Объем емкости"));
+            table.addCell(new Paragraph(volumeMamOrPap));
+        }
+        else {
+            table.addCell(new Paragraph("Объем емкости"));
+            table.addCell(new Paragraph("Нет"));
+        }
         return  table;
     }
 

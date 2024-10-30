@@ -66,7 +66,7 @@ public class PdfComponent<T extends ParentInstallations> {
 
             Paragraph line1 = new Paragraph("Код установки: " + installations.getName())
                     .setFont(font)
-                    .setFontSize(16)
+                    .setFontSize(14)
                     .setTextAlignment(com.itextpdf.layout.property.TextAlignment.LEFT);
 
             Paragraph line2 = new Paragraph("Код комплектации: "+options.createCode(installations))
@@ -104,11 +104,20 @@ public class PdfComponent<T extends ParentInstallations> {
 
 
 
-
             Table infoTable = createInfoTable(font, x, y);
-            infoTable.setFixedPosition(1,275,457,250);
             Table addOptionTable = options.createTable(installations, font);
-            addOptionTable.setFixedPosition(1,275,357,250);
+            if (installations.getClass().getSimpleName().equals("GMInstallation")){
+                infoTable.setFixedPosition(1,275,457,250);
+                addOptionTable.setFixedPosition(1,275,200,250);
+            }else if(installations.getClass().getSimpleName().equals("PNSInstallationERW") || installations.getClass().getSimpleName().equals("HozPitInstallation")){
+                infoTable.setFixedPosition(1,275,435,250);
+                addOptionTable.setFixedPosition(1,275,230,290);
+            }else{
+                infoTable.setFixedPosition(1,275,332,250);
+                addOptionTable.setFixedPosition(1,275,170,290);
+            }
+
+
             document.add(addOptionTable);
             document.add(infoTable);
 
@@ -152,7 +161,7 @@ public class PdfComponent<T extends ParentInstallations> {
                 .add(new Paragraph("Информация о установке"))
                 .setBold()
                 .setFont(font)
-                .setFontSize(16)
+                .setFontSize(14)
                 .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER);
         table.setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER);
         table.setFont(font);
@@ -233,9 +242,9 @@ public class PdfComponent<T extends ParentInstallations> {
                 break;
             case "PNSInstallationAFEIJP" :
                 PNSInstallationAFEIJP pnsInstallation = (PNSInstallationAFEIJP) installations;
-                table.addCell("Суммарная производительность жокей-насоса");
+                table.addCell("Подача жокей-насоса");
                 table.addCell(String.valueOf(pnsInstallation.getTotalCapacityOfJockeyPump()));
-                table.addCell("Требуемый напор жокей-насоса");
+                table.addCell("Напор жокей-насоса");
                 table.addCell(String.valueOf(pnsInstallation.getRequiredJockeyPumpPressure()));
                 break;
             case "PNSInstallationERW":

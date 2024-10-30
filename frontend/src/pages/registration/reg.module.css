@@ -76,6 +76,10 @@
     border: 1px solid #fff;
 }
 
+.formInput {
+    width: 60%; /* Устанавливает одинаковую ширину для обоих полей */
+}
+
 .errorInput {
     border-color: red;
     border-width: 2px;
