@@ -16,6 +16,9 @@ services:
       dockerfile: build/back.dockerfile
     ports:
       - "8080:8080"
+    volumes:
+      - ../firstTrySqliteBase.bd:/firstTrySqliteBase.bd # Том для базы данных SQLite
+      - ../uploads:/uploads
     networks:
       - app-network
 
@@ -34,3 +37,4 @@ services:
 networks:
   app-network:
     driver: bridge
+

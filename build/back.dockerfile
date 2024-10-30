@@ -17,9 +17,6 @@ RUN apk add --no-cache fontconfig freetype ttf-dejavu
 
 COPY --from=build /backend/target/pumpingUnits-0.0.1-SNAPSHOT.jar /backend/backend.jar
 
-COPY firstTrySqliteBase.bd /firstTrySqliteBase.bd
-COPY uploads /uploads
-
 EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "/backend/backend.jar"]
