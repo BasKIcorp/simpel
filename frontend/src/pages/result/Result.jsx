@@ -121,7 +121,12 @@ function Result() {
 
     const fillModuleOptions = {
         1: 'нет',
-        2: 'с вмонтированной емкостью',
+        2: 'клапан автоматической подпитки',
+        3: 'модуль подпитки',
+    };
+    const motorTypeTranslations = {
+        VERTICAL_MULTISTAGE: 'Вертикальный многоступенчатый',
+        IN_LINE: 'Линейный',
     };
 
 
@@ -581,7 +586,7 @@ function Result() {
                                 </tr>
                                 <tr>
                                     <td>Тип</td>
-                                    <td>{motorData.type || 'Вертикальный многоступенчатый'}</td>
+                                    <td>{motorTypeTranslations[motorData.type] || 'Вертикальный многоступенчатый'}</td>
                                 </tr>
                                 <tr>
                                     <td>Мощность</td>
@@ -724,14 +729,14 @@ function Result() {
                                     <td>Заливочный модуль</td>
                                     <td>{fillModuleOptions[options.fillModule]}</td>
                                 </tr>
-                                {options.fillModule === "2" && (
+                                {options.fillModule === "3" && (
                                     <>
                                         <tr>
-                                            <td>Давление</td>
+                                            <td>Давление насоса подпитки</td>
                                             <td>{options.fillPressure} бар</td>
                                         </tr>
                                         <tr>
-                                            <td>Объем</td>
+                                            <td>Емкость запаса теплоносителя</td>
                                             <td>{options.fillVolume} л</td>
                                         </tr>
                                     </>

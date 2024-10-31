@@ -49,11 +49,16 @@ export const AdditionalOptions = () => {
         dispatch(setAdditionalOptions(options))
         navigate("/selection/result");
     };
+    const handleSliderChange = (e) => {
+        const value = parseInt(e.target.value);
+        setOptions((prev) => ({...prev, fillPressure: value}));
+        setFillError(value < 2 || value > 16 ? "Давление должно быть от 2 до 16 бар" : "");
+    };
     const handlePressureChange = (e) => {
         const value = e.target.value;
 
         // Обновляем значение в стейте
-        setOptions((prev) => ({ ...prev, pressureSetting: value }));
+        setOptions((prev) => ({...prev, pressureSetting: value}));
 
         // Проверка диапазона
         if (value < 4 || value > 16) {
@@ -66,7 +71,7 @@ export const AdditionalOptions = () => {
         const value = e.target.value;
 
         // Обновляем значение в стейте
-        setOptions((prev) => ({ ...prev, fillPressure: value }));
+        setOptions((prev) => ({...prev, fillPressure: value}));
 
         // Проверка диапазона
         if (value < 4 || value > 16) {
@@ -198,7 +203,7 @@ export const AdditionalOptions = () => {
                             <h3>Мембранный бак:</h3>
                             <select name="membraneTank" value={options.membraneTank} onChange={handleChange}
                                     className={styles.select}>
-                                {["нет", "8л", "24л", "35л", "550л", "80л", "100л", "200л", "300л", "500л", "750л", "1000л", "1500л"].map((size, index) => (
+                                {["нет", "8л", "12л", "18л", "24л", "35л", "35л (отдельностоящий)", "50л", "50л (отдельностоящий)","80л", "80л (отдельностоящий)","100л", "100л (отдельностоящий)", "200л", "300л", "500л", "750л", "1000л", "1500л"].map((size, index) => (
                                     <option key={index} value={(index).toString()}>{size}</option>
                                 ))}
                             </select>
@@ -269,7 +274,7 @@ export const AdditionalOptions = () => {
                                         className={styles.temperatureInput}
                                         style={error ? {borderColor: "red"} : {}}
                                     />
-                                    {error && <p style={{color: "red", fontSize: 14} }>{error}</p>}
+                                    {error && <p style={{color: "red", fontSize: 14}}>{error}</p>}
 
                                 </>
                             )}
@@ -293,8 +298,8 @@ export const AdditionalOptions = () => {
                             ))}
 
                             {/* Заливочный модуль */}
-                            <h3>Заливочный модуль:</h3>
-                            {["нет", "с вмонтированной емкостью"].map((fillModule, index) => (
+                            <h3>Подпитка:</h3>
+                            {["нет", "клапан автоматической подпитки ", "модуль подпитки"].map((fillModule, index) => (
                                 <>
                                     <label key={index} className={styles.radioLabel}>
                                         <input
@@ -310,29 +315,35 @@ export const AdditionalOptions = () => {
                                 </>
                             ))}
                             <br/>
-                            {options.fillModule === "2" && (
+                            { options.fillModule === "3" && (
                                 <>
-                                    <h5>Давление (бар)</h5>
+                                    <h5>Давление насоса подпитки</h5>
                                     <input
-                                        type="number"
-                                        placeholder="Давление (бар)"
+                                        type="range"
+                                        min="2"
+                                        max="16"
+                                        step="1"
                                         value={options.fillPressure}
-                                        // onChange={(e) => setOptions((prev) => ({
-                                        //     ...prev,
-                                        //     fillPressure: e.target.value
-                                        // }))}
-                                        onChange={handleFillPressureChange}
-                                        className={styles.anotherInput}
-                                        style={fillError ? {borderColor: "red"} : {}}
+                                        onChange={handleSliderChange}
+                                        style={{
+                                            width: "100%", // Adjust width as needed
+                                            accentColor: fillError ? "red" : "#3f51b5" // Red when there's an error
+                                        }}
                                     />
-                                    {fillError && <p style={{color: "red", fontSize: 14} }>{fillError}</p>}
-                                    <h5>Объем (л)</h5>
+                                    <div style={{ textAlign: "center", fontSize: "14px", marginTop: "8px" }}>
+                                        <strong>{options.fillPressure} бар</strong>
+                                    </div>
+                                    {fillError && <p style={{ color: "red", fontSize: 14 }}>{fillError}</p>}
+                                    <h5>Емкость запаса теплоносителя</h5>
                                     <select
                                         value={options.fillVolume}
-                                        onChange={(e) => setOptions((prev) => ({...prev, fillVolume: e.target.value}))}
-                                        className={styles.anotherInput}
+                                        onChange={(e) => setOptions((prev) => ({
+                                            ...prev,
+                                            fillVolume: e.target.value
+                                        }))}
+                                        className={styles.select}
                                     >
-                                        <option value="">Выберите объем (л)</option>
+                                        <option value="">нет</option>
                                         <option value="50">50 л</option>
                                         <option value="100">100 л</option>
                                         <option value="150">150 л</option>
@@ -343,6 +354,7 @@ export const AdditionalOptions = () => {
                                         <option value="750">750 л</option>
                                         <option value="1000">1000 л</option>
                                         <option value="1500">1500 л</option>
+
                                     </select>
 
                                 </>
@@ -567,7 +579,7 @@ export const AdditionalOptions = () => {
                             <h3>Мембранный бак:</h3>
                             <select name="membraneTank" value={options.membraneTank} onChange={handleChange}
                                     className={styles.select}>
-                                {["нет", "12л", "18л", "24л", "35л (отдельностоящий)", "50л (отдельностоящий)"].map((size, index) => (
+                                {["нет", "8л", "12л", "18л", "24л", "35л", "35л (отдельностоящий)", "50л", "50л (отдельностоящий)","80л", "80л (отдельностоящий)","100л", "100л (отдельностоящий)", "200л", "300л", "500л", "750л", "1000л", "1500л"].map((size, index) => (
                                     <option key={index} value={(index).toString()}>{size}</option>
                                 ))}
                             </select>
@@ -754,7 +766,7 @@ export const AdditionalOptions = () => {
                             <h3>Мембранный бак:</h3>
                             <select name="membraneTank" value={options.membraneTank} onChange={handleChange}
                                     className={styles.select}>
-                                {["нет", "12л", "18л", "24л", "35л (отдельностоящий)", "50л (отдельностоящий)", "80л (отдельностоящий)", "100л (отдельностоящий)"].map((size, index) => (
+                                {["нет", "8л", "12л", "18л", "24л", "35л", "35л (отдельностоящий)", "50л", "50л (отдельностоящий)","80л", "80л (отдельностоящий)","100л", "100л (отдельностоящий)", "200л", "300л", "500л", "750л", "1000л", "1500л"].map((size, index) => (
                                     <option key={index} value={(index).toString()}>{size}</option>
                                 ))}
                             </select>
