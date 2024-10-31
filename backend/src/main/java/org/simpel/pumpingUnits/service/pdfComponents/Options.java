@@ -129,8 +129,8 @@ public class Options {
         bufferTankTypeMap.put("2",  new String[]{"H", "Горизонтальный"});
         bufferTankTypeMap.put("1",  new String[]{"V", "Вертикальный"});
 
-        makeUpMamOrPapMap.put("1",  new String[]{"MuP", "Подпиточный клапан"});
-        makeUpMamOrPapMap.put("2",  new String[]{"MuM", "Подпиточный модуль"});
+        makeUpMamOrPapMap.put("2",  new String[]{"MuP", "Подпиточный клапан"});
+        makeUpMamOrPapMap.put("3",  new String[]{"MuM", "Подпиточный модуль"});
 
         //ванины сыны
 
@@ -693,14 +693,11 @@ public class Options {
         else {
             table.addCell(new Paragraph("Давление"));
             table.addCell(new Paragraph("Нет"));
-            table.addCell(new Paragraph("Объем емкости"));
-            table.addCell(new Paragraph("Нет"));
         }
-        if(makeUpMamOrPap.equals("1")){
+        if(makeUpMamOrPap.equals("3")){
             table.addCell(new Paragraph("Объем емкости"));
             table.addCell(new Paragraph(volumeMamOrPap));
-        }
-        else {
+        }else {
             table.addCell(new Paragraph("Объем емкости"));
             table.addCell(new Paragraph("Нет"));
         }
