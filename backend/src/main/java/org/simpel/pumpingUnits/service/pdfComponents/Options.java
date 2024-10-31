@@ -137,21 +137,21 @@ public class Options {
         expansionTankMap.put("1", "8");
         expansionTankMap.put("2", "12");
         expansionTankMap.put("3", "18");
-        expansionTankMap.put("4", "8");
-        expansionTankMap.put("5", "8");
-        expansionTankMap.put("6", "8");
-        expansionTankMap.put("7", "8");
-        expansionTankMap.put("8", "8");
-        expansionTankMap.put("9", "8");
-        expansionTankMap.put("10", "8");
-        expansionTankMap.put("11", "8");
-        expansionTankMap.put("12", "8");
-        expansionTankMap.put("13", "8");
-        expansionTankMap.put("14", "8");
-        expansionTankMap.put("15", "8");
-        expansionTankMap.put("16", "8");
-        expansionTankMap.put("17", "8");
-        expansionTankMap.put("18", "8");
+        expansionTankMap.put("4", "24");
+        expansionTankMap.put("5", "35");
+        expansionTankMap.put("6", "35");
+        expansionTankMap.put("7", "50");
+        expansionTankMap.put("8", "50");
+        expansionTankMap.put("9", "80");
+        expansionTankMap.put("10", "80");
+        expansionTankMap.put("11", "100");
+        expansionTankMap.put("12", "100");
+        expansionTankMap.put("13", "200");
+        expansionTankMap.put("14", "300");
+        expansionTankMap.put("15", "500");
+        expansionTankMap.put("16", "750");
+        expansionTankMap.put("17", "1000");
+        expansionTankMap.put("18", "1500");
 
 
         bufferTankSizeMap.put("1","200");
@@ -632,7 +632,7 @@ public class Options {
         table.addCell(new Cell(1,5).add(new Paragraph("Материал коллектора")));
         table.addCell(new Cell(1,5).add(new Paragraph(collectorMap.get(collector)[1])));
 
-        table.addCell(new Cell(1,5).add(new Paragraph("Не знаю про что речь 1")));
+        table.addCell(new Cell(1,5).add(new Paragraph("Тип подключения")));
         table.addCell(new Cell(1,5).add(new Paragraph(flangesOrGrooveLockMap.get(flangesOrGrooveLock)[1])));
 
         table.addCell(new Cell(1,5).add(new Paragraph("Фильтр")));
@@ -668,9 +668,9 @@ public class Options {
         table.addCell(new Paragraph("Тип"));
         table.addCell(new Paragraph(bufferTankTypeMap.get(bufferTankType)[1]));
 
-        table.addCell(new Cell(1,5).add(new Paragraph("Предохранитель")));
+        table.addCell(new Cell(1,5).add(new Paragraph("Предохранительный клапан")));
         if(!fuse.equals("")){
-            table.addCell(new Cell(1,5).add(new Paragraph(fuse)));
+            table.addCell(new Cell(1,5).add(new Paragraph(fuse+"бар")));
         }
         else {
             table.addCell(new Cell(1,5).add(new Paragraph("Нет")));

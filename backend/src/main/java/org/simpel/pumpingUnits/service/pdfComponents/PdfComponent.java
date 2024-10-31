@@ -108,7 +108,7 @@ public class PdfComponent<T extends ParentInstallations> {
             Table addOptionTable = options.createTable(installations, font);
             if (installations.getClass().getSimpleName().equals("GMInstallation")){
                 infoTable.setFixedPosition(1,275,457,250);
-                addOptionTable.setFixedPosition(1,275,200,250);
+                addOptionTable.setFixedPosition(1,275,180,250);
             }else if(installations.getClass().getSimpleName().equals("PNSInstallationERW") || installations.getClass().getSimpleName().equals("HozPitInstallation")){
                 infoTable.setFixedPosition(1,275,435,250);
                 addOptionTable.setFixedPosition(1,275,230,290);
