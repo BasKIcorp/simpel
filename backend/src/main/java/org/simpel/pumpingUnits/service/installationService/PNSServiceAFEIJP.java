@@ -8,6 +8,7 @@ import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.enums.subtypes.PNSSubtypes;
 import org.simpel.pumpingUnits.model.installation.*;
+import org.simpel.pumpingUnits.repository.EngineRepo;
 import org.simpel.pumpingUnits.repository.MaterialRepo;
 import org.simpel.pumpingUnits.repository.PnsAFEIJPRepository;
 import org.simpel.pumpingUnits.repository.PumpRepo;
@@ -31,13 +32,15 @@ public class PNSServiceAFEIJP implements InstallationServiceInterface <PNSInstal
     private final SearchComponent<PNSInstallationAFEIJP> searchComponent;
     private final PumpRepo pumpRepo;
     private final List<Optional<Pump>> list = new ArrayList<>();
+    private final EngineRepo engineRepo;
 
-    public PNSServiceAFEIJP(PnsAFEIJPRepository repository, MaterialRepo materialRepo, FileStorageService fileStorageService, SearchComponent<PNSInstallationAFEIJP> searchComponent, PumpRepo pumpRepo) {
+    public PNSServiceAFEIJP(PnsAFEIJPRepository repository, MaterialRepo materialRepo, FileStorageService fileStorageService, SearchComponent<PNSInstallationAFEIJP> searchComponent, PumpRepo pumpRepo, EngineRepo engineRepo) {
         this.repository = repository;
         this.materialRepo = materialRepo;
         this.fileStorageService = fileStorageService;
         this.searchComponent = searchComponent;
         this.pumpRepo = pumpRepo;
+        this.engineRepo = engineRepo;
     }
 
 
@@ -97,5 +100,51 @@ public class PNSServiceAFEIJP implements InstallationServiceInterface <PNSInstal
                 minFlowRate,
                 maxFlowRate);
         return searchComponent.get(suitableInstallations);
+    }
+
+    @Override
+    public PNSInstallationAFEIJP saveWithIds(InstallationSaveRequest request, MultipartFile[] files, List<PointPressure> pointsPressure, List<PointPower> pointPower, List<PointNPSH> pointNPSH) throws IOException {
+        PNSInstallationAFEIJP pns = new PNSInstallationAFEIJP();
+        pns.setCommonFields(request);
+        pns.setSpecificFields(request);
+        Pump pump = new Pump();
+        Pump jokPump = new Pump();
+        if (request.getPumpIds() != null && !request.getPumpIds().isEmpty()){
+            pump = pumpRepo.findById(request.getPumpIds().get(0)).orElse(null);
+
+            jokPump = pumpRepo.findById(request.getPumpIds().get(1)).orElse(null);
+        }
+        else {
+            Optional<Pump> existingPump = pumpRepo.findById(request.getPumpIds().get(0));
+            Optional<Pump> existingPumpJok = pumpRepo.findById(request.getPumpIds().get(1));
+            list.add(existingPump);
+            list.add(existingPumpJok);
+            for(Optional<Pump> pumpik : list  ) {
+                if (pumpik.isPresent()) {
+                    throw new NullPointerException("Имя насоса уже существует");
+                }
+            }
+            if (request.getEngineIds() != null && !request.getEngineIds().isEmpty()){
+                Engine engine = engineRepo.findById(request.getEngineIds().get(0)).orElse(null);
+                pump.setFieldsForPumpSave(request.getPumps().get(0), engine, pointsPressure, pointPower, pointNPSH);
+
+                Engine engine1 = engineRepo.findById(request.getEngineIds().get(1)).orElse(null);
+                jokPump.setFieldsForPumpSave(request.getPumps().get(1), engine1, pointsPressure, pointPower, pointNPSH);
+            }
+            else {
+                pump.setFieldsForPumpSave(request.getPumps().get(0), request.getEngines().get(0), pointsPressure, pointPower, pointNPSH);
+                jokPump.setFieldsForPumpSave(request.getPumps().get(1), request.getEngines().get(1), pointsPressure, pointPower, pointNPSH);
+            }
+            pump.setMaterial(materialRepo.findById(request.getMaterial().get(0)));
+            jokPump.setMaterial(materialRepo.findById(request.getMaterial().get(1)));
+        }
+        pns.getPumps().add(pump);
+        pump.getInstallations().add(pns);
+
+        pns.getPumps().add(jokPump);
+        jokPump.getInstallations().add(pns);
+
+        pns.setFieldsForSave(request,files,fileStorageService);
+        return repository.save(pns);
     }
 }

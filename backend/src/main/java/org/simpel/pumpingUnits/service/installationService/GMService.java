@@ -9,6 +9,7 @@ import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.enums.subtypes.SubtypeForGm;
 import org.simpel.pumpingUnits.model.installation.*;
+import org.simpel.pumpingUnits.repository.EngineRepo;
 import org.simpel.pumpingUnits.repository.GMRepository;
 import org.simpel.pumpingUnits.repository.MaterialRepo;
 import org.simpel.pumpingUnits.repository.PumpRepo;
@@ -31,13 +32,15 @@ public class GMService implements InstallationServiceInterface<GMInstallation> {
     private final FileStorageService fileStorageService;
     private final SearchComponent<GMInstallation> searchComponent;
     private final PumpRepo pumpRepo;
+    private final EngineRepo engineRepo;
 
-    public GMService(GMRepository repository, MaterialRepo materialRepo, FileStorageService fileStorageService, SearchComponent<GMInstallation> searchComponent, PumpRepo pumpRepo) {
+    public GMService(GMRepository repository, MaterialRepo materialRepo, FileStorageService fileStorageService, SearchComponent<GMInstallation> searchComponent, PumpRepo pumpRepo, EngineRepo engineRepo) {
         this.repository = repository;
         this.materialRepo = materialRepo;
         this.fileStorageService = fileStorageService;
         this.searchComponent = searchComponent;
         this.pumpRepo = pumpRepo;
+        this.engineRepo = engineRepo;
     }
 
     @Override
@@ -84,5 +87,32 @@ public class GMService implements InstallationServiceInterface<GMInstallation> {
         return searchComponent.get(suitableInstallations);
     }
 
-
+    @Override
+    public GMInstallation saveWithIds(InstallationSaveRequest request, MultipartFile[] files, List<PointPressure> pointsPressure, List<PointPower> pointPower, List<PointNPSH> pointNPSH) throws IOException {
+        GMInstallation gmInstallation = new GMInstallation();
+        gmInstallation.setCommonFields(request);
+        gmInstallation.setSpecificFields(request);
+        Pump pump = new Pump();
+        if (request.getPumpIds() != null && !request.getPumpIds().isEmpty()){
+            pump = pumpRepo.findById(request.getPumpIds().get(0)).orElse(null);
+        }
+        else {
+            Optional<Pump> existingPump = pumpRepo.findByName(request.getPumps().get(0).getName());
+            if (existingPump.isPresent()) {
+                throw new NullPointerException("Имя насоса уже существует");
+            }
+            if (request.getEngineIds() != null && !request.getEngineIds().isEmpty()){
+                Engine engine = engineRepo.findById(request.getEngineIds().get(0)).orElse(null);
+                pump.setFieldsForPumpSave(request.getPumps().get(0), engine, pointsPressure, pointPower, pointNPSH);
+            }
+            else {
+                pump.setFieldsForPumpSave(request.getPumps().get(0), request.getEngines().get(0), pointsPressure, pointPower, pointNPSH);
+            }
+            pump.setMaterial(materialRepo.findById(request.getMaterial().get(0)));
+        }
+        gmInstallation.getPumps().add(pump);
+        pump.getInstallations().add(gmInstallation);
+        gmInstallation.setFieldsForSave(request,files,fileStorageService);
+        return repository.save(gmInstallation);
+    }
 }

@@ -33,7 +33,11 @@ public class InstallationService {
         List<PointPower> pointPower = getPointPower(requestPoints);
         List<PointNPSH> pointNPSH = getPointNPSH(requestPoints);
         if (pointsPressure.size() + pointPower.size() + pointNPSH.size() == requestPoints.length) {
-        return installationsService.save(request,files, pointsPressure, pointPower, pointNPSH);}
+            if((request.getPumpIds() != null && !request.getPumpIds().isEmpty()) || (request.getEngineIds() != null && !request.getEngines().isEmpty())){
+                return installationsService.saveWithIds(request,files, pointsPressure, pointPower, pointNPSH);
+            }
+            return installationsService.save(request,files, pointsPressure, pointPower, pointNPSH);
+        }
         else{
             throw new IllegalArgumentException("Нет такого типа точек либо вообще нет типа точки");
         }
