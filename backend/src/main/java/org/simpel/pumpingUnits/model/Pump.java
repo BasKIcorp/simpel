@@ -16,6 +16,8 @@ import java.util.stream.Stream;
 
 @Entity
 public class Pump {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -319,5 +321,12 @@ public class Pump {
 
     public void setName(String name) {
         this.name = name;
+    }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

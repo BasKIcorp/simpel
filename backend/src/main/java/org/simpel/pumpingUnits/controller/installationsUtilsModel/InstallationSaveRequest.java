@@ -13,6 +13,25 @@ public class InstallationSaveRequest extends InstallationRequest {
     private List<Pump> pumps;
     private List<Engine> engines;
 
+    private List<Long> pumpIds;
+    private List<Long> engineIds;
+
+    public List<Long> getPumpIds() {
+        return pumpIds;
+    }
+
+    public void setPumpIds(List<Long> pumpIds) {
+        this.pumpIds = pumpIds;
+    }
+
+    public List<Long> getEngineIds() {
+        return engineIds;
+    }
+
+    public void setEngineIds(List<Long> engineIds) {
+        this.engineIds = engineIds;
+    }
+
     public String getControlType() {
         return controlType;
     }

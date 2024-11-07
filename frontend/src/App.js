@@ -13,6 +13,7 @@ import {DeviceParamsHVS} from "./pages/deviceParams/DeviceParamsHVS";
 import {DeviceParamsPNSVPV} from "./pages/deviceParams/DeviceParamsPNSVPV";
 import {DeviceParamsPNSAUTP} from "./pages/deviceParams/DeviceParamsPNSAUTP";
 import {useEffect} from "react";
+import AdminPage from './pages/adminPage/AdminPage';
 function App() {
     const token = useSelector((state) => state.user.token);
     const isAuthenticated = token !== "";
@@ -27,6 +28,7 @@ function App() {
             <Route path="/" element={isAuthenticated ? <Navigate to="/selection/installation_choice" /> : <Navigate to="/auth" />} />
 
             {/* Другие маршруты */}
+            <Route path="admin" element={<AdminPage/>} />
             <Route path="auth" element={!isAuthenticated ? <AuthPage /> : <Navigate to="/selection/installation_choice" />} />
             <Route path="registration" element={!isAuthenticated ? <RegPage /> : <Navigate to="/selection/installation_choice" />} />
             <Route path="/selection">
