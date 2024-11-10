@@ -1,6 +1,5 @@
 package org.simpel.pumpingUnits.service.pdfComponents;
 
-import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
@@ -8,14 +7,11 @@ import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
-import com.itextpdf.layout.border.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.property.UnitValue;
 import org.simpel.pumpingUnits.model.Material;
 import org.simpel.pumpingUnits.model.Pump;
-import org.simpel.pumpingUnits.model.enums.CoolantType;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.enums.subtypes.HozPitSubtypes;
 import org.simpel.pumpingUnits.model.enums.subtypes.PNSSubtypes;
@@ -30,7 +26,6 @@ import com.itextpdf.layout.element.Paragraph;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.Phaser;
 
 @Component
 public class PdfComponent<T extends ParentInstallations> {
@@ -108,7 +103,7 @@ public class PdfComponent<T extends ParentInstallations> {
             Table addOptionTable = options.createTable(installations, font);
             if (installations.getClass().getSimpleName().equals("GMInstallation")){
                 infoTable.setFixedPosition(1,275,457,250);
-                addOptionTable.setFixedPosition(1,275,200,250);
+                addOptionTable.setFixedPosition(1,275,180,250);
             }else if(installations.getClass().getSimpleName().equals("PNSInstallationERW") || installations.getClass().getSimpleName().equals("HozPitInstallation")){
                 infoTable.setFixedPosition(1,275,435,250);
                 addOptionTable.setFixedPosition(1,275,230,290);
@@ -284,10 +279,10 @@ public class PdfComponent<T extends ParentInstallations> {
         table.addCell(pump.getDiameter().toString());
 
         table.addCell("Патрубок на стороне всасывания");
-        table.addCell(String.valueOf(pump.getDM_in()));
+        table.addCell(String.valueOf(pump.getDm_in()));
 
         table.addCell("Патрубок на напорной стороне");
-        table.addCell(String.valueOf(pump.getDM_out()));
+        table.addCell(String.valueOf(pump.getDm_out()));
 
         table.addCell("Количество ступеней");
         table.addCell(String.valueOf(pump.getNumberOfSteps()));

@@ -1,5 +1,6 @@
 package org.simpel.pumpingUnits.config;
 
+import org.simpel.pumpingUnits.model.enums.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -8,8 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -21,7 +20,7 @@ import java.util.Collections;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
-
+    
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
@@ -34,15 +33,17 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/uploads/").permitAll()
-                        .requestMatchers("/api/simple/auth/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeRequests()
+                .requestMatchers("/uploads/").permitAll() // доступ без токена
+                .requestMatchers("/api/simple/auth/**").permitAll() // доступ для авторизации
+                .requestMatchers("/api/simple/admin/**").hasAnyRole("ADMIN")
+                // доступ для администратора
+                .anyRequest().authenticated() // доступ для всех аутентифицированных
+                .and()
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // без сессий
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class) // добавляем фильтр JWT
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())); // настройки CORS
 
         return http.build();
     }

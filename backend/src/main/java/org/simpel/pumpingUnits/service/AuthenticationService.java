@@ -41,8 +41,8 @@ public class AuthenticationService {
                 .company(request.getCompany())
                 .build();
         userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        return new AuthenticationResponse(jwtToken);
+        var jwtToken = jwtService.generateToken(user,user.getRole().name());
+        return new AuthenticationResponse(jwtToken,user.getRole().toString());
     }
     public AuthenticationResponse authenticate(AuthenticationRequest request) throws UsernameNotFoundException, BadCredentialsException {
         Users user = userRepository.findByEmail(request.getEmail())
@@ -54,7 +54,7 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
-        var jwtToken = jwtService.generateToken(user);
-        return new AuthenticationResponse(jwtToken);
+        var jwtToken = jwtService.generateToken(user, user.getRole().name());
+        return new AuthenticationResponse(jwtToken,user.getRole().toString());
     }
 }

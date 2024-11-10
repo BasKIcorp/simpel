@@ -1,13 +1,17 @@
 // InstallationForm.js - основной компонент для выбора установки
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { setGeneralInfo } from "../../store/pumpSlice";
-import PumpDataForm from "./PumpDataForm";
-import PhotoAndPointsForm from "./PhotoAndPointsForm";
+// import PumpDataForm from "./PumpDataForm";
+// import PhotoAndPointsForm from "./PhotoAndPointsForm";
 import styles from "./AdminPage.module.css";
 import {Header} from "../../components/UI/Header";
 import {GMFields} from './GMFields'
 import {HozPitPns} from './HozPitPns'
+import PumpData from "./PumpData";
+import PointsData from "./PointsData";
+import {server_url} from "../../config";
+import {useNavigate} from "react-router-dom";
 
 export const AdminPage = () => {
     const [installationData, setInstallationData] = useState({
@@ -21,8 +25,8 @@ export const AdminPage = () => {
         controlType: '',
         concentration: 0,
         pumpTypeForSomeInstallation: '',
-        pumpIds: [{id: 0}],
-        engineIds: [{id: 0}],
+        pumpIds: ["",""],
+        engineIds: ["",""],
         pumps: [{
             name: '',
             manufacturer: '',
@@ -33,13 +37,30 @@ export const AdminPage = () => {
             article: '',
             efficiency: 0,
             npsh: 0,
-            dmIn: 0,
-            dmOut: 0,
+            dm_in: 0,
+            dm_out: 0,
             installationLength: 0,
             description: '',
             price: 0
 
-        }],
+        },
+            {
+                name: '',
+                manufacturer: '',
+                speed: 0,
+                numberOfSteps: 0,
+                maximumPressure: 0, // flowrated
+                maximumHead: 0,
+                article: '',
+                efficiency: 0,
+                npsh: 0,
+                dm_in: 0,
+                dm_out: 0,
+                installationLength: 0,
+                description: '',
+                price: 0
+
+            }],
         engines: [{
             pumpType: '',
             manufacturer: '',
@@ -51,22 +72,37 @@ export const AdminPage = () => {
             typeOfProtection: '',
             insulationClass: '',
             color: ''
-        }],
-        material: []
+        },
+            {
+                pumpType: '',
+                manufacturer: '',
+                execution: '',
+                power: 0,
+                amperage: 0,
+                voltage: 0,
+                turnovers: 0,
+                typeOfProtection: '',
+                insulationClass: '',
+                color: ''
+            }],
+        material: ['','']
     });
+    const [files, setFiles] = useState([]);
+    const [points,setPoints]=useState([]);
+    const token = useSelector((state) => state.user.token);
 
-    // Функция для изменения типа установки
+
     const handleInstallationTypeChange = (event) => {
         const value = event.target.value;
         console.log(value);
         setInstallationData(prevData => ({
             ...prevData,
             typeInstallations: value,
-            subtype: "" // Сбрасываем подтип при изменении типа
+            subtype: ""
         }));
     };
 
-    // Функция для изменения подтипа установки
+
     const handleInstallationSubtypeChange = (event) => {
         const value = event.target.value;
         setInstallationData(prevData => ({
@@ -75,7 +111,6 @@ export const AdminPage = () => {
         }));
     };
 
-    // Функция для изменения данных установки
     const handleChange = (e) => {
         const { name, value } = e.target;
         setInstallationData({
@@ -84,7 +119,86 @@ export const AdminPage = () => {
         });
         console.log(installationData)
     };
+    const handleFileChange = (e) => {
+        const selectedFiles = Array.from(e.target.files).slice(0, 3); // Ограничиваем до 3 фото
 
+        // Обновляем состояние, добавляя новые выбранные файлы к уже существующим
+        setFiles((prevFiles) => {
+            // Соединяем предыдущие файлы с новыми, не превышая лимит в 3 файла
+            const updatedFiles = [...prevFiles, ...selectedFiles].slice(0, 3);
+            return updatedFiles;
+        });
+    };
+    const handleRemoveFile = (index) => {
+        setFiles(files.filter((_, i) => i !== index));
+    };
+
+    const isFormValid = () => {
+        // Пример проверки обязательных полей
+        return installationData.typeInstallations !== '' &&
+            installationData.subtype !== '' &&
+            installationData.countMainPumps > 0 &&
+            installationData.countSparePumps >= 0 &&
+            installationData.powerType !== '' &&
+            installationData.controlType !== '' &&
+            files.length > 0;  // Например, проверка на наличие файлов
+    };
+    const handleClick = async () => {
+        try {
+            const response = await fetch(`${server_url}/api/simple/admin/users`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                method: "GET",
+            });
+            console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log(installationData);
+        if(installationData.subtype !== ""){
+            setInstallationData(prevData => {
+                const updateEngines = [...prevData.engines];
+                const newEngines = [updateEngines[0]];
+                return {
+                    ...prevData,
+                    engines: newEngines
+                }
+            });
+        }
+        const formData = new FormData();
+        formData.append("request", new Blob([JSON.stringify(installationData)], { type: "application/json" }));
+
+        files.forEach(file => {
+            formData.append('files', file);
+        });
+
+        formData.append("points", new Blob([JSON.stringify(points)], { type: "application/json" }));
+        console.log(formData)
+        try {
+            const response = await fetch(`${server_url}/api/simple/admin/save`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                method: "POST",
+                body: formData,
+            });
+            if (response.ok) {
+                alert("Данные успешно сохранены!");
+                window.location.reload()
+            } else {
+                const data = await response.json();
+                alert(`Ошибка: ${data.message}`);
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Произошла ошибка при отправке данных.");
+        }
+    };
+    const navigate = useNavigate();
     return (
         <div>
             <Header/>
@@ -92,23 +206,21 @@ export const AdminPage = () => {
 
                 <div className={styles.rectangle}>
 
-                    <div className={styles.formGroup}>
+                    <div className={styles.selectWrapper}>
+                        <button className={styles.topRightButton}>Добавить</button>
                         <h2 className={styles.formSubtitle}>Тип установки</h2>
-                        <div className={styles.selectWrapper}>
-                            <select className={styles.select} onChange={handleInstallationTypeChange}>
-                                <option value="">Выберите тип установки</option>
-                                <option title="Установка для циркуляционных систем" value="GM">Выносной гидромодуль
-                                </option>
-                                <option value="HOZPIT">Установка повышения давления</option>
-                                <option value="PNS">Установка системы пожаротушения</option>
-                            </select>
-                            {console.log(installationData)}
-                        </div>
-                    </div>
 
+                        <select className={styles.select} onChange={handleInstallationTypeChange}>
+                            <option value="">Выберите тип установки</option>
+                            <option title="Установка для циркуляционных систем" value="GM">Выносной гидромодуль
+                            </option>
+                            <option value="HOZPIT">Установка повышения давления</option>
+                            <option value="PNS">Установка системы пожаротушения</option>
+                        </select>
+                    </div>
                     <div>
                         {installationData.typeInstallations === "GM" && (
-                            <div className={styles.formGroup}>
+                            <div className={styles.selectWrapper}>
                                 <h2 className={styles.formSubtitle}>Тип гидромодуля</h2>
                                 <div className={styles.radioGroup}>
                                     <label>
@@ -156,7 +268,7 @@ export const AdminPage = () => {
                         )}
 
                         {installationData.typeInstallations === "HOZPIT" && (
-                            <div className={styles.formGroup}>
+                            <div className={styles.selectWrapper}>
                                 <h2 className={styles.formSubtitle}>Тип хоз-пит</h2>
                                 <div className={styles.radioGroup}>
                                     <label>
@@ -183,7 +295,7 @@ export const AdminPage = () => {
                         )}
 
                         {installationData.typeInstallations === "PNS" && (
-                            <div className={styles.formGroup}>
+                            <div className={styles.selectWrapper}>
                                 <h2 className={styles.formSubtitle}>Тип ПНС</h2>
                                 <div className={styles.radioGroup}>
                                     <label>
@@ -209,7 +321,7 @@ export const AdminPage = () => {
                             </div>
                         )}
                     </div>
-                    <div className={styles.formGroup}>
+                    <div className={styles.selectWrapper}>
                         <h3 className={styles.formSubtitle}>Количество насосов</h3>
                         <div className={styles.radioGroup}>
                             <h4>Рабочих</h4>
@@ -245,26 +357,83 @@ export const AdminPage = () => {
                                        onChange={handleChange}/> 2
                             </label>
                         </div>
-                        <div className={styles.selectWrapper}>
-                            <h2 className={styles.formSubtitle}>Тип подключения</h2>
-                            <select className={styles.select} name='powerType' onChange={handleChange}>
-                                <option value="">Выберите тип подключения</option>
-                                <option value="З80">З80</option>
-                                <option value="З">З</option>
-                            </select>
-                        </div>
-
-                        <div className={styles.selectWrapper}>
-                            <h2 className={styles.formSubtitle}>Тип управления</h2>
-                            <select className={styles.select} name='controlType' onChange={handleChange}>
-                                <option value="">Выберите тип управления</option>
-                                <option value="asd">asd</option>
-                                <option value="qwe">qwe</option>
-                            </select>
-                        </div>
                     </div>
-                    <div><GMFields installationData={installationData} setInstallationData={setInstallationData}/></div>
-                    <div><HozPitPns installationData={installationData} setInstallationData={setInstallationData}/></div>
+                    <div className={styles.selectWrapper}>
+                        <h2 className={styles.formSubtitle}>Тип подключения</h2>
+                        <select className={styles.select} name='powerType' onChange={handleChange}>
+                            <option value="">Выберите тип подключения</option>
+                            <option value="З80">З80</option>
+                            <option value="З">З</option>
+                        </select>
+                    </div>
+
+                    <div className={styles.selectWrapper}>
+                        <h2 className={styles.formSubtitle}>Тип управления</h2>
+                        <select className={styles.select} name='controlType' onChange={handleChange}>
+                            <option value="">Выберите тип управления</option>
+                            <option value="asd">asd</option>
+                            <option value="qwe">qwe</option>
+                        </select>
+                    </div>
+
+                    {installationData.typeInstallations === "GM" && (
+                        <div><GMFields installationData={installationData} setInstallationData={setInstallationData}/>
+                        </div>)}
+                    {installationData.typeInstallations === "HOZPIT" && (
+                        <div><HozPitPns installationData={installationData} setInstallationData={setInstallationData}/>
+                        </div>)}
+                    {installationData.typeInstallations === "PNS" && (
+                        <div><HozPitPns installationData={installationData} setInstallationData={setInstallationData}/>
+                        </div>)}
+                    <div><PumpData installationData={installationData} setInstallationData={setInstallationData}/></div>
+                    <div className={styles.selectWrapper}>
+                        <h3>Добавить до трех фото:</h3>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            style={{display: 'none'}}
+                            id="fileInput"
+                            onChange={handleFileChange}
+                        />
+                        <button className={styles.button} type="button"
+                                onClick={() => document.getElementById('fileInput').click()}>
+                            Выбрать фото
+                        </button>
+                        {files.length > 0 && (
+                            <div>
+                                <h3>Предпросмотр фото:</h3>
+                                {files.map((file, index) => (
+                                    <div key={index} style={{marginBottom: '10px'}}>
+                                        <img
+                                            src={URL.createObjectURL(file)}
+                                            alt="Preview"
+                                            width="25%"
+                                            style={{marginRight: '10px'}}
+                                        />
+                                        <button className={styles.button} type="button"
+                                                onClick={() => handleRemoveFile(index)}>Удалить фото
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                    <div><PointsData points={points} setPoints={setPoints}/></div>
+                    <button
+                        className={styles.button}
+                        type="button"
+                        onClick={handleSubmit}
+                        disabled={!isFormValid()}
+                    >
+                        Сохранить
+                    </button>
+                    <button
+                        className={`${styles.button} ${styles.bottomRightButton}`}
+                        onClick={() => navigate('/selection/installation_choice')}
+                    >
+                        Перейти к выбору установки
+                    </button>
                 </div>
 
             </div>

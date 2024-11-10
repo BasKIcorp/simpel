@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
 import org.simpel.pumpingUnits.model.enums.Diameter;
 import org.simpel.pumpingUnits.model.enums.subtypes.PumpType;
 import org.simpel.pumpingUnits.model.installation.*;
@@ -38,9 +37,9 @@ public class Pump {
     private float price;
     /*private float power;*/
     private int efficiency;
-    private float Npsh;
-    private float DM_in;
-    private float DM_out;
+    private float npsh;
+    private float dm_in;
+    private float dm_out;
     private float installationLength;
     private String description;
 
@@ -50,9 +49,7 @@ public class Pump {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "engine_id")
-    @JsonManagedReference
     private Engine engine;
-
     @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<PointPressure> pointsPressure ;
@@ -111,8 +108,8 @@ public class Pump {
         this.setPrice(pump.getPrice());
         this.setEfficiency(pump.getEfficiency());
         this.setNpsh(pump.getNpsh());
-        this.setDM_in(pump.getDM_in());
-        this.setDM_out(pump.getDM_out());
+        this.setDm_in(pump.getDm_in());
+        this.setDm_out(pump.getDm_out());
         this.setInstallationLength(pump.getInstallationLength());
         this.setDescription(pump.getDescription());
 
@@ -181,28 +178,28 @@ public class Pump {
         this.installationLength = installationLength;
     }
 
-    public float getDM_out() {
-        return DM_out;
+    public float getDm_out() {
+        return dm_out;
     }
 
-    public void setDM_out(float DM_out) {
-        this.DM_out = DM_out;
+    public void setDm_out(float DM_out) {
+        this.dm_out = DM_out;
     }
 
-    public float getDM_in() {
-        return DM_in;
+    public float getDm_in() {
+        return dm_in;
     }
 
-    public void setDM_in(float DM_in) {
-        this.DM_in = DM_in;
+    public void setDm_in(float DM_in) {
+        this.dm_in = DM_in;
     }
 
     public float getNpsh() {
-        return Npsh;
+        return npsh;
     }
 
     public void setNpsh(float npsh) {
-        this.Npsh = npsh;
+        this.npsh = npsh;
     }
 
     public int getEfficiency() {
