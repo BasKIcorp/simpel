@@ -1,15 +1,19 @@
 package org.simpel.pumpingUnits.controller;
 
 
+import jakarta.mail.MessagingException;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.*;
 import org.simpel.pumpingUnits.model.Engine;
+import org.simpel.pumpingUnits.model.Material;
 import org.simpel.pumpingUnits.model.Pump;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.installation.ParentInstallations;
 import org.simpel.pumpingUnits.repository.EngineRepo;
+import org.simpel.pumpingUnits.repository.MaterialRepo;
 import org.simpel.pumpingUnits.repository.PumpRepo;
 import org.simpel.pumpingUnits.service.InstallationService;
 import org.simpel.pumpingUnits.service.installationService.InstallationServiceFactory;
+import org.simpel.pumpingUnits.service.post.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,12 +32,16 @@ public class AdminController {
     private final PumpRepo pumpRepo;
     private final EngineRepo engineRepo;
     private final InstallationService installationService;
+    private final MaterialRepo materialRepo;
+    private final PostService postService;
 
-    public AdminController(InstallationServiceFactory installationServiceFactory, PumpRepo pumpRepo, EngineRepo engineRepo, InstallationService installationService) {
+    public AdminController(InstallationServiceFactory installationServiceFactory, PumpRepo pumpRepo, EngineRepo engineRepo, InstallationService installationService, MaterialRepo materialRepo, PostService postService) {
         this.installationServiceFactory = installationServiceFactory;
         this.pumpRepo = pumpRepo;
         this.engineRepo = engineRepo;
         this.installationService = installationService;
+        this.materialRepo = materialRepo;
+        this.postService = postService;
     }
 
 
@@ -120,5 +128,28 @@ public class AdminController {
         } catch (NullPointerException e) {
             return ResponseEntity.badRequest().body(e.getMessage() != "" ? e.getMessage() : "Some data is missing, fill out the form completely and submit again");
         }
+    }
+    @GetMapping(value="/users")
+    public ResponseEntity<?> save() throws IOException {
+        try {postService.sendUsers();
+            return ResponseEntity.ok().body("ок");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (NullPointerException e) {
+            return ResponseEntity.badRequest().body(e.getMessage() != "" ? e.getMessage() : "Some data is missing, fill out the form completely and submit again");
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @GetMapping("materials")
+    public ResponseEntity<?> materials(){
+        List<String> materials = materialRepo.findAll().stream().map(
+                material -> {
+                    return  material.getName();
+                }
+        ).collect(Collectors.toList());
+        
+        return ResponseEntity.ok(materials);
     }
 }

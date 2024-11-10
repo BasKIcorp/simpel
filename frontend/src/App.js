@@ -17,6 +17,8 @@ import AdminPage from './pages/adminPage/AdminPage';
 function App() {
     const token = useSelector((state) => state.user.token);
     const isAuthenticated = token !== "";
+    const role = useSelector((state) => state.user.role);
+    const isAdmin = role === "ADMIN";
     useEffect(() => {
         if (performance.getEntriesByType("navigation")[0].type === "reload" && window.location.href.includes("/selection")) {
             window.location.href = '/selection/installation_choice';
@@ -25,10 +27,12 @@ function App() {
     return (
         <Routes>
             {/* Корневой маршрут */}
-            <Route path="/" element={isAuthenticated ? <Navigate to="/selection/installation_choice" /> : <Navigate to="/auth" />} />
+            <Route path="/" element={isAuthenticated ? (isAdmin ? <Navigate to="/admin" /> : <Navigate to="/selection/installation_choice" />) : <Navigate to="/auth" />} />
+
+            {/* Маршрут для админов */}
+            <Route path="admin" element={isAdmin ? <AdminPage/> : <Navigate to="/auth" />} />
 
             {/* Другие маршруты */}
-            <Route path="admin" element={<AdminPage/>} />
             <Route path="auth" element={!isAuthenticated ? <AuthPage /> : <Navigate to="/selection/installation_choice" />} />
             <Route path="registration" element={!isAuthenticated ? <RegPage /> : <Navigate to="/selection/installation_choice" />} />
             <Route path="/selection">

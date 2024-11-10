@@ -1,5 +1,6 @@
     import {useState} from "react";
     import styles from './AdminPage.module.css'
+    import {useEffect} from "react";
 
     export const HozPitPns = ({installationData, setInstallationData}) => {
 
@@ -16,7 +17,6 @@
             const { name, value } = e.target;
 
             setInstallationData(prevData => {
-                // Устанавливаем концентрацию в 10% при выборе растворов, сбрасываем для воды
                 if (name === "coolantType") {
                     return {
                         ...prevData,
@@ -33,20 +33,27 @@
 
         const validateTemperature = (temp, coolant) => {
             let tempValue = parseFloat(temp);
-            if (coolant === 'WATER') {
-                if (tempValue < 4 || tempValue > 70) {
-                    setTemperatureError('Для воды допустимый диапазон температуры: +4 … +70°C');
+            if(installationData.typeInstallations === "PNS"){
+                if (tempValue < 4 || tempValue > 50) {
+                    setTemperatureError('Для воды допустимый диапазон температуры: +4 … +50°C');
                     return false;
                 }
-            } else {
-                setTemperatureError('Выберите тип теплоносителя');
-                return false;
+            }else {
+                if (coolant === 'WATER') {
+                    if (tempValue < 4 || tempValue > 70) {
+                        setTemperatureError('Для воды допустимый диапазон температуры: +4 … +70°C');
+                        return false;
+                    }
+                } else {
+                    setTemperatureError('Выберите тип теплоносителя');
+                    return false;
+                }
             }
             setTemperatureError('');
             return true;
         };
         return (
-            <div className={styles.formGroup}>
+            <div className={styles.selectWrapper}>
                 <h2 className={styles.formSubtitle}>Тип теплоносителя</h2>
                 <div className={styles.radioGroup}>
                     <label>
@@ -70,7 +77,6 @@
                             onChange={handleChange}
                             onBlur={() => validateTemperature(installationData.temperature, installationData.coolantType)}
                             style={temperatureError ? {borderColor: "red"} : {}}
-
                         />
                         <span className={styles.temperatureUnit}
                               style={temperatureError ? {color: "red"} : {}}
@@ -78,8 +84,34 @@
                     </div>
                     {temperatureError && <p className={styles.error}>{temperatureError}</p>}
                 </div>
-            </div>
+                {installationData.typeInstallations === "PNS" && installationData.subtype !== "AFEIJP" && (<div>
+                    <h2 className={styles.formSubtitle}>Тип насоса</h2>
+                    <div className={styles.radioGroup}>
+                        <label>
+                            <input
+                                type="radio"
+                                name="pumpTypeForSomeInstallation"
+                                value="VERTICAL"
+                                onChange={handleChange}
+                            /> Вертикальный
+                        </label>
+                    </div>
+                    <br/>
 
+                    <div className={styles.radioGroup}>
+                        <label>
+                            <input
+                                type="radio"
+                                name="pumpTypeForSomeInstallation"
+                                value="HORIZONTAL"
+                                onChange={handleChange}
+                            /> Горизонтальный
+                        </label>
+                    </div>
+
+                </div>)}
+                <br/>
+            </div>
 
         );
     };

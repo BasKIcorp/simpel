@@ -44,7 +44,7 @@ export const GMFields = ({installationData, setInstallationData}) => {
         return true;
     };
     return (
-        <div className={styles.formGroup}>
+        <div className={styles.selectWrapper}>
             <h2 className={styles.formSubtitle}>Тип теплоносителя</h2>
             <div className={styles.radioGroup}>
                 <label>

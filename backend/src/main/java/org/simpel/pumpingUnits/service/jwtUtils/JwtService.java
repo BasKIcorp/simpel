@@ -18,14 +18,16 @@ import java.util.function.Function;
 public class JwtService {
     private final String SECRET_KEY = "9bgATz23gMcMW0rWKzfEXEd5I5kvcTer8P3bJU5eVig=";
 
-    public String generateToken(UserDetails userDetails){
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(UserDetails userDetails,String role){
+        return generateToken(new HashMap<>(), userDetails,role);
     }
 
     public String generateToken(
             Map<String, Object> extraClaims,
-            UserDetails userDetails
+            UserDetails userDetails,
+            String role
     ){
+        extraClaims.put("role","ROLE_" +role);
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
@@ -53,6 +55,9 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("role", String.class));  // Извлекаем роль из токена
+    }
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver){
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);

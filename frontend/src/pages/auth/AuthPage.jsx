@@ -65,18 +65,24 @@ function AuthPage() {
 
             if (response.ok) {
                 const data = await response.json();
-                dispatch({ type: 'set_user', payload: { username: username, token: data.token } });
+                dispatch({ type: 'set_user', payload: { username: username, token: data.token, role: data.role } });
+
                 console.log(data.message);
-                navigate("/selection/installation_choice", {replace: true})
+
+
+                if (data.role === 'ADMIN') {
+                    navigate("/adminPage", { replace: true });
+                } else {
+                    navigate("/selection/installation_choice", { replace: true });
+                }
             } else {
                 const error = await response.json();
-                alert(error.message)
+                alert(error.message);
             }
         } catch (error) {
-
             console.error('Произошла ошибка при отправке запроса:', error);
         }
-    }
+    };
 
     const handleRegistrationClick = (e) => {
         e.preventDefault();
