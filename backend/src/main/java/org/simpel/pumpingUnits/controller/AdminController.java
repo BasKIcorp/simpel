@@ -87,7 +87,12 @@ public class AdminController {
     } catch (NullPointerException e) {
         return ResponseEntity.badRequest().body(e.getMessage() != "" ? e.getMessage() : "Some data is missing, fill out the form completely and submit again");
     }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
+
 
     @GetMapping("engines")
     public ResponseEntity<?> engines() {
@@ -119,7 +124,7 @@ public class AdminController {
         return ResponseEntity.ok(engine);
     }
 
-    @PostMapping(value="/save")
+    @PostMapping("save")
     public ResponseEntity<?> save(@RequestPart("request") InstallationSaveRequest request,
                                   @RequestPart("files") MultipartFile[] files,
                                   @RequestPart("points") InstallationPointRequest[] pointRequests) throws IOException {
@@ -131,8 +136,8 @@ public class AdminController {
             return ResponseEntity.badRequest().body(e.getMessage() != "" ? e.getMessage() : "Some data is missing, fill out the form completely and submit again");
         }
     }
-    @GetMapping(value="/users")
-    public ResponseEntity<?> save() throws IOException {
+    @GetMapping("users")
+    public ResponseEntity<?> usersOnEmail() throws IOException {
         try {postService.sendUsers();
             return ResponseEntity.ok().body("ок");
         } catch (IllegalArgumentException e) {
@@ -144,7 +149,7 @@ public class AdminController {
         }
     }
 
-    @GetMapping("materials")
+    @GetMapping("/materials")
     public ResponseEntity<?> materials(){
         List<String> materials = materialRepo.findAll().stream().map(
                 material -> {
