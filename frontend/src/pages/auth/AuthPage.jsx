@@ -71,9 +71,11 @@ function AuthPage() {
 
 
                 if (data.role === 'ADMIN') {
-                    navigate("/adminPage", { replace: true });
+                    navigate("/admin", { replace: true });
+                    console.log("qweqwqweqweqwe1wqw")
                 } else {
                     navigate("/selection/installation_choice", { replace: true });
+                    console.log(")")
                 }
             } else {
                 const error = await response.json();

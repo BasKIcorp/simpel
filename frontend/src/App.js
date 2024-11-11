@@ -23,6 +23,9 @@ function App() {
         if (performance.getEntriesByType("navigation")[0].type === "reload" && window.location.href.includes("/selection")) {
             window.location.href = '/selection/installation_choice';
         }
+        else if (performance.getEntriesByType("navigation")[0].type === "reload" && window.location.href.includes("/admin")){
+            window.location.href = '/admin';
+        }
     }, []);
     return (
         <Routes>
@@ -33,8 +36,17 @@ function App() {
             <Route path="admin" element={isAdmin ? <AdminPage/> : <Navigate to="/auth" />} />
 
             {/* Другие маршруты */}
-            <Route path="admin" element={<AdminPage/>} />
-            <Route path="auth" element={!isAuthenticated ? <AuthPage /> : <Navigate to="/selection/installation_choice" />} />
+            <Route
+                path="auth"
+                element={
+                    !isAuthenticated
+                        ? <AuthPage />
+                        : (isAdmin
+                                ? <Navigate to="/admin" />
+                                : <Navigate to="/selection/installation_choice" />
+                        )
+                }
+            />
             <Route path="registration" element={!isAuthenticated ? <RegPage /> : <Navigate to="/selection/installation_choice" />} />
             <Route path="/selection">
                 <Route path="installation_choice" element={isAuthenticated ? <InstallationChoice /> : <Navigate to="/auth" />} />
