@@ -58,6 +58,7 @@ public class PostService {
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setFrom("noreply@spartaspb.ru");
         helper.setTo("Playstationstoreplus@yandex.ru");
+//        helper.setTo("post8888@list.ru");
         helper.setSubject("Отчет о пользователях");
         helper.setText(userInfo.toString(), true);
 

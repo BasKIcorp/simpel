@@ -133,7 +133,12 @@ public class AdminController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (NullPointerException e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage() != "" ? e.getMessage() : "Some data is missing, fill out the form completely and submit again");
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
     @GetMapping("users")
@@ -147,6 +152,7 @@ public class AdminController {
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     @GetMapping("/materials")

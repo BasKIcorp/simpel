@@ -12,6 +12,7 @@ import PumpData from "./PumpData";
 import PointsData from "./PointsData";
 import {server_url} from "../../config";
 import {useNavigate} from "react-router-dom";
+import { useEffect } from "react";
 
 export const AdminPage = () => {
     const [installationData, setInstallationData] = useState({
@@ -91,6 +92,31 @@ export const AdminPage = () => {
     const [points,setPoints]=useState([]);
     const token = useSelector((state) => state.user.token);
 
+    useEffect(() => {
+        setInstallationData(prevData => {
+            let newEngines = [...prevData.engines];
+            let newPumps = [...prevData.pumps]
+
+            // Проверяем, выбран ли подтип "AFEIJP"
+            if (installationData.subtype === "AFEIJP") {
+                // Если выбран "AFEIJP", оставляем только один двигатель
+                 // Вставляем только первый двигатель
+                newEngines = [newEngines[0], newEngines[0]];
+                newPumps = [newPumps[0],newPumps[0]];
+            } else {
+                newEngines = [newEngines[0]];
+                newPumps = [newPumps[0]];
+                }
+
+
+            return {
+                ...prevData,
+                engines: newEngines, // Обновляем массив двигателей'
+                pumps: newPumps
+            };
+        });
+        console.log("qwewq", installationData.engines)
+    }, [installationData.subtype]);
 
     const handleInstallationTypeChange = (event) => {
         const value = event.target.value;
@@ -100,6 +126,7 @@ export const AdminPage = () => {
             typeInstallations: value,
             subtype: ""
         }));
+
     };
 
 
@@ -109,6 +136,7 @@ export const AdminPage = () => {
             ...prevData,
             subtype: value
         }));
+
     };
 
     const handleChange = (e) => {
@@ -158,17 +186,7 @@ export const AdminPage = () => {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(installationData);
-        if(installationData.subtype !== ""){
-            setInstallationData(prevData => {
-                const updateEngines = [...prevData.engines];
-                const newEngines = [updateEngines[0]];
-                return {
-                    ...prevData,
-                    engines: newEngines
-                }
-            });
-        }
+
         const formData = new FormData();
         formData.append("request", new Blob([JSON.stringify(installationData)], { type: "application/json" }));
 
@@ -177,7 +195,6 @@ export const AdminPage = () => {
         });
 
         formData.append("points", new Blob([JSON.stringify(points)], { type: "application/json" }));
-        console.log(formData)
         try {
             const response = await fetch(`${server_url}/api/simple/admin/save`, {
                 headers: {
@@ -186,6 +203,7 @@ export const AdminPage = () => {
                 method: "POST",
                 body: formData,
             });
+            console.log(response.json())
             if (response.ok) {
                 alert("Данные успешно сохранены!");
                 window.location.reload()
@@ -207,7 +225,7 @@ export const AdminPage = () => {
                 <div className={styles.rectangle}>
 
                     <div className={styles.selectWrapper}>
-                        <button className={styles.topRightButton}>Добавить</button>
+                        <button className={styles.topRightButton} onClick={handleClick}>Users</button>
                         <h2 className={styles.formSubtitle}>Тип установки</h2>
 
                         <select className={styles.select} onChange={handleInstallationTypeChange}>
