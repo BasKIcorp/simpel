@@ -22,6 +22,16 @@ public class Engine {
     private String typeOfProtection;
     private String insulationClass;
     private String color;
+    private Float price;
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
+    }
+
     public Engine() {}
     public void setFieldsForPumpSave(Engine request){
         this.manufacturer = request.getManufacturer();

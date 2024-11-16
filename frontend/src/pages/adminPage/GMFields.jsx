@@ -88,7 +88,6 @@ export const GMFields = ({installationData, setInstallationData}) => {
                     </select>
                 </label>
             </div>
-
             <div className={styles.temperatureGroup}>
                 <h2 className={styles.formSubtitle}>Температура</h2>
                 <div className={styles.temperatureInputWrapper}>
@@ -108,6 +107,7 @@ export const GMFields = ({installationData, setInstallationData}) => {
                 </div>
                 {temperatureError && <p className={styles.error}>{temperatureError}</p>}
             </div>
+
         </div>
 
 

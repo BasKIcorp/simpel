@@ -6,7 +6,16 @@ import org.simpel.pumpingUnits.model.Pump;
 import java.util.List;
 
 public class InstallationSaveRequest extends InstallationRequest {
+
     //для установок
+    private Integer price;
+
+    public Integer getPrice() {
+        return price;
+    }
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
     private String controlType;
     private String powerType;
 

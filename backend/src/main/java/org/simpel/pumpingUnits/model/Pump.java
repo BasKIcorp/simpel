@@ -105,7 +105,6 @@ public class Pump {
         this.setMaximumHead(pump.getMaximumHead());
 
         this.setArticle(pump.getArticle());
-        this.setPrice(pump.getPrice());
         this.setEfficiency(pump.getEfficiency());
         this.setNpsh(pump.getNpsh());
         this.setDm_in(pump.getDm_in());
@@ -142,7 +141,7 @@ public class Pump {
         this.setPointsNPSH(pointNPSH);
         this.setEngine(engine);
         this.setType(engine.getPumpType());
-        
+        this.setPrice(pump.getPrice() + engine.getPrice());
     }
 
     public Engine getEngine() {

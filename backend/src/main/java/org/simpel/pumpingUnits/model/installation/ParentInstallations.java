@@ -41,6 +41,17 @@ public abstract class ParentInstallations {
     @Enumerated(EnumType.STRING)
     private Diameter diameter;
     protected String name;
+    private Float price;
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
+    }
+
+
 
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -63,13 +74,12 @@ public abstract class ParentInstallations {
         this.setCoolantType(CoolantType.valueOf(request.getCoolantType()));
         this.setCountMainPumps(request.getCountMainPumps());
         this.setCountSparePumps(request.getCountSparePumps());
-
-
     }
 
     public abstract void setSpecificFields(InstallationRequest request);
 
     public void setFieldsForSave(InstallationSaveRequest request, MultipartFile[] files,  FileStorageService fileStorageService) throws IOException {
+        this.setPrice(request.getPrice() + pumps.get(0).getPrice() +( pumps.get(1) != null ? pumps.get(1).getPrice(): 0));
         List<String> pathFiles = fileStorageService.saveFiles(files,request.getTypeInstallations(), request.getSubtype());
         this.setDrawingsPath(pathFiles);
         this.setControlType(ControlType.valueOf(request.getControlType()));
