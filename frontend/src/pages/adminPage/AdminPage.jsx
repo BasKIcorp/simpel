@@ -239,7 +239,10 @@ export const AdminPage = () => {
                 <div className={styles.rectangle}>
 
                     <button className={styles.buttonMain} onClick={toggleExpand}>
-                        {isContentVisible ? "Скрыть" : "Показать"} дополнительные поля
+                        <br/>
+                        Добавить
+                        <br/>
+                        <br/>
                     </button>
                     <button
                         className={styles.buttonMain}
