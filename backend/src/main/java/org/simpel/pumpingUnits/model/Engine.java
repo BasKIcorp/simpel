@@ -32,8 +32,11 @@ public class Engine {
         this.price = price;
     }
 
-    public Engine() {}
-    public void setFieldsForPumpSave(Engine request){
+    public Engine() {
+    }
+
+    public void setFieldsForPumpSave(Engine request) {
+        this.name = request.getName();
         this.manufacturer = request.getManufacturer();
         this.execution = request.getExecution();
         this.pumpType = PumpType.valueOf(request.getPumpType().toString());
@@ -44,9 +47,11 @@ public class Engine {
         this.insulationClass = request.getInsulationClass();
         this.color = request.getColor();
     }
+
     public String getManufacturer() {
         return manufacturer;
     }
+
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
     }
@@ -130,6 +135,7 @@ public class Engine {
     public void setId(Long id) {
         this.id = id;
     }
+
     public String getName() {
         return name;
     }

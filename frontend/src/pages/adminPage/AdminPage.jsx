@@ -15,7 +15,9 @@ import {useNavigate} from "react-router-dom";
 import { useEffect } from "react";
 import { Grid, Collapse,Box } from '@mui/material';
 
+
 export const AdminPage = () => {
+    const dispatch = useDispatch();
     const [installationData, setInstallationData] = useState({
         typeInstallations: '',
         subtype: '',
@@ -218,9 +220,28 @@ export const AdminPage = () => {
                 alert("Данные успешно сохранены!");
                 window.location.reload()
             } else {
+                if (!response) {
+                    dispatch({ type: 'remove_user' });
+                    console.log('Нет ответа от сервера, токен удалён');
+                    return null;
+                }
+
+                // Проверяем, если статус 401 или 403 (неавторизован или нет прав)
+                if (response.status === 401 || response.status === 403) {
+                    dispatch({ type: 'remove_user' }); // Удаляем пользователя из стора
+
+                    if (response.status === 401) {
+                        console.log('Испорченный токен');
+                    } else {
+                        console.log('Нет прав для выполнения операции');
+                    }
+
+                    return null; // Завершаем выполнение
+                }
                 const data = await response.json();
                 alert(`Ошибка: ${data.message}`);
             }
+
         } catch (error) {
             console.error(error);
             alert("Произошла ошибка при отправке данных.");

@@ -84,21 +84,16 @@
     max-width: 200px;
 }
 .horizontalGroup {
-
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
+    flex-direction: column; /* Располагаем поля в столбик */
+    gap: 20px; /* Расстояние между группами полей */
 }
 
 .rightColumn {
-
     margin-right: 55rem;
 }
 .engine{
-    margin-left: 45rem;
-    margin-top: -68.8rem;
-    margin-bottom: 4rem;
+
 }
 
 
@@ -310,10 +305,10 @@
 }
 .formContent {
     display: flex;
-    width: 40%;
-    max-width: 100%;
-    flex-direction: column;
-    align-items: center;
+    width: 800px;
+    flex-direction: row;
+    gap: 20%;
+    align-items: flex-start;
     background-color: transparent;
 }
 
@@ -592,6 +587,7 @@
 }
 
 .pumpSection {
+    display: flex;
     width: 48%;
     padding: 20px;
     border-radius: 6px;
@@ -601,19 +597,19 @@
 /* Специфический фон для левого насоса */
 .pumpContainer {
     display: flex; /* Flexbox для горизонтального расположения */
-    justify-content: space-between; /* Распределяет элементы по краям */
-    align-items: center; /* Выравнивание по вертикали, если высоты разные */
-    width: 100%; /* или задайте нужную ширину */
+    width: 80%; /* или задайте нужную ширину */
 }
 
 /* Специфический фон для левого насоса */
 .pumpLeft {
+    text-align: left;
     background-color: #e0f7fa;
     width: 48%; /* Устанавливаем ширину, чтобы они располагались рядом */
 }
 
 /* Специфический фон для правого насоса */
 .pumpRight {
+    text-align: left;
     background-color: #fce4ec;
     width: 48%; /* Устанавливаем ширину, чтобы они располагались рядом */
     margin-left: 2%;

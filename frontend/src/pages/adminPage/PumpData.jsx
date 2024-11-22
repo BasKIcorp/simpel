@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import {server_url} from "../../config"
 import styles from './AdminPage.module.css'
 import {useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
+
 
 const PumpData = ({ installationData, setInstallationData}) => {
     const [availablePumps, setAvailablePumps] = useState([]);
     const [availableEngines, setAvailableEngines] = useState([]);
     const [availableMaterials, setAvailableMaterial] = useState([]);
 
-    const token = useSelector((state) => state.user.token);
+    const dispatch = useDispatch();
 
 
     useEffect(() => {
@@ -34,6 +36,9 @@ const PumpData = ({ installationData, setInstallationData}) => {
 
     const fetchAllMaterial = async () => {
         try {
+            const userData = localStorage.getItem("token");
+            const token = JSON.parse(userData).token
+            console.log(token)
             const response = await fetch(`${server_url}/api/simple/admin/materials`, {
                 method: "GET",
                 headers: {
@@ -41,11 +46,26 @@ const PumpData = ({ installationData, setInstallationData}) => {
                     "Content-Type": "application/json",
                 }
             });
+            if (!response) {
+                dispatch({ type: 'remove_user' });
+                console.log('Нет ответа от сервера, токен удалён');
+                return null;
+            }
+            if (response.status === 401 || response.status === 403) {
+                alert("Токен испорчен")
+                dispatch({ type: 'remove_user' }); // Удаляем пользователя из стора
+                if (response.status === 401) {
+                    console.log('Испорченный токен');
+                } else {
+                    console.log('Нет прав для выполнения операции');
+                }
+
+                return null; // Завершаем выполнение
+            }
             console.log(response.body)
             if (!response.ok) {
                 throw new Error(`Ошибка: ${response.status}`);
             }
-
             const data = await response.json();
             return data;
         } catch (error) {
@@ -168,6 +188,8 @@ const PumpData = ({ installationData, setInstallationData}) => {
 
     const fetchAllPumps = async () => {
         try {
+            const userData = localStorage.getItem("token");
+            const token = JSON.parse(userData).token
             const response = await fetch(`${server_url}/api/simple/admin/pumps`, {
                 method: "GET",
                 headers: {
@@ -175,11 +197,22 @@ const PumpData = ({ installationData, setInstallationData}) => {
                     "Content-Type": "application/json",
                 }
             });
-            console.log(response)
-            if (!response.ok) {
-                throw new Error(`Ошибка: ${response.status}`);
+            if (!response) {
+                dispatch({ type: 'remove_user' });
+                console.log('Нет ответа от сервера, токен удалён');
+                return null;
             }
+            if (response.status === 401 || response.status === 403) {
+                alert("Токен испорчен")
+                dispatch({ type: 'remove_user' }); // Удаляем пользователя из стора
+                if (response.status === 401) {
+                    console.log('Испорченный токен');
+                } else {
+                    console.log('Нет прав для выполнения операции');
+                }
 
+                return null; // Завершаем выполнение
+            }
             const data = await response.json();
             return data;
         } catch (error) {
@@ -189,13 +222,34 @@ const PumpData = ({ installationData, setInstallationData}) => {
     };
     const fetchAllEngines = async () => {
         try {
+            const userData = localStorage.getItem("token");
+            const token = JSON.parse(userData).token
             const response = await fetch(`${server_url}/api/simple/admin/engines`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
                 }
-            });
+            });console.log(response.status)
+            if (!response) {
+                dispatch({ type: 'remove_user' });
+                console.log('Нет ответа от сервера, токен удалён');
+                return null;
+            }
+
+            // Проверяем, если статус 401 или 403 (неавторизован или нет прав)
+            if (response.status === 401 || response.status === 403) {
+                alert("Токен испорчен")
+                dispatch({ type: 'remove_user' }); // Удаляем пользователя из стора
+
+                if (response.status === 401) {
+                    console.log('Испорченный токен');
+                } else {
+                    console.log('Нет прав для выполнения операции');
+                }
+
+                return null; // Завершаем выполнение
+            }
 
             if (!response.ok) {
                 throw new Error(`Ошибка: ${response.status}`);
@@ -210,13 +264,34 @@ const PumpData = ({ installationData, setInstallationData}) => {
     };
     const fetchPumpById = async (id) => {
         try {
+            const userData = localStorage.getItem("token");
+            const token = JSON.parse(userData).token
             const response = await fetch(`${server_url}/api/simple/admin/pumps/${id}`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
                 }
-            });
+            });console.log(response.status)
+            if (!response) {
+                dispatch({ type: 'remove_user' });
+                console.log('Нет ответа от сервера, токен удалён');
+                return null;
+            }
+
+            // Проверяем, если статус 401 или 403 (неавторизован или нет прав)
+            if (response.status === 401 || response.status === 403) {
+                alert("Токен испорчен")
+                dispatch({ type: 'remove_user' }); // Удаляем пользователя из стора
+
+                if (response.status === 401) {
+                    console.log('Испорченный токен');
+                } else {
+                    console.log('Нет прав для выполнения операции');
+                }
+
+                return null; // Завершаем выполнение
+            }
             console.log(response)
             if (!response.ok) {
                 throw new Error(`Ошибка: ${response.status}`);
@@ -231,14 +306,32 @@ const PumpData = ({ installationData, setInstallationData}) => {
     };
     const fetchEngineById = async (id) => {
         try {
+            const userData = localStorage.getItem("token");
+            const token = JSON.parse(userData).token
             const response = await fetch(`${server_url}/api/simple/admin/engines/${id}`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
                 }
-            });
+            });console.log(response.status)
+            if (!response) {
+                dispatch({ type: 'remove_user' });
+                console.log('Нет ответа от сервера, токен удалён');
+                return null;
+            }
+            if (response.status === 401 || response.status === 403) {
+                alert("Токен испорчен")
+                dispatch({ type: 'remove_user' }); // Удаляем пользователя из стора
 
+                if (response.status === 401) {
+                    console.log('Испорченный токен');
+                } else {
+                    console.log('Нет прав для выполнения операции');
+                }
+
+                return null; // Завершаем выполнение
+            }
             if (!response.ok) {
                 throw new Error(`Ошибка: ${response.status}`);
             }
@@ -252,6 +345,8 @@ const PumpData = ({ installationData, setInstallationData}) => {
     };
     const fetchInstallationPumps = async (type, subType) => {
         try {
+            const userData = localStorage.getItem("token");
+            const token = JSON.parse(userData).token
             const response = await fetch(`${server_url}/api/simple/admin/instPump?type=${type}&subType=${subType}`, {
                 method: "GET",
                 headers: {
@@ -259,11 +354,28 @@ const PumpData = ({ installationData, setInstallationData}) => {
                     "Content-Type": "application/json",
                 }
             });
+            console.log(response.status)
+            if (!response) {
+                dispatch({ type: 'remove_user' });
+                console.log('Нет ответа от сервера, токен удалён');
+                return null;
+            }
+            // Проверяем, если статус 401 или 403 (неавторизован или нет прав)
+            if (response.status === 401 || response.status === 403) {
+                alert("Токен испорчен")
+                dispatch({ type: 'remove_user' }); // Удаляем пользователя из стора
 
+                if (response.status === 401) {
+                    console.log('Испорченный токен');
+                } else {
+                    console.log('Нет прав для выполнения операции');
+                }
+
+                return null; // Завершаем выполнение
+            }
             if (!response.ok) {
                 throw new Error(`Ошибка: ${response.status}`);
             }
-
             const data = await response.json();
             return data;
         } catch (error) {
@@ -332,6 +444,7 @@ const PumpData = ({ installationData, setInstallationData}) => {
 const PumpEngineFields = ({ index, availablePumps, availableEngines, availableMaterials, handleChangeMaterial, handlePumpSelection, handleEngineSelection, installationData, handleChangePumpFields, handleChangeEngineFields }) => (
     <div className={styles.horizontalGroup}>
         <div className={styles.formContent}>
+            <div>
             <h2 className={styles.formSubtitle}>Насос {index + 1}</h2>
             <input className={styles.radioGroup}
                    type="text"
@@ -440,6 +553,7 @@ const PumpEngineFields = ({ index, availablePumps, availableEngines, availableMa
                    name="price"
                    onChange={(e) => handleChangePumpFields(e, index)}
             />
+            </div>
             <div className={styles.engine}>
                 <h2 className={styles.formSubtitle}>Двигатель {index + 1}</h2>
                 <input className={styles.radioGroup}
@@ -454,8 +568,9 @@ const PumpEngineFields = ({ index, availablePumps, availableEngines, availableMa
                     ))}
                 </datalist>
                 <h3 className={styles.formSubtitle}>Тип насоса</h3>
-                <select value={installationData.engines[index]?.pumpType || ''} name="pumpType"
+                <select style={{ fontSize: "14px", marginTop: "9px", height: "25px", width: "90%"}} value={installationData.engines[index]?.pumpType || ''} name="pumpType"
                         onChange={(e) => handleChangeEngineFields(e, index)}>
+
                     <option value="">Выберите тип насоса</option>
                     <option value="VERTICAL_MULTISTAGE">Вертикальный мульти</option>
                     <option value="IN_LINE">Инлайн</option>
@@ -540,10 +655,10 @@ const PumpEngineFields = ({ index, availablePumps, availableEngines, availableMa
                        name="price"
                        onChange={(e) => handleChangeEngineFields(e, index)}
                 />
-                <h3 className={styles.formSubtitle}>Конфигурация материалов {index + 1}</h3>
+                <h3 className={styles.formSubtitle}>Материалы {index + 1}</h3>
 
                 <select
-                    className={styles.radioGroup}
+                    style={{ fontSize: "14px", marginTop: "9px", height: "25px", width: "90%"}}
                     value={installationData.material[index] || ''}
                     onChange={(e) => handleChangeMaterial(index, e.target.value)}
                 >
@@ -552,7 +667,6 @@ const PumpEngineFields = ({ index, availablePumps, availableEngines, availableMa
                         <option key={idx} value={material}>{material}</option>
                     ))}
                 </select>
-
             </div>
         </div>
     </div>
