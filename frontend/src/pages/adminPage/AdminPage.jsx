@@ -14,6 +14,7 @@ import {server_url} from "../../config";
 import {useNavigate} from "react-router-dom";
 import { useEffect } from "react";
 import { Grid, Collapse,Box } from '@mui/material';
+import EngineData from './EngineData';
 
 
 export const AdminPage = () => {
@@ -98,10 +99,18 @@ export const AdminPage = () => {
     const [points,setPoints]=useState([]);
     const token = useSelector((state) => state.user.token);
 
-    const [isContentVisible, setContentVisible] = useState(false);
+    const [visibleInst, setVisibleInst] = useState(false);
+    const [visiblePump, setVisiblePump] = useState(false);
+    const [visibleEngine, setVisibleEngine] = useState(false);
 
-    const toggleExpand = () => {
-        setContentVisible(!isContentVisible);
+    const toggleExpandInst = () => {
+        setVisibleInst(!visibleInst);
+    };
+    const toggleExpandPump = () => {
+        setVisiblePump(!visiblePump);
+    };
+    const toggleExpandEngine = () => {
+        setVisibleEngine(!visibleEngine);
     };
 
     useEffect(() => {
@@ -127,8 +136,105 @@ export const AdminPage = () => {
                 pumps: newPumps
             };
         });
-        console.log("qwewq", installationData.engines)
     }, [installationData.subtype]);
+
+    const handleClickAddPump = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append("pump", new Blob([JSON.stringify(installationData.pumps[0])], { type: "application/json" }));
+        formData.append("engine", new Blob([JSON.stringify(installationData.engines[0])], { type: "application/json" }));
+        formData.append("engineId", new Blob([JSON.stringify(installationData.engineIds[0])], { type: "application/json" }));
+        files.forEach(file => {
+            formData.append('files', file);
+        });
+
+        formData.append("points", new Blob([JSON.stringify(points)], { type: "application/json" }));
+        try {
+            const response = await fetch(`${server_url}/api/simple/admin/save/pump`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                method: "POST",
+                body: formData,
+            });
+            console.log(response.json())
+            if (response.ok) {
+                alert("Данные успешно сохранены!");
+                window.location.reload()
+            } else {
+                if (!response) {
+                    dispatch({ type: 'remove_user' });
+                    console.log('Нет ответа от сервера, токен удалён');
+                    return null;
+                }
+
+                // Проверяем, если статус 401 или 403 (неавторизован или нет прав)
+                if (response.status === 401 || response.status === 403) {
+                    dispatch({ type: 'remove_user' }); // Удаляем пользователя из стора
+
+                    if (response.status === 401) {
+                        console.log('Испорченный токен');
+                    } else {
+                        console.log('Нет прав для выполнения операции');
+                    }
+
+                    return null; // Завершаем выполнение
+                }
+                const data = await response.json();
+                alert(`Ошибка: ${data.message}`);
+            }
+
+        } catch (error) {
+            console.error(error);
+            alert("Произошла ошибка при отправке данных.");
+        }
+    }
+
+    const handleClickAddEngine = async (e) => {
+        e.preventDefault();
+
+
+        try {
+            const response = await fetch(`${server_url}/api/simple/admin/save/engine`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                method: "POST",
+                body: JSON.stringify(installationData.engines[0])
+            });
+            if (response.ok) {
+                alert("Данные успешно сохранены!");
+                window.location.reload()
+            } else {
+                if (!response) {
+                    dispatch({ type: 'remove_user' });
+                    console.log('Нет ответа от сервера, токен удалён');
+                    return null;
+                }
+
+                // Проверяем, если статус 401 или 403 (неавторизован или нет прав)
+                if (response.status === 401 || response.status === 403) {
+                    dispatch({ type: 'remove_user' }); // Удаляем пользователя из стора
+
+                    if (response.status === 401) {
+                        console.log('Испорченный токен');
+                    } else {
+                        console.log('Нет прав для выполнения операции');
+                    }
+
+                    return null; // Завершаем выполнение
+                }
+                const data = await response.json();
+                alert(`Ошибка: ${data.message}`);
+            }
+
+        } catch (error) {
+            console.error(error);
+            alert("Произошла ошибка при отправке данных.");
+        }
+    }
 
     const handleInstallationTypeChange = (event) => {
         const value = event.target.value;
@@ -259,11 +365,23 @@ export const AdminPage = () => {
 
                 <div className={styles.rectangle}>
 
-                    <button className={styles.buttonMain} onClick={toggleExpand}>
+                    <button className={styles.buttonMain} onClick={toggleExpandInst}>
+                        <div className={styles.textButton}>
+                            Добавить Установку
+                        </div>
                         <br/>
-                        Добавить
+                    </button>
+                    <button className={styles.buttonMain} onClick={toggleExpandPump}>
+                        <br/>
+                        Добавить Насос
                         <br/>
                         <br/>
+                    </button>
+                    <button className={styles.buttonMain} onClick={toggleExpandEngine}>
+                        <div className={styles.textButton}>
+                            Добавить Движок
+                        </div>
+                            <br/>
                     </button>
                     <button
                         className={styles.buttonMain}
@@ -271,12 +389,13 @@ export const AdminPage = () => {
                     >
                         Перейти к выбору установки
                     </button>
-                    <button className={styles.buttonMain} onClick={handleClick}>Отправить на почту пользователей</button>
+                    <button className={styles.buttonMain} onClick={handleClick}>Отправить на почту пользователей
+                    </button>
 
 
-                    <Collapse in={isContentVisible}>
+                    <Collapse  in={visibleInst}>
 
-                        <div className={styles.contentContainer}>
+                        <div style={{marginTop: "10%"}}className={styles.contentContainer}>
                             <div className={styles.selectWrapper}>
 
                                 <h2 className={styles.formSubtitle}>Тип установки</h2>
@@ -475,7 +594,8 @@ export const AdminPage = () => {
                             <div><HozPitPns installationData={installationData}
                                             setInstallationData={setInstallationData}/>
                             </div>)}
-                        <div><PumpData installationData={installationData} setInstallationData={setInstallationData}/>
+                        <div><PumpData installationData={installationData} setInstallationData={setInstallationData}
+                                       isPump={false}/>
                         </div>
                         <div className={styles.selectWrapper}>
                             <h3>Добавить до трех фото:</h3>
@@ -511,7 +631,7 @@ export const AdminPage = () => {
                             )}
                         </div>
                         <div><PointsData points={points} setPoints={setPoints}/></div>
-                        <button
+                        <button style={{transform: "translateX(7%)"}}
                             className={styles.button}
                             type="button"
                             onClick={handleSubmit}
@@ -521,7 +641,88 @@ export const AdminPage = () => {
                         </button>
 
                     </Collapse>
+                    <Collapse in={visiblePump}>
 
+                        <div style={{marginTop: "10%"}}><PumpData installationData={installationData}
+                                                                  setInstallationData={setInstallationData}
+                                                                  isPump={true}/></div>
+                        <div className={styles.selectWrapper}>
+                            <h3>Добавить до трех фото:</h3>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                style={{display: 'none'}}
+                                id="fileInput"
+                                onChange={handleFileChange}
+                            />
+                            <button className={styles.button} type="button"
+                                    onClick={() => document.getElementById('fileInput').click()}>
+                                Выбрать фото
+                            </button>
+                            {files.length > 0 && (
+                                <div>
+                                    <h3>Предпросмотр фото:</h3>
+                                    {files.map((file, index) => (
+                                        <div key={index} style={{marginBottom: '10px'}}>
+                                            <img
+                                                src={URL.createObjectURL(file)}
+                                                alt="Preview"
+                                                width="25%"
+                                                style={{marginRight: '10px'}}
+                                            />
+                                            <button className={styles.button} type="button"
+                                                    onClick={() => handleRemoveFile(index)}>Удалить фото
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                        <div><PointsData points={points} setPoints={setPoints}/></div>
+                        <button style={{transform: "translateX(7%)"}}
+                            className={styles.button}
+                            type="button"
+                            onClick={handleClickAddPump}
+                            disabled={!isFormValid()}
+                        >
+                            Сохранить
+                        </button>
+                    </Collapse>
+
+                    <Collapse  in={visibleEngine}>
+                        <div className={styles.selectWrapper}>
+                            <div style={{marginTop: "10%"}} className={styles.pumpContainer}>
+                                {/* Левый насос */}
+                                <div className={`${styles.pumpSection} ${styles.pumpLeft}`}>
+                                    <div className={styles.horizontalGroup}>
+                                        <div style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            height: "100%",
+                                            transform: "translateX(-95px)"
+                                        }} className={styles.formContent}>
+                                            <div><EngineData index={0}
+                                                             installationData={installationData}
+                                                             isPump={true}
+                                                             setInstallationData={setInstallationData}
+
+                                            /></div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button style={{transform: "translateX(7%)"}}
+                            className={styles.button}
+                            type="button"
+                            onClick={handleClickAddEngine}
+                        >
+                            Сохранить
+                        </button>
+                    </Collapse>
                 </div>
 
             </div>

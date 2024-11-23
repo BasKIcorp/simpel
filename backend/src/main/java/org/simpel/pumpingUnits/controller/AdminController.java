@@ -25,7 +25,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -204,7 +206,9 @@ public class AdminController {
     public ResponseEntity<?> saveEngine(@RequestBody Engine engine) throws IOException {
         try {
             engineService.save(engine);
-            return ResponseEntity.ok().body("Успешно");
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Успешно");
+            return ResponseEntity.ok(response);
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
