@@ -25,7 +25,8 @@ public abstract class ParentInstallations {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     @ElementCollection
-    @CollectionTable(name = "installation_photos", joinColumns = @JoinColumn(name = "installation_id"))
+    @CollectionTable(name = "installation_photos",
+            joinColumns = @JoinColumn(name = "installation_id"))
     @Column(name = "file_name")
     private List<String> drawingsPath = new ArrayList<>();
     @Enumerated(EnumType.STRING)
@@ -41,17 +42,15 @@ public abstract class ParentInstallations {
     @Enumerated(EnumType.STRING)
     private Diameter diameter;
     protected String name;
-    private Float price;
+    private int price;
 
-    public Float getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(Float price) {
+    public void setPrice(int price) {
         this.price = price;
     }
-
-
 
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -68,6 +67,7 @@ public abstract class ParentInstallations {
     public void setPumps(List<Pump> pumps) {
         this.pumps = pumps;
     }
+
     //full info
     public void setCommonFields(InstallationRequest request) {
         this.setTypeInstallations(TypeInstallations.valueOf(request.getTypeInstallations()));
@@ -78,9 +78,9 @@ public abstract class ParentInstallations {
 
     public abstract void setSpecificFields(InstallationRequest request);
 
-    public void setFieldsForSave(InstallationSaveRequest request, MultipartFile[] files,  FileStorageService fileStorageService) throws IOException {
-        this.setPrice(request.getPrice() + pumps.get(0).getPrice() +( pumps.get(1) != null ? pumps.get(1).getPrice(): 0));
-        List<String> pathFiles = fileStorageService.saveFiles(files,request.getTypeInstallations(), request.getSubtype());
+    public void setFieldsForSave(InstallationSaveRequest request, MultipartFile[] files, FileStorageService fileStorageService) throws IOException {
+        this.setPrice(request.getPrice() + pumps.get(0).getPrice() + (pumps.get(1) != null ? pumps.get(1).getPrice() : 0));
+        List<String> pathFiles = fileStorageService.saveFiles(files, request.getTypeInstallations(), request.getSubtype());
         this.setDrawingsPath(pathFiles);
         this.setControlType(ControlType.valueOf(request.getControlType()));
         this.setPowerType(PowerType.valueOf(request.getPowerType()));
@@ -175,32 +175,23 @@ public abstract class ParentInstallations {
     public void setFlowRate(float flowRate) {
         if (flowRate >= 0 && flowRate < 16) {
             this.diameter = Diameter.DN50;
-        }
-        else if (flowRate >= 16 && flowRate < 27) {
+        } else if (flowRate >= 16 && flowRate < 27) {
             this.diameter = Diameter.DN65;
-        }
-        else if (flowRate >= 27 && flowRate < 38) {
+        } else if (flowRate >= 27 && flowRate < 38) {
             this.diameter = Diameter.DN80;
-        }
-        else if (flowRate >= 38 && flowRate < 64) {
+        } else if (flowRate >= 38 && flowRate < 64) {
             this.diameter = Diameter.DN100;
-        }
-        else if (flowRate >= 64 && flowRate < 98) {
+        } else if (flowRate >= 64 && flowRate < 98) {
             this.diameter = Diameter.DN125;
-        }
-        else if (flowRate >= 98 && flowRate < 143) {
+        } else if (flowRate >= 98 && flowRate < 143) {
             this.diameter = Diameter.DN150;
-        }
-        else if (flowRate >= 143 && flowRate < 243) {
+        } else if (flowRate >= 143 && flowRate < 243) {
             this.diameter = Diameter.DN200;
-        }
-        else if (flowRate >= 243 && flowRate < 383) {
+        } else if (flowRate >= 243 && flowRate < 383) {
             this.diameter = Diameter.DN250;
-        }
-        else if (flowRate >= 383 && flowRate < 542) {
+        } else if (flowRate >= 383 && flowRate < 542) {
             this.diameter = Diameter.DN300;
-        }
-        else if (flowRate >= 542 && flowRate < 652) {
+        } else if (flowRate >= 542 && flowRate < 652) {
             this.diameter = Diameter.DN350;
         }
         this.flowRate = flowRate;
@@ -213,8 +204,10 @@ public abstract class ParentInstallations {
     public void setPressure(float pressure) {
         this.pressure = pressure;
     }
+
     public Diameter getDiameter() {
         return diameter;
     }
+
     public abstract int getTemperature();
 }

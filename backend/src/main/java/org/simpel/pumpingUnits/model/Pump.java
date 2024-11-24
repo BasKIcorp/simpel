@@ -1,10 +1,10 @@
 package org.simpel.pumpingUnits.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.simpel.pumpingUnits.model.enums.Diameter;
+import org.simpel.pumpingUnits.model.enums.PhotoType;
 import org.simpel.pumpingUnits.model.enums.subtypes.PumpType;
 import org.simpel.pumpingUnits.model.installation.*;
 
@@ -22,6 +22,43 @@ public class Pump {
     private Long id;
     @Column(unique = true)
     private String name;
+    /*
+     * наличие
+     *Гидравлический выбор
+     * температура воды
+     *температура окружающей среды макс
+     *температура окружающей среды мин
+     * максимальное рабочее давление бар
+     * стандарт подключение (connection standard);
+     * масса (weight)
+     *
+     * список изображений конструкций
+     * список изображения размеров
+     * фото
+     * */
+
+    // новые поля для второго сайта
+    private boolean availability;
+    private String hydraulicSelection;
+    private int liquidTemperature;
+    private int ambientTemperatureMax;
+    private int ambientTemperatureMin;
+    private int maximumWorkingPressureBar;
+    private String connectionStandard;
+    private int weight;
+
+    // поле и вложенный класс для изображений
+    @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Photo> photos = new ArrayList<>();
+
+    public List<Photo> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<Photo> photos) {
+        this.photos = photos;
+    }
+
     private PumpType type;
     private String manufacturer;
     private int speed;
@@ -34,8 +71,9 @@ public class Pump {
     // заполняется автоматически в зависимотсти от расхода
     private Diameter diameter;
     private String article;
-    private float price;
-    /*private float power;*/
+    private int price;
+    private float power;
+
     private int efficiency;
     private float npsh;
     private float dm_in;
@@ -52,7 +90,7 @@ public class Pump {
     private Engine engine;
     @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<PointPressure> pointsPressure ;
+    private List<PointPressure> pointsPressure;
 
     @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
@@ -65,6 +103,94 @@ public class Pump {
     @ManyToMany(mappedBy = "pumps", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonBackReference
     private List<ParentInstallations> installations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "pumpName", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Detail> details = new ArrayList<>();
+
+    @ElementCollection
+    @CollectionTable(name = "pump_links", joinColumns = @JoinColumn(name = "pump_id"))
+    @Column(name = "link")
+    private List<String> links = new ArrayList<>();
+
+    public boolean isAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(boolean availability) {
+        this.availability = availability;
+    }
+
+    public String getHydraulicSelection() {
+        return hydraulicSelection;
+    }
+
+    public void setHydraulicSelection(String hydraulicSelection) {
+        this.hydraulicSelection = hydraulicSelection;
+    }
+
+    public int getLiquidTemperature() {
+        return liquidTemperature;
+    }
+
+    public void setLiquidTemperature(int liquidTemperature) {
+        this.liquidTemperature = liquidTemperature;
+    }
+
+    public int getAmbientTemperatureMax() {
+        return ambientTemperatureMax;
+    }
+
+    public void setAmbientTemperatureMax(int ambientTemperatureMax) {
+        this.ambientTemperatureMax = ambientTemperatureMax;
+    }
+
+    public int getAmbientTemperatureMin() {
+        return ambientTemperatureMin;
+    }
+
+    public void setAmbientTemperatureMin(int ambientTemperatureMin) {
+        this.ambientTemperatureMin = ambientTemperatureMin;
+    }
+
+    public int getMaximumWorkingPressureBar() {
+        return maximumWorkingPressureBar;
+    }
+
+    public void setMaximumWorkingPressureBar(int maximumWorkingPressureBar) {
+        this.maximumWorkingPressureBar = maximumWorkingPressureBar;
+    }
+
+    public String getConnectionStandard() {
+        return connectionStandard;
+    }
+
+    public void setConnectionStandard(String connectionStandard) {
+        this.connectionStandard = connectionStandard;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    public List<String> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<String> links) {
+        this.links = links;
+    }
+
+    public void setDetails(List<Detail> details) {
+        this.details = details;
+    }
+
+    public List<Detail> getDetails() {
+        return details;
+    }
 
     public List<ParentInstallations> getInstallations() {
         return installations;
@@ -95,7 +221,7 @@ public class Pump {
         this.pointsNPSH = pointsNPSH;
     }
 
-    public void setFieldsForPumpSave(Pump pump,Engine engine, List<PointPressure> pointsPressure, List<PointPower> pointPower, List<PointNPSH> pointNPSH) {
+    public void setFieldsForPumpSave(Pump pump, Engine engine, List<PointPressure> pointsPressure, List<PointPower> pointPower, List<PointNPSH> pointNPSH) {
         this.setName(pump.getName());
         this.setSpeed(pump.getSpeed());
         this.setNumberOfSteps(pump.getNumberOfSteps());
@@ -142,6 +268,20 @@ public class Pump {
         this.setEngine(engine);
         this.setType(engine.getPumpType());
         this.setPrice(pump.getPrice() + engine.getPrice());
+
+
+        this.setLinks(pump.getLinks());
+        this.setDetails(pump.getDetails());
+        this.setPower(pump.getPower());
+
+    }
+
+    public float getPower() {
+        return power;
+    }
+
+    public void setPower(float power) {
+        this.power = power;
     }
 
     public Engine getEngine() {
@@ -158,7 +298,7 @@ public class Pump {
 
     public void setMaterial(Optional<Material> material) {
 
-        this.material =  material.get();
+        this.material = material.get();
     }
 
     public String getDescription() {
@@ -209,11 +349,11 @@ public class Pump {
         this.efficiency = efficiency;
     }
 
-    public float getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
@@ -248,32 +388,23 @@ public class Pump {
     public void setMaximumPressure(int maximumPressure) {
         if (maximumPressure >= 0 && maximumPressure < 16) {
             this.diameter = Diameter.DN50;
-        }
-        else if (maximumPressure >= 16 && maximumPressure < 27) {
+        } else if (maximumPressure >= 16 && maximumPressure < 27) {
             this.diameter = Diameter.DN65;
-        }
-        else if (maximumPressure >= 27 && maximumPressure < 38) {
+        } else if (maximumPressure >= 27 && maximumPressure < 38) {
             this.diameter = Diameter.DN80;
-        }
-        else if (maximumPressure >= 38 && maximumPressure < 64) {
+        } else if (maximumPressure >= 38 && maximumPressure < 64) {
             this.diameter = Diameter.DN100;
-        }
-        else if (maximumPressure >= 64 && maximumPressure < 98) {
+        } else if (maximumPressure >= 64 && maximumPressure < 98) {
             this.diameter = Diameter.DN125;
-        }
-        else if (maximumPressure >= 98 && maximumPressure < 143) {
+        } else if (maximumPressure >= 98 && maximumPressure < 143) {
             this.diameter = Diameter.DN150;
-        }
-        else if (maximumPressure >= 143 && maximumPressure < 243) {
+        } else if (maximumPressure >= 143 && maximumPressure < 243) {
             this.diameter = Diameter.DN200;
-        }
-        else if (maximumPressure >= 243 && maximumPressure < 383) {
+        } else if (maximumPressure >= 243 && maximumPressure < 383) {
             this.diameter = Diameter.DN250;
-        }
-        else if (maximumPressure >= 383 && maximumPressure < 542) {
+        } else if (maximumPressure >= 383 && maximumPressure < 542) {
             this.diameter = Diameter.DN300;
-        }
-        else if (maximumPressure >= 542 && maximumPressure < 652) {
+        } else if (maximumPressure >= 542 && maximumPressure < 652) {
             this.diameter = Diameter.DN350;
         }
         this.maximumPressure = maximumPressure;
@@ -318,6 +449,7 @@ public class Pump {
     public void setName(String name) {
         this.name = name;
     }
+
     public Long getId() {
         return id;
     }

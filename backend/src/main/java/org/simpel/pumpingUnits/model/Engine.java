@@ -1,12 +1,11 @@
 package org.simpel.pumpingUnits.model;
 
 import jakarta.persistence.*;
-import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationRequest;
-import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
 import org.simpel.pumpingUnits.model.enums.subtypes.PumpType;
 
 @Entity
 public class Engine {
+    /* номинальный ток (rated current) */
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -22,13 +21,14 @@ public class Engine {
     private String typeOfProtection;
     private String insulationClass;
     private String color;
-    private Float price;
+    private Integer price;
 
-    public Float getPrice() {
+
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(Float price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 

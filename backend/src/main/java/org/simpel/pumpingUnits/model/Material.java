@@ -19,6 +19,10 @@ public class Material {
     private String pumpHousing;
     private String externalCasing;
 
+    private boolean StainlessSteel;//Нержавеющая сталь или раб колесо хз
+    private String DischargeSideConnection;//Патрубок на напорной стороне
+    private String SuctionSideConnection; //Патрубок на стороне всасывания
+
     public String getName() {
         return name;
     }
