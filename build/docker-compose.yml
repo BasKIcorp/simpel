@@ -29,8 +29,8 @@ services:
     ports:
       - "8081:8081"
     volumes:
-      - ../simpel/firstTrySqliteBase.bd:/firstTrySqliteBase.bd # Общий файл базы данных
-      - ../simpel/uploads:/uploads
+      - ../firstTrySqliteBase.bd:/firstTrySqliteBase.bd # Общий файл базы данных
+      - ../uploads:/uploads
     networks:
       - app-network
 
