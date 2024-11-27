@@ -43,7 +43,7 @@ services:
     depends_on:
       - frontend
       - backend
-      - backendPump
+      - backend_pump
     networks:
       - app-network
 
