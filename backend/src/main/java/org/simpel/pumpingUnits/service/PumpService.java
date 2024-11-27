@@ -11,6 +11,7 @@ import org.simpel.pumpingUnits.repository.PumpRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class PumpService {
     }
 
 
-    public void save(Pump request, Engine engine, MultipartFile[] files, InstallationPointRequest[] requestPoints) {
+    public void save(Pump request, Engine engine, MultipartFile[] photoDesign, MultipartFile[] photoDimensions, MultipartFile photo, InstallationPointRequest[] requestPoints) throws IOException {
         List<PointPressure> pointsPressure = getPointPressure(requestPoints);
         List<PointPower> pointPower = getPointPower(requestPoints);
         List<PointNPSH> pointNPSH = getPointNPSH(requestPoints);
@@ -31,10 +32,10 @@ public class PumpService {
             Pump pump = pumpRepo.findByName(request.getName()).orElse(null);
             if (pump == null) {
                 Pump newPump = new Pump();
-                newPump.setFieldsForPumpSave(request, engine, pointsPressure, pointPower, pointNPSH);
+                newPump.setFieldsSolo(request, engine, pointsPressure, pointPower, pointNPSH, photoDesign, photoDimensions, photo);
                 pumpRepo.save(newPump);
             } else {
-                pump.setFieldsForPumpSave(request, engine, pointsPressure, pointPower, pointNPSH);
+                pump.setFieldsSolo(request, engine, pointsPressure, pointPower, pointNPSH, photoDesign, photoDimensions, photo);
                 pumpRepo.save(pump);
             }
         } else {

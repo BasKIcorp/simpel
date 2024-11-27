@@ -224,16 +224,19 @@ public class AdminController {
     @PostMapping("/save/pump")
     public ResponseEntity<?> savePump(@RequestPart("pump") Pump pump,
                                       @RequestPart("engine") Engine engine,
-                                      @RequestPart("files") MultipartFile[] files,
                                       @RequestPart("points") InstallationPointRequest[] pointRequests,
-                                      @RequestPart("engineId") Long engineId) throws IOException {
+                                      @RequestPart("engineId") Long engineId,
+                                      @RequestPart("photoDesign") MultipartFile[] photoDesign,
+                                      @RequestPart("photoDimensions") MultipartFile[] photoDimensions,
+                                      @RequestPart("photo") MultipartFile photo
+    ) throws IOException {
         try {
             if (engine == null) {
-                pumpService.save(pump, engine, files, pointRequests);
+                pumpService.save(pump, engine, photoDesign, photoDimensions, photo, pointRequests);
                 return ResponseEntity.ok("Success");
             } else {
                 engine = engineRepo.findById(engineId).orElse(null);
-                pumpService.save(pump, engine, files, pointRequests);
+                pumpService.save(pump, engine, photoDesign, photoDimensions, photo, pointRequests);
                 return ResponseEntity.ok("Success");
             }
         } catch (IllegalArgumentException e) {

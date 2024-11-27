@@ -7,16 +7,19 @@ import org.simpel.pumpingUnits.model.enums.Diameter;
 import org.simpel.pumpingUnits.model.enums.PhotoType;
 import org.simpel.pumpingUnits.model.enums.subtypes.PumpType;
 import org.simpel.pumpingUnits.model.installation.*;
+import org.simpel.pumpingUnits.service.FileStorageService;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Entity
 public class Pump {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -24,6 +27,7 @@ public class Pump {
     private String name;
     /*
      * наличие
+     * Серия
      *Гидравлический выбор
      * температура воды
      *температура окружающей среды макс
@@ -37,7 +41,10 @@ public class Pump {
      * фото
      * */
 
+
     // новые поля для второго сайта
+    @ManyToOne
+    private Series series;
     private boolean availability;
     private String hydraulicSelection;
     private int liquidTemperature;
@@ -221,7 +228,11 @@ public class Pump {
         this.pointsNPSH = pointsNPSH;
     }
 
-    public void setFieldsForPumpSave(Pump pump, Engine engine, List<PointPressure> pointsPressure, List<PointPower> pointPower, List<PointNPSH> pointNPSH) {
+    public void setFieldsForPumpSave(Pump pump,
+                                     Engine engine,
+                                     List<PointPressure> pointsPressure,
+                                     List<PointPower> pointPower,
+                                     List<PointNPSH> pointNPSH) {
         this.setName(pump.getName());
         this.setSpeed(pump.getSpeed());
         this.setNumberOfSteps(pump.getNumberOfSteps());
@@ -269,11 +280,80 @@ public class Pump {
         this.setType(engine.getPumpType());
         this.setPrice(pump.getPrice() + engine.getPrice());
 
+    }
+
+    public void setFieldsSolo(Pump pump,
+                              Engine engine,
+                              List<PointPressure> pointsPressure,
+                              List<PointPower> pointPower,
+                              List<PointNPSH> pointNPSH,
+                              MultipartFile[] photoDesign,
+                              MultipartFile[] photoDimensions,
+                              MultipartFile photo) throws IOException {
+        this.setName(pump.getName());
+        this.setSpeed(pump.getSpeed());
+        this.setNumberOfSteps(pump.getNumberOfSteps());
+        this.setManufacturer(pump.getManufacturer());
+        //наверное нужно отдельно прописать поле для насосов, но пока хз
+        this.setMaximumPressure(pump.getMaximumPressure());
+        this.setMaximumHead(pump.getMaximumHead());
+
+        this.setArticle(pump.getArticle());
+        this.setEfficiency(pump.getEfficiency());
+        this.setNpsh(pump.getNpsh());
+        this.setDm_in(pump.getDm_in());
+        this.setDm_out(pump.getDm_out());
+        this.setInstallationLength(pump.getInstallationLength());
+        this.setDescription(pump.getDescription());
+
+        Stream<Point> combinedStream = Stream.concat(
+                Stream.concat(pointsPressure.stream(), pointPower.stream()),
+                pointNPSH.stream()
+        );
+        combinedStream.forEach(point -> {
+            point.setPump(this);
+        });
+        this.setPointsPressure(pointsPressure);
+        this.setPointsPower(pointPower);
+        this.setPointsNPSH(pointNPSH);
+        this.setEngine(engine);
+        this.setType(engine.getPumpType());
+        this.setPrice(pump.getPrice() + engine.getPrice());
 
         this.setLinks(pump.getLinks());
         this.setDetails(pump.getDetails());
         this.setPower(pump.getPower());
-
+        FileStorageService fileStorageService = new FileStorageService();
+        Arrays.stream(photoDesign)
+                .forEach(originalPhoto -> {
+                    Photo newPhoto = new Photo();
+                    newPhoto.setPhotoType(PhotoType.DESIGN);  // Устанавливаем тип фото
+                    try {
+                        // Сохраняем файл и устанавливаем имя файла
+                        newPhoto.setFileName(fileStorageService.saveFile(originalPhoto, newPhoto.getPhotoType()));
+                    } catch (IOException e) {
+                        // Логируем ошибку или делаем обработку
+                        throw new RuntimeException("Ошибка при сохранении файла", e);
+                    }
+                    this.getPhotos().add(newPhoto); // Добавляем в коллекцию
+                });
+        Arrays.stream(photoDimensions)
+                .forEach(originalPhoto -> {
+                    Photo newPhoto = new Photo();
+                    newPhoto.setPhotoType(PhotoType.DIMENSIONS);  // Устанавливаем тип фото
+                    try {
+                        // Сохраняем файл и устанавливаем имя файла
+                        newPhoto.setFileName(fileStorageService.saveFile(originalPhoto, newPhoto.getPhotoType()));
+                    } catch (IOException e) {
+                        // Логируем ошибку или делаем обработку
+                        throw new RuntimeException("Ошибка при сохранении файла", e);
+                    }
+                    this.getPhotos().add(newPhoto); // Добавляем в коллекцию
+                });
+        Photo photoL = new Photo();
+        photoL.setPhotoType(PhotoType.PHOTO);
+        photoL.setFileName(fileStorageService.saveFile(photo, PhotoType.PHOTO));
+        this.getPhotos().add(photoL);
     }
 
     public float getPower() {
@@ -456,5 +536,13 @@ public class Pump {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Series getSeries() {
+        return series;
+    }
+
+    public void setSeries(Series series) {
+        this.series = series;
     }
 }

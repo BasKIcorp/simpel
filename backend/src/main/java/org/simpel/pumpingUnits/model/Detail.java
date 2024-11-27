@@ -1,7 +1,8 @@
 package org.simpel.pumpingUnits.model;
 
 import jakarta.persistence.*;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.Id;
+
 
 @Entity
 public class Detail {
