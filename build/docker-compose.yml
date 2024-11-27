@@ -21,6 +21,8 @@ services:
       - ../uploads:/uploads
     networks:
       - app-network
+    expose:
+      - 8080
 
   backend_pump:
     build:
@@ -28,6 +30,8 @@ services:
       dockerfile: ../simpel/build/pump.dockerfile
     ports:
       - "8081:8081"
+    expose:
+      - 8081
     volumes:
       - ../firstTrySqliteBase.bd:/firstTrySqliteBase.bd # Общий файл базы данных
       - ../uploads:/uploads
