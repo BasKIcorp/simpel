@@ -22,7 +22,7 @@ services:
     networks:
       - app-network
 
-  backendPump:
+  backend_pump:
     build:
       context: ../../pumps
       dockerfile: ../simpel/build/pump.dockerfile
