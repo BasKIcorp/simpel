@@ -228,15 +228,16 @@ public class AdminController {
                                       @RequestPart("engineId") Long engineId,
                                       @RequestPart("photoDesign") MultipartFile[] photoDesign,
                                       @RequestPart("photoDimensions") MultipartFile[] photoDimensions,
-                                      @RequestPart("photo") MultipartFile photo
+                                      @RequestPart("photo") MultipartFile photo,
+                                      @RequestPart("material") String material
     ) throws IOException {
         try {
             if (engine == null) {
-                pumpService.save(pump, engine, photoDesign, photoDimensions, photo, pointRequests);
+                pumpService.save(pump, engine, photoDesign, photoDimensions, photo, pointRequests,material);
                 return ResponseEntity.ok("Success");
             } else {
                 engine = engineRepo.findById(engineId).orElse(null);
-                pumpService.save(pump, engine, photoDesign, photoDimensions, photo, pointRequests);
+                pumpService.save(pump, engine, photoDesign, photoDimensions, photo, pointRequests,material);
                 return ResponseEntity.ok("Success");
             }
         } catch (IllegalArgumentException e) {

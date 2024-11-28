@@ -3,6 +3,7 @@ package org.simpel.pumpingUnits.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.simpel.pumpingUnits.controller.pumpRequest.PumpRequest;
 import org.simpel.pumpingUnits.model.enums.Diameter;
 import org.simpel.pumpingUnits.model.enums.PhotoType;
 import org.simpel.pumpingUnits.model.enums.subtypes.PumpType;
@@ -11,6 +12,7 @@ import org.simpel.pumpingUnits.service.FileStorageService;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -289,7 +291,8 @@ public class Pump {
                               List<PointNPSH> pointNPSH,
                               MultipartFile[] photoDesign,
                               MultipartFile[] photoDimensions,
-                              MultipartFile photo) throws IOException {
+                              MultipartFile photo,Material material, Series series) throws IOException {
+
         this.setName(pump.getName());
         this.setSpeed(pump.getSpeed());
         this.setNumberOfSteps(pump.getNumberOfSteps());
@@ -354,6 +357,8 @@ public class Pump {
         photoL.setPhotoType(PhotoType.PHOTO);
         photoL.setFileName(fileStorageService.saveFile(photo, PhotoType.PHOTO));
         this.getPhotos().add(photoL);
+        this.setMaterial(Optional.ofNullable(material));
+        this.setSeries(series);
     }
 
     public float getPower() {
