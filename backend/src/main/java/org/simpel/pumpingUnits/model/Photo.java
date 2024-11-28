@@ -1,5 +1,6 @@
 package org.simpel.pumpingUnits.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import org.simpel.pumpingUnits.model.enums.PhotoType;
 
@@ -19,6 +20,7 @@ public class Photo {
 
     @ManyToOne
     @JoinColumn(name = "pump_id")
+    @JsonBackReference
     private Pump pump; // Связь с Pump
 
     // Геттеры и сеттеры
