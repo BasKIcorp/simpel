@@ -5,9 +5,15 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.mail.MessagingException;
-import org.simpel.pumpingUnits.controller.installationsUtilsModel.*;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
+import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationPointRequest;
+import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationSaveRequest;
+import org.simpel.pumpingUnits.controller.installationsUtilsModel.ListEngine;
+import org.simpel.pumpingUnits.controller.installationsUtilsModel.ListPumps;
 import org.simpel.pumpingUnits.controller.pumpRequest.PumpRequest;
 import org.simpel.pumpingUnits.model.Engine;
+import org.simpel.pumpingUnits.model.Material;
 import org.simpel.pumpingUnits.model.Pump;
 import org.simpel.pumpingUnits.model.enums.TypeInstallations;
 import org.simpel.pumpingUnits.model.installation.ParentInstallations;
@@ -249,5 +255,22 @@ public class AdminController {
         } catch (JwtException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Ошибка авторизации");
         }
+    }
+
+    @PostMapping("save/material")
+    public ResponseEntity<?> saveMaterial(@Valid @RequestBody Material material) {
+        try{
+            pumpService.saveNewMaterial(material);
+            return ResponseEntity.ok("Success");
+        }catch (ConstraintViolationException e){
+            return ResponseEntity.badRequest().body(e.getMessage() != "" ? e.getMessage() : "Some data is missing, fill out the form completely and submit again");
+        }
+        catch (NullPointerException e){
+            return ResponseEntity.badRequest().body(e.getMessage() != "" ? e.getMessage() : "Some data is missing, fill out the form completely and submit again");
+        }
+        catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 }

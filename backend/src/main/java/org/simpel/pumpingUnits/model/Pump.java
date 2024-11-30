@@ -3,6 +3,7 @@
     import com.fasterxml.jackson.annotation.JsonBackReference;
     import com.fasterxml.jackson.annotation.JsonManagedReference;
     import jakarta.persistence.*;
+    import jakarta.transaction.Transactional;
     import org.simpel.pumpingUnits.controller.pumpRequest.PumpRequest;
     import org.simpel.pumpingUnits.model.enums.Diameter;
     import org.simpel.pumpingUnits.model.enums.PhotoType;
@@ -270,7 +271,7 @@
             this.setPrice(pump.getPrice() + engine.getPrice());
     
         }
-    
+        @Transactional
         public void setFieldsSolo(Pump pump,
                                   Engine engine,
                                   List<PointPressure> pointsPressure,

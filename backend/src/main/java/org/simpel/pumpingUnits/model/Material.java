@@ -2,25 +2,39 @@ package org.simpel.pumpingUnits.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
+import java.lang.reflect.Field;
 
 
 @Entity
 public class Material {
     @Id
     private String name;
+    @NotNull
     private String collector;
+    @NotNull
     private String shutOffValves;
+    @NotNull
     private String checkValves;
+    @NotNull
     private String pressureSwitch;
+    @NotNull
     private String pressureSensors;
+    @NotNull
     private String plugsOrFlanges;
+    @NotNull
     private String rack;
+    @NotNull
     private String frameBase;
+    @NotNull
     private String pumpHousing;
+    @NotNull
     private String externalCasing;
-
+    @NotNull
     private boolean StainlessSteel;//Нержавеющая сталь или раб колесо хз
+    @NotNull
     private String DischargeSideConnection;//Патрубок на напорной стороне
+    @NotNull
     private String SuctionSideConnection; //Патрубок на стороне всасывания
 
     public String getName() {
@@ -110,4 +124,51 @@ public class Material {
     public void setExternalCasing(String externalCasing) {
         this.externalCasing = externalCasing;
     }
+
+    public boolean isStainlessSteel() {
+        return StainlessSteel;
+    }
+
+    public void setStainlessSteel(boolean stainlessSteel) {
+        StainlessSteel = stainlessSteel;
+    }
+
+    public String getDischargeSideConnection() {
+        return DischargeSideConnection;
+    }
+
+    public void setDischargeSideConnection(String dischargeSideConnection) {
+        DischargeSideConnection = dischargeSideConnection;
+    }
+
+    public String getSuctionSideConnection() {
+        return SuctionSideConnection;
+    }
+
+    public void setSuctionSideConnection(String suctionSideConnection) {
+        SuctionSideConnection = suctionSideConnection;
+    }
+
+    public void setFields(Material material){
+        try {
+            this.setStainlessSteel(material.isStainlessSteel());
+            this.setCheckValves(material.getCheckValves());
+            this.setCollector(material.getCollector());
+            this.setDischargeSideConnection(material.getDischargeSideConnection());
+            this.setExternalCasing(material.getExternalCasing());
+            this.setFrameBase(material.getFrameBase());
+            this.setName(material.getName());
+            this.setPlugsOrFlanges(material.getPlugsOrFlanges());
+            this.setPressureSensors(material.getPressureSensors());
+            this.setPressureSwitch(material.getPressureSwitch());
+            this.setPumpHousing(material.getPumpHousing());
+            this.setRack(material.getRack());
+            this.setShutOffValves(material.getShutOffValves());
+            this.setSuctionSideConnection(material.getSuctionSideConnection());
+        }
+        catch (NullPointerException e) {
+            throw new NullPointerException("Material must have all required fields");
+        }
+    }
+
 }

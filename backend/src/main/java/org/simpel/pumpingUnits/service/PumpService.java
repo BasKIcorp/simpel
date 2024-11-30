@@ -1,15 +1,12 @@
 package org.simpel.pumpingUnits.service;
 
+import jakarta.validation.constraints.NotNull;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationPointRequest;
 import org.simpel.pumpingUnits.controller.pumpRequest.PumpRequest;
-import org.simpel.pumpingUnits.model.Engine;
-import org.simpel.pumpingUnits.model.Material;
-import org.simpel.pumpingUnits.model.Pump;
-import org.simpel.pumpingUnits.model.Series;
+import org.simpel.pumpingUnits.model.*;
 import org.simpel.pumpingUnits.model.installation.PointNPSH;
 import org.simpel.pumpingUnits.model.installation.PointPower;
 import org.simpel.pumpingUnits.model.installation.PointPressure;
-import org.simpel.pumpingUnits.repository.EngineRepo;
 import org.simpel.pumpingUnits.repository.MaterialRepo;
 import org.simpel.pumpingUnits.repository.PumpRepo;
 import org.simpel.pumpingUnits.repository.SeriesRepository;
@@ -17,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.Serial;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,14 +43,24 @@ public class PumpService {
                 throw new IllegalAccessError("Material not found");
             }
             if(serial==null){
-                throw new IllegalAccessError("Material not found");
+                throw new IllegalAccessError("Series not found");
             }
             if (pump == null) {
                 Pump newPump = new Pump();
                 newPump.setFieldsSolo(request.getPump(), engine, pointsPressure, pointPower, pointNPSH, photoDesign, photoDimensions, photo,mater,serial);
+                newPump = pumpRepo.save(newPump);
+                List<Photo> photos = newPump.getPhotos();
+                for (Photo pic : photos){
+                    pic.setPump(newPump);
+                }
                 pumpRepo.save(newPump);
             } else {
                 pump.setFieldsSolo(request.getPump(), engine, pointsPressure, pointPower, pointNPSH, photoDesign, photoDimensions, photo,mater,serial);
+                pumpRepo.save(pump);
+                List<Photo> photos = pump.getPhotos();
+                for (Photo pic : photos){
+                    pic.setPump(pump);
+                }
                 pumpRepo.save(pump);
             }
         } else {
@@ -109,6 +116,34 @@ public class PumpService {
         }
         return points;
 
+    }
+    public void saveNewMaterial(Material materialRequest){
+        if (materialRepo.findById(materialRequest.getName()).orElse(null) != null) {
+            throw new IllegalArgumentException("Конфигурация материалов с таким названием уже существует");
+        }
+        Material material = new Material();
+        material.setFields(materialRequest);
+        validateNotNullFields(material);
+        materialRepo.save(material);
+    }
+
+    public void validateNotNullFields(Object object) {
+        Class<?> clazz = object.getClass();
+        for (Field field : clazz.getDeclaredFields()) {
+            field.setAccessible(true);
+            if (field.isAnnotationPresent(NotNull.class)) {
+                try {
+                    Object value = field.get(object);
+                    if (value == null || (value instanceof String && ((String) value).isEmpty())) {
+                        throw new IllegalArgumentException(
+                                String.format("Field '%s' cannot be null or empty", field.getName())
+                        );
+                    }
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException("Failed to access field: " + field.getName(), e);
+                }
+            }
+        }
     }
 }
 

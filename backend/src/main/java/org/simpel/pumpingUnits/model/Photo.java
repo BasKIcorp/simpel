@@ -19,7 +19,7 @@ public class Photo {
     private PhotoType photoType;
 
     @ManyToOne
-    @JoinColumn(name = "pump_id")
+    @JoinColumn(name = "pump_id", nullable = false)
     @JsonBackReference
     private Pump pump; // Связь с Pump
 

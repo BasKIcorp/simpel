@@ -1,5 +1,6 @@
 package org.simpel.pumpingUnits.controller.pumpRequest;
 
+import org.simpel.pumpingUnits.model.Detail;
 import org.simpel.pumpingUnits.model.Engine;
 import org.simpel.pumpingUnits.model.Pump;
 
@@ -9,6 +10,16 @@ public class PumpRequest {
     private Engine engine;
     private String material;
     private String serial;
+
+    private Detail[] details;
+
+    public Detail[] getDetails() {
+        return details;
+    }
+
+    public void setDetails(Detail[] details) {
+        this.details = details;
+    }
 
     public Pump getPump() {
            return pump;
