@@ -1,5 +1,6 @@
 package org.simpel.pumpingUnits.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
 
@@ -17,6 +18,7 @@ public class Detail {
 
     @ManyToOne
     @JoinColumn(name = "pump_name", referencedColumnName = "name", nullable = false)
+    @JsonBackReference
     private Pump pumpName;
 
     public String getDescriptionDetail() {
