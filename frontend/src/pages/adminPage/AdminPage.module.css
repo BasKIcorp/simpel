@@ -63,7 +63,7 @@
 .buttonMain{
     position: relative;
     top: 4em;
-    left: 11%;
+    left: 4%;
     background-color: #007bff;
     color: #fff;
     border: none;
@@ -93,7 +93,7 @@
     margin-right: 55rem;
 }
 .engine{
-
+    margin-left: -30px;
 }
 
 
@@ -377,7 +377,7 @@
 }
 .textButton{
     position: relative;
-    top: 0.5em;
+    top: 0.7em;
     display: flex; /* Включаем Flexbox */
     justify-content: center; /* Центрируем текст по горизонтали */
     align-items: center; /* Центрируем текст по вертикали */

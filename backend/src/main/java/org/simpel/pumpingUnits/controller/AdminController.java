@@ -242,7 +242,7 @@ public class AdminController {
                 pumpService.save(pump, engine, photoDesign, photoDimensions, photo, pointRequests);
                 return ResponseEntity.ok("Success");
             } else {
-                engine = engineRepo.findById(engineId).orElse(null);
+                engine = engineRepo.findById(engineId).orElseThrow(NullPointerException::new);
                 pumpService.save(pump, engine, photoDesign, photoDimensions, photo, pointRequests);
                 return ResponseEntity.ok("Success");
             }
@@ -258,19 +258,34 @@ public class AdminController {
     }
 
     @PostMapping("save/material")
-    public ResponseEntity<?> saveMaterial(@Valid @RequestBody Material material) {
-        try{
+    public ResponseEntity<?> saveMaterial(@RequestBody Material material) {
+        try {
             pumpService.saveNewMaterial(material);
             return ResponseEntity.ok("Success");
-        }catch (ConstraintViolationException e){
+        } catch (ConstraintViolationException e) {
             return ResponseEntity.badRequest().body(e.getMessage() != "" ? e.getMessage() : "Some data is missing, fill out the form completely and submit again");
-        }
-        catch (NullPointerException e){
+        } catch (NullPointerException e) {
             return ResponseEntity.badRequest().body(e.getMessage() != "" ? e.getMessage() : "Some data is missing, fill out the form completely and submit again");
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 
+    }
+
+    @GetMapping("series")
+    public ResponseEntity<?> getSeries() {
+        return ResponseEntity.ok(pumpService.getSeries());
+    }
+
+    @PostMapping("save/series/{name}/{cat}")
+    public ResponseEntity<?> saveSeries(@RequestPart String name, @RequestPart String cat) {
+        try {
+            pumpService.saveSeries(name, cat);
+            return ResponseEntity.ok("Success");
+        } catch (NullPointerException e) {
+            return ResponseEntity.badRequest().body(e.getMessage() != "" ? e.getMessage() : "Some data is missing, fill out the form completely and submit again");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

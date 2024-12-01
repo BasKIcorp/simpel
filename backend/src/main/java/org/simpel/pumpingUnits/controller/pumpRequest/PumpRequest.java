@@ -4,6 +4,8 @@ import org.simpel.pumpingUnits.model.Detail;
 import org.simpel.pumpingUnits.model.Engine;
 import org.simpel.pumpingUnits.model.Pump;
 
+import java.util.List;
+
 public class PumpRequest {
 
     private Pump pump;
@@ -11,18 +13,18 @@ public class PumpRequest {
     private String material;
     private String serial;
 
-    private Detail[] details;
+    private List<Detail> details;
 
-    public Detail[] getDetails() {
+    public List<Detail> getDetails() {
         return details;
     }
 
-    public void setDetails(Detail[] details) {
+    public void setDetails(List<Detail> details) {
         this.details = details;
     }
 
     public Pump getPump() {
-           return pump;
+        return pump;
     }
 
     public void setPump(Pump pump) {

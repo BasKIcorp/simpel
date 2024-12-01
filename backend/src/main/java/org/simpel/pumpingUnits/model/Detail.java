@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 @Entity
 public class Detail {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String descriptionDetail;
@@ -16,10 +16,19 @@ public class Detail {
     private String enDin;
     private String aisiAstm;
 
+
     @ManyToOne
-    @JoinColumn(name = "pump_name", referencedColumnName = "name", nullable = false)
+    @JoinColumn(name = "pumps_id", nullable = false)
     @JsonBackReference
-    private Pump pumpName;
+    private Pump pump;
+
+    public Pump getPump() {
+        return pump;
+    }
+
+    public void setPump(Pump pump) {
+        this.pump = pump;
+    }
 
     public String getDescriptionDetail() {
         return descriptionDetail;
@@ -62,11 +71,5 @@ public class Detail {
         this.name = name;
     }
 
-    public Pump getPumpName() {
-        return pumpName;
-    }
 
-    public void setPumpName(Pump pumpName) {
-        this.pumpName = pumpName;
-    }
 }

@@ -1,5 +1,6 @@
 package org.simpel.pumpingUnits.service;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import org.simpel.pumpingUnits.controller.installationsUtilsModel.InstallationPointRequest;
 import org.simpel.pumpingUnits.controller.pumpRequest.PumpRequest;
@@ -7,6 +8,7 @@ import org.simpel.pumpingUnits.model.*;
 import org.simpel.pumpingUnits.model.installation.PointNPSH;
 import org.simpel.pumpingUnits.model.installation.PointPower;
 import org.simpel.pumpingUnits.model.installation.PointPressure;
+import org.simpel.pumpingUnits.repository.CategoryRepository;
 import org.simpel.pumpingUnits.repository.MaterialRepo;
 import org.simpel.pumpingUnits.repository.PumpRepo;
 import org.simpel.pumpingUnits.repository.SeriesRepository;
@@ -23,11 +25,13 @@ public class PumpService {
     private final PumpRepo pumpRepo;
     private final MaterialRepo materialRepo;
     private final SeriesRepository seriesRepo;
+    private final CategoryRepository categoryRepository;
 
-    public PumpService(PumpRepo pumpRepo, MaterialRepo materialRepo, SeriesRepository seriesRepo) {
+    public PumpService(PumpRepo pumpRepo, MaterialRepo materialRepo, SeriesRepository seriesRepo, CategoryRepository categoryRepository) {
         this.pumpRepo = pumpRepo;
         this.materialRepo = materialRepo;
         this.seriesRepo = seriesRepo;
+        this.categoryRepository = categoryRepository;
     }
 
 
@@ -39,29 +43,33 @@ public class PumpService {
             Pump pump = pumpRepo.findByName(request.getPump().getName()).orElse(null);
             Material mater = materialRepo.findById(request.getMaterial()).orElse(null);
             Series serial = seriesRepo.findById(request.getSerial()).orElse(null);
-            if(mater==null){
+            if (mater == null) {
                 throw new IllegalAccessError("Material not found");
             }
-            if(serial==null){
+            if (serial == null) {
                 throw new IllegalAccessError("Series not found");
             }
             if (pump == null) {
                 Pump newPump = new Pump();
-                newPump.setFieldsSolo(request.getPump(), engine, pointsPressure, pointPower, pointNPSH, photoDesign, photoDimensions, photo,mater,serial);
+                newPump.setFieldsSolo(request.getPump(), engine, mater, serial);
                 newPump = pumpRepo.save(newPump);
-                List<Photo> photos = newPump.getPhotos();
-                for (Photo pic : photos){
-                    pic.setPump(newPump);
-                }
+                newPump.saveDetails(request.getDetails());
+                newPump = pumpRepo.save(newPump);
+                newPump.savePhotos(photoDesign, photoDimensions, photo);
+                newPump = pumpRepo.save(newPump);
+                newPump.savePoints(pointsPressure, pointPower, pointNPSH);
                 pumpRepo.save(newPump);
+
             } else {
-                pump.setFieldsSolo(request.getPump(), engine, pointsPressure, pointPower, pointNPSH, photoDesign, photoDimensions, photo,mater,serial);
+                pump.setFieldsSolo(request.getPump(), engine, mater, serial);
+                pump = pumpRepo.save(pump);
+                pump.savePoints(pointsPressure, pointPower, pointNPSH);
+                pump = pumpRepo.save(pump);
+                pump.savePhotos(photoDesign, photoDimensions, photo);
+                pump = pumpRepo.save(pump);
+                pump.saveDetails(request.getDetails());
                 pumpRepo.save(pump);
-                List<Photo> photos = pump.getPhotos();
-                for (Photo pic : photos){
-                    pic.setPump(pump);
-                }
-                pumpRepo.save(pump);
+
             }
         } else {
             throw new IllegalArgumentException("Нет такого типа точек либо вообще нет типа точки");
@@ -117,7 +125,8 @@ public class PumpService {
         return points;
 
     }
-    public void saveNewMaterial(Material materialRequest){
+
+    public void saveNewMaterial(Material materialRequest) {
         if (materialRepo.findById(materialRequest.getName()).orElse(null) != null) {
             throw new IllegalArgumentException("Конфигурация материалов с таким названием уже существует");
         }
@@ -144,6 +153,18 @@ public class PumpService {
                 }
             }
         }
+    }
+
+    public List<Series> getSeries() {
+        return seriesRepo.findAll();
+    }
+
+    public void saveSeries(String name, String cat) {
+        Series series = new Series();
+        Category category = categoryRepository.findById(cat).orElseThrow(IllegalArgumentException::new);
+        series.setName(name);
+        series.setCategoryName(category);
+        seriesRepo.save(series);
     }
 }
 
