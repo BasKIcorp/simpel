@@ -79,7 +79,7 @@ public abstract class ParentInstallations {
     public abstract void setSpecificFields(InstallationRequest request);
 
     public void setFieldsForSave(InstallationSaveRequest request, MultipartFile[] files, FileStorageService fileStorageService) throws IOException {
-        this.setPrice(request.getPrice() + pumps.get(0).getPrice() + (pumps.get(1) != null ? pumps.get(1).getPrice() : 0));
+        this.setPrice(request.getPrice() + pumps.get(0).getPrice() + (pumps.size() > 1 ? pumps.get(1).getPrice() : 0));
         List<String> pathFiles = fileStorageService.saveFiles(files, request.getTypeInstallations(), request.getSubtype());
         this.setDrawingsPath(pathFiles);
         this.setControlType(ControlType.valueOf(request.getControlType()));

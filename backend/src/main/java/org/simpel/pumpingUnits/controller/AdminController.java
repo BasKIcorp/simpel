@@ -232,18 +232,20 @@ public class AdminController {
     public ResponseEntity<?> savePump(@RequestPart("pump") PumpRequest pump,
                                       @RequestPart("engine") Engine engine,
                                       @RequestPart("points") InstallationPointRequest[] pointRequests,
-                                      @RequestPart("engineId") Long engineId,
                                       @RequestPart("photoDesign") MultipartFile[] photoDesign,
                                       @RequestPart("photoDimensions") MultipartFile[] photoDimensions,
                                       @RequestPart("photo") MultipartFile photo
     ) throws IOException {
         try {
-            if (engine == null) {
-                pumpService.save(pump, engine, photoDesign, photoDimensions, photo, pointRequests);
+            Engine engine1 = engineRepo.findByName(engine.getName()).orElse(null);
+
+            if (engine1 != null) {
+                pumpService.save(pump, engine1, photoDesign, photoDimensions, photo, pointRequests);
                 return ResponseEntity.ok("Success");
             } else {
-                engine = engineRepo.findById(engineId).orElseThrow(NullPointerException::new);
-                pumpService.save(pump, engine, photoDesign, photoDimensions, photo, pointRequests);
+                Engine engine2 = new Engine();
+                engine2.setFieldsForPumpSave(engine);
+                pumpService.save(pump, engine2, photoDesign, photoDimensions, photo, pointRequests);
                 return ResponseEntity.ok("Success");
             }
         } catch (IllegalArgumentException e) {
@@ -278,7 +280,7 @@ public class AdminController {
     }
 
     @PostMapping("save/series/{name}/{cat}")
-    public ResponseEntity<?> saveSeries(@RequestPart String name, @RequestPart String cat) {
+    public ResponseEntity<?> saveSeries(@PathVariable String name, @PathVariable String cat) {
         try {
             pumpService.saveSeries(name, cat);
             return ResponseEntity.ok("Success");

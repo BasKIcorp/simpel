@@ -24,7 +24,7 @@ import java.util.Optional;
 
 
 @Service
-public class PNSServiceAFEIJP implements InstallationServiceInterface <PNSInstallationAFEIJP> {
+public class PNSServiceAFEIJP implements InstallationServiceInterface<PNSInstallationAFEIJP> {
 
     private final PnsAFEIJPRepository repository;
     private final MaterialRepo materialRepo;
@@ -45,39 +45,76 @@ public class PNSServiceAFEIJP implements InstallationServiceInterface <PNSInstal
 
 
     @Override
-    public PNSInstallationAFEIJP save(InstallationSaveRequest request, MultipartFile[] files, List<PointPressure> pointsPressure, List<PointPower> pointPower, List<PointNPSH> pointNPSH) throws IOException {
+    public PNSInstallationAFEIJP save(InstallationSaveRequest request, MultipartFile[] files,
+                                      List<PointPressure> pointsPressure, List<PointPower> pointPower,
+                                      List<PointNPSH> pointNPSH) throws IOException {
+        PNSInstallationAFEIJP pnsInstallation = new PNSInstallationAFEIJP();
         List<Pump> pumps = new ArrayList<>();
-        PNSInstallationAFEIJP pns = new PNSInstallationAFEIJP();
-        Optional<Pump> existingPump = pumpRepo.findByName(request.getPumps().get(0).getName());
-        Optional<Pump> existingPumpJok = pumpRepo.findByName(request.getPumps().get(1).getName());
-        list.add(existingPump);
-        list.add(existingPumpJok);
-        for(Optional<Pump> pumpik : list  ) {
-            if (pumpik.isPresent()) {
-                throw new NullPointerException("Имя насоса уже существует");
-            }
+
+        // Поиск первого двигателя по имени
+        Optional<Engine> existingEngine1 = engineRepo.findByName(request.getEngines().get(0).getName());
+        Engine engine1;
+        if (existingEngine1.isPresent()) {
+            engine1 = existingEngine1.get();
+            engine1.setFieldsForPumpSave(request.getEngines().get(0));
+        } else {
+            engine1 = new Engine();
+            engine1.setFieldsForPumpSave(request.getEngines().get(0));
         }
-        Engine engine = request.getEngines().get(0);
-        Pump pump = new Pump();
-        pump.setFieldsForPumpSave(request.getPumps().get(0), engine, pointsPressure, pointPower, pointNPSH);
-        pump.setMaterial(materialRepo.findById(request.getMaterial().get(0)));
-        pumps.add(pump);
 
-        Engine engineJok = request.getEngines().get(1);
-        Pump pumpJok = new Pump();
-        pumpJok.setFieldsForPumpSave(request.getPumps().get(1), engineJok, pointsPressure, pointPower, pointNPSH);
-        pumpJok.setMaterial(materialRepo.findById(request.getMaterial().get(1)));
-        pumps.add(pumpJok);
+        // Поиск второго двигателя по имени
+        Optional<Engine> existingEngine2 = engineRepo.findByName(request.getEngines().get(1).getName());
+        Engine engine2;
+        if (existingEngine2.isPresent()) {
+            engine2 = existingEngine2.get();
+            engine2.setFieldsForPumpSave(request.getEngines().get(1));
+        } else {
+            engine2 = new Engine();
+            engine2.setFieldsForPumpSave(request.getEngines().get(1));
+        }
 
-        pns.setPumps(pumps);
-        pump.getInstallations().add(pns);
-        pumpJok.getInstallations().add(pns);
-        pns.setCommonFields(request);
-        pns.setSpecificFields(request);
-        pns.setFieldsForSave(request,files,fileStorageService);
+        // Поиск первого насоса по имени
+        Pump pump1 = new Pump();
+        Optional<Pump> existingPump1 = pumpRepo.findByName(request.getPumps().get(0).getName());
+        if (existingPump1.isPresent()) {
+            pump1 = existingPump1.get();
+            pump1.setFieldsForPumpSave(request.getPumps().get(0), engine1, pointsPressure, pointPower, pointNPSH);
+        } else {
+            pump1.setFieldsForPumpSave(request.getPumps().get(0), engine1, pointsPressure, pointPower, pointNPSH);
+        }
 
-        return repository.save(pns);
+        // Поиск второго насоса по имени
+        Pump pump2 = new Pump();
+        Optional<Pump> existingPump2 = pumpRepo.findByName(request.getPumps().get(1).getName());
+        if (existingPump2.isPresent()) {
+            pump2 = existingPump2.get();
+            pump2.setFieldsForPumpSave(request.getPumps().get(1), engine2, pointsPressure, pointPower, pointNPSH);
+        } else {
+            pump2.setFieldsForPumpSave(request.getPumps().get(1), engine2, pointsPressure, pointPower, pointNPSH);
+        }
+
+        // Добавляем насосы в список установки
+        pumps.add(pump1);
+        pumps.add(pump2);
+
+        // Связываем установку с насосами
+        pnsInstallation.setPumps(pumps);
+        pump1.getInstallations().add(pnsInstallation);
+        pump2.getInstallations().add(pnsInstallation);
+
+        // Устанавливаем общие и специфические поля для установки
+        pnsInstallation.setCommonFields(request);
+        pnsInstallation.setSpecificFields(request);
+        pnsInstallation.setFieldsForSave(request, files, fileStorageService);
+
+        // Сохраняем данные
+        engineRepo.save(engine1);
+        engineRepo.save(engine2);
+        pumpRepo.save(pump1);
+        pumpRepo.save(pump2);
+        return repository.save(pnsInstallation);
     }
+
 
     @Override
     public List<PNSInstallationAFEIJP> getAll(InstallationRequest installationRequest) {
@@ -100,51 +137,5 @@ public class PNSServiceAFEIJP implements InstallationServiceInterface <PNSInstal
                 minFlowRate,
                 maxFlowRate);
         return searchComponent.get(suitableInstallations);
-    }
-
-    @Override
-    public PNSInstallationAFEIJP saveWithIds(InstallationSaveRequest request, MultipartFile[] files, List<PointPressure> pointsPressure, List<PointPower> pointPower, List<PointNPSH> pointNPSH) throws IOException {
-        PNSInstallationAFEIJP pns = new PNSInstallationAFEIJP();
-        pns.setCommonFields(request);
-        pns.setSpecificFields(request);
-        Pump pump = new Pump();
-        Pump jokPump = new Pump();
-        if (request.getPumpIds() != null && !request.getPumpIds().isEmpty()){
-            pump = pumpRepo.findById(request.getPumpIds().get(0)).orElse(null);
-
-            jokPump = pumpRepo.findById(request.getPumpIds().get(1)).orElse(null);
-        }
-        else {
-            Optional<Pump> existingPump = pumpRepo.findById(request.getPumpIds().get(0));
-            Optional<Pump> existingPumpJok = pumpRepo.findById(request.getPumpIds().get(1));
-            list.add(existingPump);
-            list.add(existingPumpJok);
-            for(Optional<Pump> pumpik : list  ) {
-                if (pumpik.isPresent()) {
-                    throw new NullPointerException("Имя насоса уже существует");
-                }
-            }
-            if (request.getEngineIds() != null && !request.getEngineIds().isEmpty()){
-                Engine engine = engineRepo.findById(request.getEngineIds().get(0)).orElse(null);
-                pump.setFieldsForPumpSave(request.getPumps().get(0), engine, pointsPressure, pointPower, pointNPSH);
-
-                Engine engine1 = engineRepo.findById(request.getEngineIds().get(1)).orElse(null);
-                jokPump.setFieldsForPumpSave(request.getPumps().get(1), engine1, pointsPressure, pointPower, pointNPSH);
-            }
-            else {
-                pump.setFieldsForPumpSave(request.getPumps().get(0), request.getEngines().get(0), pointsPressure, pointPower, pointNPSH);
-                jokPump.setFieldsForPumpSave(request.getPumps().get(1), request.getEngines().get(1), pointsPressure, pointPower, pointNPSH);
-            }
-            pump.setMaterial(materialRepo.findById(request.getMaterial().get(0)));
-            jokPump.setMaterial(materialRepo.findById(request.getMaterial().get(1)));
-        }
-        pns.getPumps().add(pump);
-        pump.getInstallations().add(pns);
-
-        pns.getPumps().add(jokPump);
-        jokPump.getInstallations().add(pns);
-
-        pns.setFieldsForSave(request,files,fileStorageService);
-        return repository.save(pns);
     }
 }

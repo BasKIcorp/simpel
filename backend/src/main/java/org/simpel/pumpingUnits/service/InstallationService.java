@@ -32,16 +32,14 @@ public class InstallationService {
         List<PointPressure> pointsPressure = getPointPressure(requestPoints);
         List<PointPower> pointPower = getPointPower(requestPoints);
         List<PointNPSH> pointNPSH = getPointNPSH(requestPoints);
+
         if (pointsPressure.size() + pointPower.size() + pointNPSH.size() == requestPoints.length) {
-            if((request.getPumpIds() != null && !request.getPumpIds().isEmpty()) || (request.getEngineIds() != null && !request.getEngines().isEmpty())){
-                return installationsService.saveWithIds(request,files, pointsPressure, pointPower, pointNPSH);
-            }
-            return installationsService.save(request,files, pointsPressure, pointPower, pointNPSH);
-        }
-        else{
+            return installationsService.save(request, files, pointsPressure, pointPower, pointNPSH);
+        } else {
             throw new IllegalArgumentException("Нет такого типа точек либо вообще нет типа точки");
         }
     }
+
 
     public List<?> get(InstallationRequest request) {
         TypeInstallations typeInstallations = TypeInstallations.valueOf(request.getTypeInstallations());
@@ -72,7 +70,10 @@ public class InstallationService {
         }
         return points;
 
-    };
+    }
+
+    ;
+
     public List<PointPower> getPointPower(InstallationPointRequest[] requests) {
         List<PointPower> points = new ArrayList<>();
 
@@ -86,13 +87,16 @@ public class InstallationService {
         }
         return points;
 
-    };
+    }
+
+    ;
+
     public List<PointNPSH> getPointNPSH(InstallationPointRequest[] requests) {
         List<PointNPSH> points = new ArrayList<>();
 
         for (InstallationPointRequest request : requests) {
-             if (request.getType().equals("NPSH")) {
-                 PointNPSH point = new PointNPSH();
+            if (request.getType().equals("NPSH")) {
+                PointNPSH point = new PointNPSH();
                 point.setX(request.getX());
                 point.setY(request.getY());
                 points.add(point);
@@ -102,5 +106,7 @@ public class InstallationService {
         }
         return points;
 
-    };
+    }
+
+    ;
 }

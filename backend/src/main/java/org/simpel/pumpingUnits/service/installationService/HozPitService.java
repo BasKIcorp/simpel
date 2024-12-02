@@ -36,7 +36,7 @@ public class HozPitService implements InstallationServiceInterface<HozPitInstall
     private final PumpRepo pumpRepo;
     private final EngineRepo engineRepo;
 
-    public HozPitService(HozPitRepository repository, MaterialRepo materialRepo, FileStorageService fileStorageService, SearchComponent<HozPitInstallation>  searchComponent, PumpRepo pumpRepo, EngineRepo engineRepo) {
+    public HozPitService(HozPitRepository repository, MaterialRepo materialRepo, FileStorageService fileStorageService, SearchComponent<HozPitInstallation> searchComponent, PumpRepo pumpRepo, EngineRepo engineRepo) {
         this.repository = repository;
         this.materialRepo = materialRepo;
         this.fileStorageService = fileStorageService;
@@ -46,26 +46,54 @@ public class HozPitService implements InstallationServiceInterface<HozPitInstall
     }
 
     @Override
-    public HozPitInstallation save(InstallationSaveRequest request, MultipartFile[] files, List<PointPressure> pointsPressure, List<PointPower> pointPower, List<PointNPSH> pointNPSH) throws IOException {
-        Engine engine = request.getEngines().get(0);
-        Pump pump = new Pump();
-        Optional<Pump> existingPump = pumpRepo.findByName(request.getPumps().get(0).getName());
-        if (existingPump.isPresent()) {
-            throw new NullPointerException("Имя насоса уже существует");
-        }
-        pump.setFieldsForPumpSave(request.getPumps().get(0), engine, pointsPressure, pointPower, pointNPSH);
-        pump.setMaterial(materialRepo.findById(request.getMaterial().get(0)));
-        HozPitInstallation hozPit = new HozPitInstallation();
+    public HozPitInstallation save(InstallationSaveRequest request, MultipartFile[] files,
+                                   List<PointPressure> pointsPressure, List<PointPower> pointPower,
+                                   List<PointNPSH> pointNPSH) throws IOException {
+        HozPitInstallation hozPitInstallation = new HozPitInstallation();
         List<Pump> pumps = new ArrayList<>();
-        pumps.add(pump);
-        hozPit.setPumps(pumps);
-        pump.getInstallations().add(hozPit);
-        hozPit.setCommonFields(request);
-        hozPit.setSpecificFields(request);
-        hozPit.setFieldsForSave(request,files,fileStorageService);
 
-        return repository.save(hozPit);
+        // Поиск существующего двигателя по имени
+        Optional<Engine> existingEngine = engineRepo.findByName(request.getEngines().get(0).getName());
+        Engine engine;
+        if (existingEngine.isPresent()) {
+            engine = existingEngine.get();
+            engine.setFieldsForPumpSave(request.getEngines().get(0));
+        } else {
+            engine = new Engine();
+            engine.setFieldsForPumpSave(request.getEngines().get(0));
+        }
+
+        // Поиск существующего насоса по имени
+        Optional<Pump> existingPump = pumpRepo.findByName(request.getPumps().get(0).getName());
+        Pump pump;
+        if (existingPump.isPresent()) {
+            pump = existingPump.get();
+            pump.setFieldsForPumpSave(request.getPumps().get(0), engine, pointsPressure, pointPower, pointNPSH);
+            pump.setMaterial(materialRepo.findById(request.getMaterial().get(0)));
+        } else {
+            pump = new Pump();
+            pump.setFieldsForPumpSave(request.getPumps().get(0), engine, pointsPressure, pointPower, pointNPSH);
+            pump.setMaterial(materialRepo.findById(request.getMaterial().get(0)));
+        }
+
+        // Добавляем насос в список насосов установки
+        pumps.add(pump);
+
+        // Связываем установку с насосом
+        hozPitInstallation.setPumps(pumps);
+        pump.getInstallations().add(hozPitInstallation);
+
+        // Устанавливаем общие и специфические поля для установки
+        hozPitInstallation.setCommonFields(request);
+        hozPitInstallation.setSpecificFields(request);
+        hozPitInstallation.setFieldsForSave(request, files, fileStorageService);
+
+        // Сохраняем данные
+        engineRepo.save(engine);
+        pumpRepo.save(pump);
+        return repository.save(hozPitInstallation);
     }
+
 
     @Override
     public List<HozPitInstallation> getAll(InstallationRequest installationRequest) {
@@ -76,7 +104,7 @@ public class HozPitService implements InstallationServiceInterface<HozPitInstall
         searchComponent.setPressureForSearch(installationRequest.getPressure());
         int maxFlowRate = searchComponent.getMaxFlowRate();
         int minFlowRate = searchComponent.getMinFlowRate();
-        List<HozPitInstallation> suitableInstallations = !installationRequest.getPumpTypeForSomeInstallation().equals("BOTH")?
+        List<HozPitInstallation> suitableInstallations = !installationRequest.getPumpTypeForSomeInstallation().equals("BOTH") ?
                 repository.findByTypeInstallationsAndSubtypeAndCoolantTypeAndTemperatureAndCountMainPumpsAndCountSparePumpsAndPumpTypeForSomeInstallationAndFlowRateBetween(
                         TypeInstallations.valueOf(installationRequest.getTypeInstallations()),
                         HozPitSubtypes.valueOf(installationRequest.getSubtype()),
@@ -98,34 +126,4 @@ public class HozPitService implements InstallationServiceInterface<HozPitInstall
         );
         return searchComponent.get(suitableInstallations);
     }
-
-    @Override
-    public HozPitInstallation saveWithIds(InstallationSaveRequest request, MultipartFile[] files, List<PointPressure> pointsPressure, List<PointPower> pointPower, List<PointNPSH> pointNPSH) throws IOException {
-        HozPitInstallation hozPitInstallation = new HozPitInstallation();
-        hozPitInstallation.setCommonFields(request);
-        hozPitInstallation.setSpecificFields(request);
-        Pump pump = new Pump();
-        if (request.getPumpIds() != null && !request.getPumpIds().isEmpty()){
-            pump = pumpRepo.findById(request.getPumpIds().get(0)).orElse(null);
-        }
-        else {
-            Optional<Pump> existingPump = pumpRepo.findByName(request.getPumps().get(0).getName());
-            if (existingPump.isPresent()) {
-                throw new NullPointerException("Имя насоса уже существует");
-            }
-            if (request.getEngineIds() != null && !request.getEngineIds().isEmpty()){
-                Engine engine = engineRepo.findById(request.getEngineIds().get(0)).orElse(null);
-                pump.setFieldsForPumpSave(request.getPumps().get(0), engine, pointsPressure, pointPower, pointNPSH);
-            }
-            else {
-                pump.setFieldsForPumpSave(request.getPumps().get(0), request.getEngines().get(0), pointsPressure, pointPower, pointNPSH);
-            }
-            pump.setMaterial(materialRepo.findById(request.getMaterial().get(0)));
-        }
-        hozPitInstallation.getPumps().add(pump);
-        pump.getInstallations().add(hozPitInstallation);
-        hozPitInstallation.setFieldsForSave(request,files,fileStorageService);
-        return repository.save(hozPitInstallation);
-    }
-
 }

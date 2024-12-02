@@ -13,33 +13,16 @@ public class InstallationSaveRequest extends InstallationRequest {
     public Integer getPrice() {
         return price;
     }
+
     public void setPrice(Integer price) {
         this.price = price;
     }
+
     private String controlType;
     private String powerType;
 
     private List<Pump> pumps;
     private List<Engine> engines;
-
-    private List<Long> pumpIds;
-    private List<Long> engineIds;
-
-    public List<Long> getPumpIds() {
-        return pumpIds;
-    }
-
-    public void setPumpIds(List<Long> pumpIds) {
-        this.pumpIds = pumpIds;
-    }
-
-    public List<Long> getEngineIds() {
-        return engineIds;
-    }
-
-    public void setEngineIds(List<Long> engineIds) {
-        this.engineIds = engineIds;
-    }
 
     public String getControlType() {
         return controlType;
@@ -72,6 +55,7 @@ public class InstallationSaveRequest extends InstallationRequest {
     public void setEngines(List<Engine> engines) {
         this.engines = engines;
     }
+
     //    //разница между запросом на сохранение и запросом на гет в том что в запросе на сохранение надо вставлять больше информации поэтому унаследовался от запроса на гет
 //    //для насосов
 //    private String namePump;
@@ -95,7 +79,7 @@ public class InstallationSaveRequest extends InstallationRequest {
 //    private Float dmOut;
 //    private Float installationLength;
 //    private String description;
-   private List<String> material;
+    private List<String> material;
 //
 //
 //

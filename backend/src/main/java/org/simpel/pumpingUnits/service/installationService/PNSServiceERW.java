@@ -45,25 +45,51 @@ public class PNSServiceERW implements InstallationServiceInterface<PNSInstallati
     }
 
     @Override
-    public PNSInstallationERW save(InstallationSaveRequest request, MultipartFile[] files, List<PointPressure> pointsPressure, List<PointPower> pointPower, List<PointNPSH> pointNPSH) throws IOException {
-        Engine engine = request.getEngines().get(0);
+    public PNSInstallationERW save(InstallationSaveRequest request, MultipartFile[] files,
+                                   List<PointPressure> pointsPressure, List<PointPower> pointPower,
+                                   List<PointNPSH> pointNPSH) throws IOException {
+        PNSInstallationERW pnsInstallation = new PNSInstallationERW();
+        List<Pump> pumps = new ArrayList<>();
+
+        // Поиск двигателя по имени
+        Optional<Engine> existingEngine = engineRepo.findByName(request.getEngines().get(0).getName());
+        Engine engine;
+        if (existingEngine.isPresent()) {
+            engine = existingEngine.get();
+            engine.setFieldsForPumpSave(request.getEngines().get(0));
+        } else {
+            engine = new Engine();
+            engine.setFieldsForPumpSave(request.getEngines().get(0));
+        }
+
+        // Поиск насоса по имени
         Pump pump = new Pump();
         Optional<Pump> existingPump = pumpRepo.findByName(request.getPumps().get(0).getName());
         if (existingPump.isPresent()) {
-            throw new NullPointerException("Имя насоса уже существует");
+            pump = existingPump.get();
+            pump.setFieldsForPumpSave(request.getPumps().get(0), engine, pointsPressure, pointPower, pointNPSH);
+        } else {
+            pump.setFieldsForPumpSave(request.getPumps().get(0), engine, pointsPressure, pointPower, pointNPSH);
         }
-        pump.setFieldsForPumpSave(request.getPumps().get(0), engine, pointsPressure, pointPower, pointNPSH);
-        pump.setMaterial(materialRepo.findById(request.getMaterial().get(0)));
-        PNSInstallationERW pns = new PNSInstallationERW();
-        List<Pump> pumps = new ArrayList<>();
+
+        // Добавляем насос в список насосов установки
         pumps.add(pump);
-        pns.setPumps(pumps);
-        pump.getInstallations().add(pns);
-        pns.setCommonFields(request);
-        pns.setSpecificFields(request);
-        pns.setFieldsForSave(request,files,fileStorageService);
-        return repository.save(pns);
+
+        // Связываем установку с насосом
+        pnsInstallation.setPumps(pumps);
+        pump.getInstallations().add(pnsInstallation);
+
+        // Устанавливаем общие и специфические поля для установки
+        pnsInstallation.setCommonFields(request);
+        pnsInstallation.setSpecificFields(request);
+        pnsInstallation.setFieldsForSave(request, files, fileStorageService);
+
+        // Сохраняем данные
+        engineRepo.save(engine);
+        pumpRepo.save(pump);
+        return repository.save(pnsInstallation);
     }
+
 
     @Override
     public List<PNSInstallationERW> getAll(InstallationRequest installationRequest) {
@@ -74,17 +100,17 @@ public class PNSServiceERW implements InstallationServiceInterface<PNSInstallati
         searchComponent.setPressureForSearch(installationRequest.getPressure());
         int maxFlowRate = searchComponent.getMaxFlowRate();
         int minFlowRate = searchComponent.getMinFlowRate();
-        List<PNSInstallationERW> suitableInstallations = !installationRequest.getPumpTypeForSomeInstallation().equals("BOTH")?
+        List<PNSInstallationERW> suitableInstallations = !installationRequest.getPumpTypeForSomeInstallation().equals("BOTH") ?
                 repository.findByTypeInstallationsAndSubtypeAndCoolantTypeAndTemperatureAndCountMainPumpsAndCountSparePumpsAndPumpTypeForSomeInstallationAndFlowRateBetween(
-                TypeInstallations.valueOf(installationRequest.getTypeInstallations()),
-                PNSSubtypes.valueOf(installationRequest.getSubtype()),
-                CoolantType.valueOf(installationRequest.getCoolantType()),
-                installationRequest.getTemperature(),
-                installationRequest.getCountMainPumps(),
-                installationRequest.getCountSparePumps(),
-                PumpTypeForSomeInstallation.valueOf(installationRequest.getPumpTypeForSomeInstallation()),
-                minFlowRate,
-                maxFlowRate) : repository.findByTypeInstallationsAndSubtypeAndCoolantTypeAndTemperatureAndCountMainPumpsAndCountSparePumpsAndFlowRateBetween(
+                        TypeInstallations.valueOf(installationRequest.getTypeInstallations()),
+                        PNSSubtypes.valueOf(installationRequest.getSubtype()),
+                        CoolantType.valueOf(installationRequest.getCoolantType()),
+                        installationRequest.getTemperature(),
+                        installationRequest.getCountMainPumps(),
+                        installationRequest.getCountSparePumps(),
+                        PumpTypeForSomeInstallation.valueOf(installationRequest.getPumpTypeForSomeInstallation()),
+                        minFlowRate,
+                        maxFlowRate) : repository.findByTypeInstallationsAndSubtypeAndCoolantTypeAndTemperatureAndCountMainPumpsAndCountSparePumpsAndFlowRateBetween(
                 TypeInstallations.valueOf(installationRequest.getTypeInstallations()),
                 PNSSubtypes.valueOf(installationRequest.getSubtype()),
                 CoolantType.valueOf(installationRequest.getCoolantType()),
@@ -97,33 +123,5 @@ public class PNSServiceERW implements InstallationServiceInterface<PNSInstallati
         return searchComponent.get(suitableInstallations);
     }
 
-    @Override
-    public PNSInstallationERW saveWithIds(InstallationSaveRequest request, MultipartFile[] files, List<PointPressure> pointsPressure, List<PointPower> pointPower, List<PointNPSH> pointNPSH) throws IOException {
-        PNSInstallationERW pns = new PNSInstallationERW();
-        pns.setCommonFields(request);
-        pns.setSpecificFields(request);
-        Pump pump = new Pump();
-        if (request.getPumpIds() != null && !request.getPumpIds().isEmpty()){
-            pump = pumpRepo.findById(request.getPumpIds().get(0)).orElse(null);
 
-        }
-        else {
-            Optional<Pump> existingPump = pumpRepo.findByName(request.getPumps().get(0).getName());
-            if (existingPump.isPresent()) {
-                throw new NullPointerException("Имя насоса уже существует");
-            }
-            if (request.getEngineIds() != null && !request.getEngineIds().isEmpty()){
-                Engine engine = engineRepo.findById(request.getEngineIds().get(0)).orElse(null);
-                pump.setFieldsForPumpSave(request.getPumps().get(0), engine, pointsPressure, pointPower, pointNPSH);
-            }
-            else {
-                pump.setFieldsForPumpSave(request.getPumps().get(0), request.getEngines().get(0), pointsPressure, pointPower, pointNPSH);
-            }
-            pump.setMaterial(materialRepo.findById(request.getMaterial().get(0)));
-        }
-        pns.getPumps().add(pump);
-        pump.getInstallations().add(pns);
-        pns.setFieldsForSave(request,files,fileStorageService);
-        return repository.save(pns);
-    }
 }

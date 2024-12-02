@@ -64,8 +64,7 @@ const PumpData = ({ installationData, setInstallationData, isPump,details, setDe
             const updatedPumps = [...prevData.pumps];
             updatedPumps[index] = {
                 ...updatedPumps[index],
-                [name]: value,
-                name: ''
+                [name]: value
             };
             return {...prevData, pumps: updatedPumps};
         });
@@ -86,26 +85,20 @@ console.log(installationData);
         if (selectedPump) {
             // Получаем полные данные насоса по ID
             const pumpDetails = await fetchPumpById(selectedPump.id);
-
             if (pumpDetails) {
                 setInstallationData(prevData => {
                     const updatedPumps = [...prevData.pumps];
                     updatedPumps[index] = { ...pumpDetails };
                     const updatedEngines = [...prevData.engines];
                     updatedEngines[index] = {...pumpDetails.engine}
-                    const updatedPumpIds = [...prevData.pumpIds];
-                    const updatedEngineIds = [...prevData.engineIds];
-                    updatedEngineIds[index] = pumpDetails.engine.id;
-                    updatedPumpIds[index] = pumpDetails.id;
                     return {
                         ...prevData,
-                        pumpIds: updatedPumpIds,
                         pumps: updatedPumps,
                         engines: updatedEngines,
-                        engineIds: updatedEngineIds
                     };
                 });
             }
+            setDetails(pumpDetails.details)
         } else {
             // Ввод вручную, сохраняем как текст
             setInstallationData(prevData => {
@@ -114,11 +107,8 @@ console.log(installationData);
                     ...updatedPumps[index],
                     name: value
                 };
-                const updatedPumpIds = [...prevData.pumpIds];
-                updatedPumpIds[index] = "";
                 return {
                     ...prevData,
-                    pumpIds: updatedPumpIds,
                     pumps: updatedPumps
                 };
             });
@@ -226,7 +216,7 @@ console.log(installationData);
 
                 return null; // Завершаем выполнение
             }
-            console.log(response)
+            console.log(response.body)
             if (!response.ok) {
                 throw new Error(`Ошибка: ${response.status}`);
             }
@@ -374,6 +364,10 @@ console.log(installationData);
                             setInstallationData={setInstallationData}
                             handleChangePumpFields={handleChangePumpFields}
                             availableSeries={availableSeries}
+                            detail={detail}
+                            setDetail={setDetail}
+                            details={details}
+                            setDetails={setDetails}
                         />
                     </div>
                         )}
@@ -427,7 +421,7 @@ const PumpEngineFields = ({handleChangeSeries,handleAddLink,handleRemoveLink,han
                 <input className={styles.radioGroup}
                        type="number"
                        placeholder="Введите максимальный расход"
-                       value={installationData.pumps[index]?.maximumPressure || ""}
+                       value={installationData.pumps[index]?.maximumPressure || 0}
                        name="maximumPressure"
                        onChange={(e) => handleChangePumpFields(e, index)}
                 />
@@ -435,7 +429,7 @@ const PumpEngineFields = ({handleChangeSeries,handleAddLink,handleRemoveLink,han
                 <input className={styles.radioGroup}
                        type="number"
                        placeholder="Введите максимальный напор"
-                       value={installationData.pumps[index]?.maximumHead || ""}
+                       value={installationData.pumps[index]?.maximumHead || 0}
                        name="maximumHead"
                        onChange={(e) => handleChangePumpFields(e, index)}
                 />
@@ -443,7 +437,7 @@ const PumpEngineFields = ({handleChangeSeries,handleAddLink,handleRemoveLink,han
                 <input className={styles.radioGroup}
                        type="number"
                        placeholder="Введите количество ступеней"
-                       value={installationData.pumps[index]?.numberOfSteps || ""}
+                       value={installationData.pumps[index]?.numberOfSteps || 0}
                        name="numberOfSteps"
                        onChange={(e) => handleChangePumpFields(e, index)}
                 />
@@ -451,7 +445,7 @@ const PumpEngineFields = ({handleChangeSeries,handleAddLink,handleRemoveLink,han
                 <input className={styles.radioGroup}
                        type="number"
                        placeholder="Введите КПД"
-                       value={installationData.pumps[index]?.efficiency || ""}
+                       value={installationData.pumps[index]?.efficiency || 0}
                        name="efficiency"
                        onChange={(e) => handleChangePumpFields(e, index)}
                 />
@@ -459,7 +453,7 @@ const PumpEngineFields = ({handleChangeSeries,handleAddLink,handleRemoveLink,han
                 <input className={styles.radioGroup}
                        type="number"
                        placeholder="Введите NPSH"
-                       value={installationData.pumps[index]?.npsh || ""}
+                       value={installationData.pumps[index]?.npsh || 0}
                        name="npsh"
                        onChange={(e) => handleChangePumpFields(e, index)}
                 />
@@ -467,7 +461,7 @@ const PumpEngineFields = ({handleChangeSeries,handleAddLink,handleRemoveLink,han
                 <input className={styles.radioGroup}
                        type="number"
                        placeholder="Введите диаметр входа"
-                       value={installationData.pumps[index]?.dm_in || ''}
+                       value={installationData.pumps[index]?.dm_in || 0}
                        name="dm_in"
                        onChange={(e) => handleChangePumpFields(e, index)}
                 />
@@ -475,7 +469,7 @@ const PumpEngineFields = ({handleChangeSeries,handleAddLink,handleRemoveLink,han
                 <input className={styles.radioGroup}
                        type="number"
                        placeholder="Введите диаметр выхода"
-                       value={installationData.pumps[index]?.dm_out || ''}
+                       value={installationData.pumps[index]?.dm_out || 0}
                        name="dm_out"
                        onChange={(e) => handleChangePumpFields(e, index)}
                 />
@@ -483,36 +477,35 @@ const PumpEngineFields = ({handleChangeSeries,handleAddLink,handleRemoveLink,han
                 <input className={styles.radioGroup}
                        type="number"
                        placeholder="Введите скорость"
-                       value={installationData.pumps[index]?.speed || ""}
+                       value={installationData.pumps[index]?.speed || 0}
                        name="speed"
                        onChange={(e) => handleChangePumpFields(e, index)}
                 />
-                --> отсюда
-                <h3 className={styles.formSubtitle}>Длина установки</h3>
+                <h3 className={styles.formSubtitle}>Температуру жидкости</h3>
                 <input className={styles.radioGroup}
                        type="number"
                        placeholder="Введите длину температуру жидкости"
-                       value={installationData.pumps[index]?.liquidTemperature || ''}
+                       value={installationData.pumps[index]?.liquidTemperature || 0}
                        name="liquidTemperature"
                        onChange={(e) => handleChangePumpFields(e, index)}
                 />
-                <h3 className={styles.formSubtitle}>Длина установки</h3>
+                <h3 className={styles.formSubtitle}>Температура среды(Макс)</h3>
                 <input className={styles.radioGroup}
                        type="number"
                        placeholder="Введите длину мак температуру внешней среды"
-                       value={installationData.pumps[index]?.ambientTemperatureMax || ''}
+                       value={installationData.pumps[index]?.ambientTemperatureMax || 0}
                        name="ambientTemperatureMax"
                        onChange={(e) => handleChangePumpFields(e, index)}
                 />
-                <h3 className={styles.formSubtitle}>Длина установки</h3>
+                <h3 className={styles.formSubtitle}>Температура среды(Мин)</h3>
                 <input className={styles.radioGroup}
                        type="number"
                        placeholder="Введите длину мин температуру внешней среды"
-                       value={installationData.pumps[index]?.ambientTemperatureMin || ''}
+                       value={installationData.pumps[index]?.ambientTemperatureMin || 0}
                        name="ambientTemperatureMin"
                        onChange={(e) => handleChangePumpFields(e, index)}
                 />
-                <h3 className={styles.formSubtitle}>Длина установки</h3>
+                <h3 className={styles.formSubtitle}>Стандарт подключения</h3>
                 <input className={styles.radioGroup}
                        type="text"
                        placeholder="Введите стандарт подключения"
@@ -520,28 +513,27 @@ const PumpEngineFields = ({handleChangeSeries,handleAddLink,handleRemoveLink,han
                        name="connectionStandard"
                        onChange={(e) => handleChangePumpFields(e, index)}
                 />
-                <h3 className={styles.formSubtitle}>Длина установки</h3>
+                <h3 className={styles.formSubtitle}>Гидравлический выбор</h3>
                 <input className={styles.radioGroup}
                        type="text"
-                       placeholder="Введите стандарт подключения"
+                       placeholder="Введите гидравлический выбор"
                        value={installationData.pumps[index]?.hydraulicSelection || ""}
                        name="hydraulicSelection"
                        onChange={(e) => handleChangePumpFields(e, index)}
                 />
-                <h3 className={styles.formSubtitle}>Длина установки</h3>
+                <h3 className={styles.formSubtitle}>Вес</h3>
                 <input className={styles.radioGroup}
                        type="number"
-                       placeholder="Введите длину мин температуру внешней среды"
-                       value={installationData.pumps[index]?.weight || ''}
+                       placeholder="Введите вес"
+                       value={installationData.pumps[index]?.weight || 0}
                        name="weight"
                        onChange={(e) => handleChangePumpFields(e, index)}
                 />
-                --> досюда
                 <h3 className={styles.formSubtitle}>Длина установки</h3>
                 <input className={styles.radioGroup}
                        type="number"
                        placeholder="Введите длину установки"
-                       value={installationData.pumps[index]?.installationLength || ''}
+                       value={installationData.pumps[index]?.installationLength || 0}
                        name="installationLength"
                        onChange={(e) => handleChangePumpFields(e, index)}
                 />
@@ -565,7 +557,7 @@ const PumpEngineFields = ({handleChangeSeries,handleAddLink,handleRemoveLink,han
                 <input className={styles.radioGroup}
                        type="number"
                        placeholder="Введите цену"
-                       value={installationData.pumps[index]?.price || ""}
+                       value={installationData.pumps[index]?.price || 0}
                        name="price"
                        onChange={(e) => handleChangePumpFields(e, index)}
                 />
@@ -581,6 +573,7 @@ const PumpEngineFields = ({handleChangeSeries,handleAddLink,handleRemoveLink,han
                         <option key={idx} value={material}>{material}</option>
                     ))}
                 </select>
+
                 <DetailsData detail={detail}
                              setDetail={setDetail}
                              details={details}
@@ -613,6 +606,7 @@ const PumpEngineFields = ({handleChangeSeries,handleAddLink,handleRemoveLink,han
                         Добавить ссылку
                     </button>
                 </div>
+
 
             </div>
             <EngineData index={index}

@@ -16,6 +16,7 @@ import org.simpel.pumpingUnits.repository.PumpRepo;
 import org.simpel.pumpingUnits.service.FileStorageService;
 import org.simpel.pumpingUnits.service.SearchComponent;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -45,26 +46,55 @@ public class GMService implements InstallationServiceInterface<GMInstallation> {
 
     @Override
     public GMInstallation save(InstallationSaveRequest request, MultipartFile[] files, List<PointPressure> pointsPressure, List<PointPower> pointPower, List<PointNPSH> pointNPSH) throws IOException {
-
-        Pump pump = new Pump();
-        Optional<Pump> existingPump = pumpRepo.findByName(request.getPumps().get(0).getName());
-        if (existingPump.isPresent()) {
-            throw new NullPointerException("Имя насоса уже существует");
-        }
-        pump.setFieldsForPumpSave(request.getPumps().get(0), request.getEngines().get(0), pointsPressure, pointPower, pointNPSH);
-        pump.setMaterial(materialRepo.findById(request.getMaterial().get(0)));
         GMInstallation gmInstallation = new GMInstallation();
         List<Pump> pumps = new ArrayList<>();
+
+        // Поиск существующего двигателя по имени
+        Optional<Engine> existingEngine = engineRepo.findByName(request.getEngines().get(0).getName());
+        Engine engine;
+        if (existingEngine.isPresent()) {
+            engine = existingEngine.get();
+            engine.setFieldsForPumpSave(request.getEngines().get(0));
+            // Сохраняем изменения двигателя
+        } else {
+            engine = new Engine();
+            engine.setFieldsForPumpSave(request.getEngines().get(0));
+            // Сохраняем новый двигатель
+        }
+
+        // Поиск существующего насоса по имени
+        Optional<Pump> existingPump = pumpRepo.findByName(request.getPumps().get(0).getName());
+        Pump pump;
+
+        if (existingPump.isPresent()) {
+            pump = existingPump.get();
+            pump.setFieldsForPumpSave(request.getPumps().get(0), engine, pointsPressure, pointPower, pointNPSH);
+            pump.setMaterial(materialRepo.findById(request.getMaterial().get(0)));// Сохраняем изменения насоса
+        } else {
+            pump = new Pump();
+            pump.setFieldsForPumpSave(request.getPumps().get(0), engine, pointsPressure, pointPower, pointNPSH);
+            pump.setMaterial(materialRepo.findById(request.getMaterial().get(0)));
+
+        }
+
+        // Добавляем насос в список насосов установки
         pumps.add(pump);
-        gmInstallation.setPumps(pumps);
+
+        // Связываем установку с насосом
+        gmInstallation.getPumps().addAll(pumps);
         pump.getInstallations().add(gmInstallation);
+
+        // Устанавливаем общие и специфические поля для установки
         gmInstallation.setCommonFields(request);
         gmInstallation.setSpecificFields(request);
-        gmInstallation.setFieldsForSave(request,files,fileStorageService);
+        gmInstallation.setFieldsForSave(request, files, fileStorageService);
 
-        System.out.println(gmInstallation.getTemperature());
+        // Сохраняем установку в репозитории
+        engineRepo.save(engine);
+        pumpRepo.save(pump);
         return repository.save(gmInstallation);
     }
+
 
     @Override
     public List<GMInstallation> getAll(InstallationRequest installationRequest) {
@@ -85,34 +115,5 @@ public class GMService implements InstallationServiceInterface<GMInstallation> {
                 minFlowRate,
                 maxFlowRate);
         return searchComponent.get(suitableInstallations);
-    }
-
-    @Override
-    public GMInstallation saveWithIds(InstallationSaveRequest request, MultipartFile[] files, List<PointPressure> pointsPressure, List<PointPower> pointPower, List<PointNPSH> pointNPSH) throws IOException {
-        GMInstallation gmInstallation = new GMInstallation();
-        gmInstallation.setCommonFields(request);
-        gmInstallation.setSpecificFields(request);
-        Pump pump = new Pump();
-        if (request.getPumpIds() != null && !request.getPumpIds().isEmpty()){
-            pump = pumpRepo.findById(request.getPumpIds().get(0)).orElse(null);
-        }
-        else {
-            Optional<Pump> existingPump = pumpRepo.findByName(request.getPumps().get(0).getName());
-            if (existingPump.isPresent()) {
-                throw new NullPointerException("Имя насоса уже существует");
-            }
-            if (request.getEngineIds() != null && !request.getEngineIds().isEmpty()){
-                Engine engine = engineRepo.findById(request.getEngineIds().get(0)).orElse(null);
-                pump.setFieldsForPumpSave(request.getPumps().get(0), engine, pointsPressure, pointPower, pointNPSH);
-            }
-            else {
-                pump.setFieldsForPumpSave(request.getPumps().get(0), request.getEngines().get(0), pointsPressure, pointPower, pointNPSH);
-            }
-            pump.setMaterial(materialRepo.findById(request.getMaterial().get(0)));
-        }
-        gmInstallation.getPumps().add(pump);
-        pump.getInstallations().add(gmInstallation);
-        gmInstallation.setFieldsForSave(request,files,fileStorageService);
-        return repository.save(gmInstallation);
     }
 }

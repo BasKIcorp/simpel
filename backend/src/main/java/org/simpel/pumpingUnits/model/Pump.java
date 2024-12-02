@@ -84,15 +84,18 @@ public class Pump {
     private Engine engine;
     @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<PointPressure> pointsPressure;
+    private List<PointPressure> pointsPressure = new ArrayList<>();
+    ;
 
     @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<PointPower> pointsPower;
+    private List<PointPower> pointsPower = new ArrayList<>();
+    ;
 
     @OneToMany(mappedBy = "pump", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<PointNPSH> pointsNPSH;
+    private List<PointNPSH> pointsNPSH = new ArrayList<>();
+    ;
 
     @ManyToMany(mappedBy = "pumps", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonBackReference
@@ -261,12 +264,26 @@ public class Pump {
         combinedStream.forEach(point -> {
             point.setPump(this);
         });
-        this.setPointsPressure(pointsPressure);
-        this.setPointsPower(pointPower);
-        this.setPointsNPSH(pointNPSH);
+        this.getPointsPressure().clear();
+        this.getPointsPressure().addAll(pointsPressure);
+        this.getPointsPower().clear();
+        this.getPointsPower().addAll(pointPower);
+        this.getPointsNPSH().clear();
+        this.getPointsNPSH().addAll(pointNPSH);
         this.setEngine(engine);
         this.setType(engine.getPumpType());
         this.setPrice(pump.getPrice() + engine.getPrice());
+
+        this.setAvailability(pump.isAvailability());
+        this.setHydraulicSelection(pump.getHydraulicSelection());
+        this.setLiquidTemperature(pump.getLiquidTemperature());
+        this.setAmbientTemperatureMax(pump.getAmbientTemperatureMax());
+        this.setAmbientTemperatureMin(pump.getAmbientTemperatureMin());
+        this.setMaximumWorkingPressureBar(pump.getMaximumWorkingPressureBar());
+        this.setConnectionStandard(pump.getConnectionStandard());
+        this.setWeight(pump.getWeight());
+        this.setDiameter(pump.getDiameter());
+        this.setLinks(pump.getLinks());
 
     }
 
@@ -301,6 +318,15 @@ public class Pump {
         this.setMaterial(Optional.ofNullable(material));
         this.setSeries(series);
 
+        this.setAvailability(pump.isAvailability());
+        this.setHydraulicSelection(pump.getHydraulicSelection());
+        this.setLiquidTemperature(pump.getLiquidTemperature());
+        this.setAmbientTemperatureMax(pump.getAmbientTemperatureMax());
+        this.setAmbientTemperatureMin(pump.getAmbientTemperatureMin());
+        this.setMaximumWorkingPressureBar(pump.getMaximumWorkingPressureBar());
+        this.setConnectionStandard(pump.getConnectionStandard());
+        this.setWeight(pump.getWeight());
+        this.setDiameter(pump.getDiameter());
 
     }
 
@@ -326,7 +352,7 @@ public class Pump {
         this.setPointsNPSH(pointNPSH);
 
         FileStorageService fileStorageService = new FileStorageService();
-
+        this.getPhotos().clear();
         // Сохранение фото
         savePhotos(photoDesign, PhotoType.DESIGN, fileStorageService);
         savePhotos(photoDimensions, PhotoType.DIMENSIONS, fileStorageService);

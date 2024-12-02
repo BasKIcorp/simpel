@@ -26,8 +26,7 @@ const EngineData = ({ index, installationData, isPump,setInstallationData }) => 
             const updatedEngine = [...prevData.engines];
             updatedEngine[index] = {
                 ...updatedEngine[index],
-                [name]: value,
-                name: ''
+                [name]: value
             };
             console.log(installationData.engines[index].powerType)
             return {...prevData, engines: updatedEngine};
@@ -47,11 +46,8 @@ const EngineData = ({ index, installationData, isPump,setInstallationData }) => 
                     updatedPumps[index] = { ...updatedPumps[index], name: ''};
                     const updatedEngines = [...prevData.engines];
                     updatedEngines[index] = {...engineDetails};
-                    const updatedEngineIds = [...prevData.engineIds];
-                    updatedEngineIds[index] = engineDetails.id;
                     return {
                         ...prevData,
-                        engineIds: updatedEngineIds,
                         pumps: updatedPumps,
                         engines: updatedEngines
                     };
@@ -65,13 +61,10 @@ const EngineData = ({ index, installationData, isPump,setInstallationData }) => 
                 const updatedEngines = [...prevData.engines];
                 updatedEngines[index] = {...updatedEngines[index],
                     name: value};
-                const updatedEngineIds = [...prevData.engineIds];
-                updatedEngineIds[index] = "";
                 return {
                     ...prevData,
                     pumps: updatedPumps,
-                    engines: updatedEngines,
-                    engineIds: updatedEngineIds,
+                    engines: updatedEngines
                 };
             });
         }
@@ -262,7 +255,7 @@ const EngineData = ({ index, installationData, isPump,setInstallationData }) => 
                     <input className={styles.radioGroup}
                            type="number"
                            placeholder="Введите цену"
-                           value={installationData.pumps[index]?.price || ""}
+                           value={installationData.engines[index]?.price || ""}
                            name="price"
                            onChange={(e) => handleChangeEngineFields(e, index)}
                     />

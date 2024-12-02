@@ -4,12 +4,12 @@ import {server_url} from "../../config"
 import {useDispatch} from "react-redux";
 
 
-const SeriesData = ({series, setSeties}) => {
+const SeriesData = ({series, setSeries}) => {
     const dispatch = useDispatch();
 
     const handleChangeFields = (e, index) => {
         const { name, value } = e.target;
-        setSeties(prevData => {
+        setSeries(prevData => {
             return { ...prevData, [name]: value };
         });
     };
@@ -30,7 +30,7 @@ const SeriesData = ({series, setSeties}) => {
                 <h3 className={styles.formSubtitle}>Категория</h3>
                 <select
                     style={{fontSize: "14px", marginTop: "9px", height: "25px"}}
-                    value={series.name || ""}
+                    value={series.categoryName || ""}
                     name="categoryName"
                     onChange={(e) => handleChangeFields(e)}
                 >

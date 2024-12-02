@@ -10,11 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-public interface InstallationServiceInterface <T extends ParentInstallations>{
+public interface InstallationServiceInterface<T extends ParentInstallations> {
     T save(InstallationSaveRequest parentInstallations, MultipartFile[] files, List<PointPressure> pointsPressure, List<PointPower> pointPower, List<PointNPSH> pointNPSH) throws IOException;
+
     List<T> getAll(InstallationRequest installationRequest);
     /*List<T> search(InstallationRequest parentInstallations);*/
-    T saveWithIds(InstallationSaveRequest request,
-                  MultipartFile[] files, List<PointPressure> pointsPressure,
-                  List<PointPower> pointPower, List<PointNPSH> pointNPSH) throws IOException;
 }

@@ -31,8 +31,6 @@ export const AdminPage = () => {
         controlType: '',
         concentration: 0,
         pumpTypeForSomeInstallation: '',
-        pumpIds: ["",""],
-        engineIds: ["",""],
         price: 0,
         pumps: [{
             name: '',
@@ -130,7 +128,6 @@ export const AdminPage = () => {
             const response = await fetch(`${server_url}/api/simple/admin/save/series/${series.name}/${series.categoryName}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json"
                 },
                 method: "POST",
             });
@@ -229,27 +226,14 @@ export const AdminPage = () => {
     const [filesDimensions, setFilesDimensions] = useState([]);
     const [filePhoto, setFilePhoto] = useState(null);
 
-    const isFormValid = () => {
-        // Проверка обязательных полей установки
-        if (
-            installationData.typeInstallations === '' ||
-            installationData.subtype === '' ||
-            installationData.countMainPumps <= 0 ||
-            installationData.countSparePumps < 0 ||
-            installationData.coolantType === '' ||
-            installationData.temperature === '' ||
-            installationData.powerType === '' ||
-            installationData.controlType === '' ||
-            installationData.concentration <= 0 ||
-            installationData.pumpTypeForSomeInstallation === '' ||
-            installationData.price <= 0 ||
-            files.length === 0
-        ) {
-            return false;
-        }
+const  isFormValidButt = () =>{
+         const isSpecialSubtype = installationData.subtype === 'AFEIJP';
+        const pumpsToValidate = isSpecialSubtype ? 2 : 1;
+        const enginesToValidate = isSpecialSubtype ? 2 : 1;
+        const MaterialAndSeriesVali = isSpecialSubtype ? 2 : 1;
 
-        // Проверка массивов `pumps` и `engines`
-        const arePumpsValid = installationData.pumps.every(pump => {
+        // Проверяем насосы
+        const arePumpsValid = installationData.pumps.slice(0, pumpsToValidate).every(pump => {
             return (
                 pump.name !== '' &&
                 pump.manufacturer !== '' &&
@@ -267,7 +251,8 @@ export const AdminPage = () => {
             );
         });
 
-        const areEnginesValid = installationData.engines.every(engine => {
+        // Проверяем двигатели
+        const areEnginesValid = installationData.engines.slice(0, enginesToValidate).every(engine => {
             return (
                 engine.pumpType !== '' &&
                 engine.manufacturer !== '' &&
@@ -283,23 +268,81 @@ export const AdminPage = () => {
             );
         });
 
-        // Проверка массива деталей
-        const areDetailsValid = details.every(detail => {
+        // Проверка дополнительных массивов
+        const areMaterialAndSeriesValid = installationData.material.slice(0, MaterialAndSeriesVali).every(material => material !== '') &&
+            installationData.series.slice(0, MaterialAndSeriesVali).every(series => series !== '');
+
+        // Возвращаем true, если все проверки выполнены
+        return arePumpsValid && areEnginesValid && areMaterialAndSeriesValid;
+    };
+
+
+
+    const isFormValid = () => {
+        // Проверка обязательных полей установки
+        if (
+            installationData.typeInstallations === '' ||
+            installationData.subtype === '' ||
+            installationData.countMainPumps <= 0 ||
+            installationData.countSparePumps < 0 ||
+            installationData.coolantType === '' ||
+            installationData.temperature === '' ||
+            installationData.powerType === '' ||
+            installationData.controlType === '' ||
+            installationData.price <= 0 ||
+            files.length === 0
+        ) {
+            return false;
+        }
+
+        // Определяем, нужно ли проверять один насос/двигатель или оба
+        const isSpecialSubtype = installationData.subtype === 'AFEIJP'; // Замените 'specialSubtype' на нужное значение
+        const pumpsToValidate = isSpecialSubtype ? 2 : 1;
+        const enginesToValidate = isSpecialSubtype ? 2 : 1;
+        const MaterialAndSeriesVali = isSpecialSubtype ? 2 : 1;
+
+        // Проверяем насосы
+        const arePumpsValid = installationData.pumps.slice(0, pumpsToValidate).every(pump => {
             return (
-                detail.name !== '' &&
-                detail.descriptionDetail !== '' &&
-                detail.materialDetail !== '' &&
-                detail.enDin !== '' &&
-                detail.aisiAstm !== ''
+                pump.name !== '' &&
+                pump.manufacturer !== '' &&
+                pump.speed > 0 &&
+                pump.numberOfSteps >= 0 &&
+                pump.maximumPressure > 0 &&
+                pump.maximumHead > 0 &&
+                pump.efficiency >= 0 &&
+                pump.npsh >= 0 &&
+                pump.dm_in >= 0 &&
+                pump.dm_out >= 0 &&
+                pump.installationLength >= 0 &&
+                pump.price > 0 &&
+                pump.links.length > 0
+            );
+        });
+
+        // Проверяем двигатели
+        const areEnginesValid = installationData.engines.slice(0, enginesToValidate).every(engine => {
+            return (
+                engine.pumpType !== '' &&
+                engine.manufacturer !== '' &&
+                engine.execution !== '' &&
+                engine.power > 0 &&
+                engine.amperage > 0 &&
+                engine.voltage > 0 &&
+                engine.turnovers > 0 &&
+                engine.typeOfProtection !== '' &&
+                engine.insulationClass !== '' &&
+                engine.color !== '' &&
+                engine.price > 0
             );
         });
 
         // Проверка дополнительных массивов
-        const areMaterialAndSeriesValid = installationData.material.every(material => material !== '') &&
-            installationData.series.every(series => series !== '');
+        const areMaterialAndSeriesValid = installationData.material.slice(0, MaterialAndSeriesVali).every(material => material !== '') &&
+            installationData.series.slice(0, MaterialAndSeriesVali).every(series => series !== '');
 
         // Возвращаем true, если все проверки выполнены
-        return arePumpsValid && areEnginesValid && areDetailsValid && areMaterialAndSeriesValid;
+        return arePumpsValid && areEnginesValid && areMaterialAndSeriesValid;
     };
 
 
@@ -348,7 +391,6 @@ export const AdminPage = () => {
         }
         formData.append("pump", new Blob([JSON.stringify(requestData)], { type: "application/json" }));
         formData.append("engine", new Blob([JSON.stringify(installationData.engines[0])], { type: "application/json" }));
-        formData.append("engineId", new Blob([JSON.stringify(installationData.engineIds[0])], { type: "application/json" }));
         filesDesign.forEach(file => {
             formData.append('photoDesign', file);
         });
@@ -509,6 +551,7 @@ export const AdminPage = () => {
 
         formData.append("points", new Blob([JSON.stringify(points)], { type: "application/json" }));
         try {
+            console.log(installationData.pumps)
             const response = await fetch(`${server_url}/api/simple/admin/save`, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -795,8 +838,13 @@ export const AdminPage = () => {
                             <div><HozPitPns installationData={installationData}
                                             setInstallationData={setInstallationData}/>
                             </div>)}
-                        <div><PumpData installationData={installationData} setInstallationData={setInstallationData}
-                                       isPump={false}/>
+                        <div><PumpData installationData={installationData}
+                                       setInstallationData={setInstallationData}
+                                       isPump={false}
+                                       detail={detail}
+                                       setDetail={setDetail}
+                                       details={details}
+                                       setDetails={setDetails}/>
                         </div>
                         <div className={styles.selectWrapper}>
                             <h3>Добавить до трех фото:</h3>
@@ -956,6 +1004,7 @@ export const AdminPage = () => {
                                 className={styles.button}
                                 type="button"
                                 onClick={handleClickAddPump}
+                                disabled={!isFormValidButt()}
 
                         >
                             Сохранить
@@ -991,7 +1040,7 @@ export const AdminPage = () => {
                                 className={styles.button}
                                 type="button"
                                 onClick={handleClickAddEngine}
-                                disabled={!isFormValid()}
+
                         >
                             Сохранить
                         </button>
@@ -1022,7 +1071,7 @@ export const AdminPage = () => {
                                 className={styles.button}
                                 type="button"
                                 onClick={handleClickAddSeries}
-                                disabled={!isFormValid()}
+
                         >
                             Сохранить
                         </button>
