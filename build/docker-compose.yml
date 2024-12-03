@@ -27,7 +27,7 @@ services:
   backend_pump:
     build:
       context: ../
-      dockerfile: /build/pump.dockerfile
+      dockerfile: build/pump.dockerfile
     ports:
       - "8081:8081"
     expose:
