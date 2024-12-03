@@ -1,1 +1,2 @@
-Перенес front в отдельную ветку frontend, для большего удобства. Потом замерджим с девом и в конце в мэин закинем
+sudo docker-compose build
+sudo docker-compose up -d

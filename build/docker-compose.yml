@@ -26,7 +26,7 @@ services:
 
   backend_pump:
     build:
-      context: ../pumps
+      context: ../
       dockerfile: /build/pump.dockerfile
     ports:
       - "8081:8081"
